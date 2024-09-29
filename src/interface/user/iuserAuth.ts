@@ -33,6 +33,18 @@ export interface UserResponse {
   
 }
 
+export interface MainResponse{
+   success:boolean,
+   message:string
+}
+
+export interface IuserSignupData {
+    name:string,
+    phone:string,
+    email:string,
+    password:string
+}
+
 export interface logoutResponse{
   success:boolean,
   message:string

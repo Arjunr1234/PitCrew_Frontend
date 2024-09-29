@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SigninData, UserResponse, logoutResponse } from "../../interface/user/iuserAuth";
+import { IuserSignupData, MainResponse, SigninData, UserResponse, logoutResponse } from "../../interface/user/iuserAuth";
 
 export const URL = "http://localhost:3000";
 
@@ -41,3 +41,15 @@ export const logoutApi = async ():Promise<logoutResponse> =>{
           
         }
 } 
+
+export const verifyAndSignupApi = async (userData:IuserSignupData,otp:string):Promise<MainResponse> => {
+       try {
+            const response = await axios.post(`${URL}/api/user/auth/signup/verify-otp`,{userData, otp});
+            return response.data
+            console.log("This is the response from verifyAndSignupApi: ", response)
+        
+       } catch (error) {
+           return {success: false, message:"something went wrong"}
+        
+       }
+}

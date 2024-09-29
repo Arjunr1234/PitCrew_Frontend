@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { UserResponse, SigninData, IuserInitialState, logoutResponse } from "../../interface/user/iuserAuth";
-import {  logoutApi, signInApi } from "../../services/user/userAuthService"; 
+import { UserResponse, SigninData, IuserInitialState, logoutResponse, IuserSignupData } from "../../interface/user/iuserAuth";
+import {  logoutApi, signInApi, verifyAndSignupApi } from "../../services/user/userAuthService"; 
 
 
 const storedUser = localStorage.getItem('user');
@@ -20,8 +20,6 @@ export const signInThunk = createAsyncThunk<UserResponse, SigninData>(
       );
     }
   }
-
-
 );
 
 export const logoutThunk = createAsyncThunk<logoutResponse>('user/logout', async () => {
@@ -33,6 +31,26 @@ export const logoutThunk = createAsyncThunk<logoutResponse>('user/logout', async
        throw new Error(error instanceof Error ? error.message: "Error is occured in logout thunk ")
     }
 })
+
+export const otpVerifyAndSignupThunk = createAsyncThunk<
+  UserResponse,
+  { userData: IuserSignupData; otp: string },
+  { rejectValue: string }
+>(
+  'user/verify-otp/signup',
+  async ({ userData, otp }, { rejectWithValue }) => {
+    try {
+      const response = await verifyAndSignupApi(userData, otp);
+      return response;
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        return rejectWithValue(error.response.data.message || "OTP verification failed");
+      } else {
+        return rejectWithValue('Something went wrong during user signup');
+      }
+    }
+  }
+);
 
 
 
@@ -87,6 +105,21 @@ const userSlice = createSlice({
                    }).addCase(signInThunk.rejected, (state, action) => {
                        state.isLoading = false;
                        state.error = action.payload as string
+                   })
+
+                   .addCase(otpVerifyAndSignupThunk.pending, (state) => {
+                        state.isLoading = true;
+                        state.error = null;
+                   } ).addCase(otpVerifyAndSignupThunk.fulfilled,(state,action) => {
+                        state.isLoading = false;
+                        state.message = action.payload.message;
+                        state.success = true;
+                        state.userInfo = action.payload.user?action.payload.user:null;
+                        state.isLoggedIn = true;
+                        state.error = null;
+                   }).addCase(otpVerifyAndSignupThunk.rejected, (state,action) => {
+                        state.isLoading = false;
+                        state.error = action.payload as string
                    })
              }
 })
