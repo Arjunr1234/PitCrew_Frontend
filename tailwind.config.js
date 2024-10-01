@@ -7,8 +7,9 @@ export default {
   theme: {
     extend: {
       colors: {
-        customBlue: '#5DF0F9', // Add your custom color here
-        madBlack: '#162B31'
+        customBlue: '#5DF0F9', 
+        madBlack: '#162B31',
+        providerGreen:'#4dff4d',
       },
     },
   },

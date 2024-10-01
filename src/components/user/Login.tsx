@@ -1,14 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../interface/hooks';  
-import { signInThunk } from '../../redux/slice/userAuthSlice';  
+import { resetSuccessAndSuccessMessage, signInThunk } from '../../redux/slice/userAuthSlice';  
 import { useNavigate } from 'react-router-dom';
 import { FaUserPlus } from 'react-icons/fa';
 import { RootState } from '../../redux/store';
 import { toast } from 'sonner';
-import loginImg from '../../../public/images/Login.png'
-
-
+import loginImg from '../../../public/images/Login.png';
 
 function Login() {
   const navigate = useNavigate();
@@ -18,14 +16,22 @@ function Login() {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
-  const { message, isLoading, success } = useSelector((state: RootState) => state.user);
+  const { message, isLoading, success, userInfo } = useSelector((state: RootState) => state.user);
+  // useEffect(()=>{
+  //   if (success) {
+  //     toast.success(message)
+  //     dispatch(resetSuccessAndSuccessMessage())
+  //   }
+
+
+  // },[message,success])
 
   // Email validation regex pattern
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const validateForm = () => {
     let valid = true;
-    
+
     // Reset errors
     setEmailError('');
     setPasswordError('');
@@ -45,6 +51,12 @@ function Login() {
       valid = false;
     }
 
+    // Clear error messages after 2 seconds
+    setTimeout(() => {
+      setEmailError('');
+      setPasswordError('');
+    }, 2000);  // 2 seconds
+
     return valid;
   };
 
@@ -57,17 +69,22 @@ function Login() {
       await dispatch(signInThunk(logData));
       console.log("This is the message: ", message);
       if (success) {
-        console.log('Message from Redux state:', message); 
-        toast.success(message);
-        navigate('/userHome');
+         // toast.success(message)
+        toast.success("Successfully LoggedIn !!");
+        console.log("This is messagedasdajsdh: ",message);
+        console.log("This is userInfo", userInfo)
+        navigate('/');
       } else {    
         toast.error(message);
-        console.error('Login failed');
-        console.log('Error message from Redux state:', message);
       }
+     
     } catch (error) {
       console.error('Login error:', error);
     }
+
+    
+
+   
   };
 
   return (

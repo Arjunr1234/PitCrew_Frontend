@@ -26,6 +26,7 @@ export const logoutThunk = createAsyncThunk<logoutResponse>('user/logout', async
     try {
          const response = await logoutApi();
          return response
+         console.log("This is the response of logoutthunk: ", response)
       
     } catch (error) {
        throw new Error(error instanceof Error ? error.message: "Error is occured in logout thunk ")
@@ -79,11 +80,13 @@ const userSlice = createSlice({
                resetMessage:(state) =>{
                   state.message = ""
                },
-               resetSuccess:(state) => {
+               resetSuccessAndSuccessMessage:(state) => {
                   state.success = null;
+                  state.message = ''
                },
-               resetError:(state) => {
+               resetErrorAndErrorMessage:(state) => {
                   state.error = null;
+                  state.message = ""
                },
                urgentReset:(state) => {
                    state.message = "";
@@ -121,8 +124,21 @@ const userSlice = createSlice({
                         state.isLoading = false;
                         state.error = action.payload as string
                    })
+
+                  
+
+                   .addCase(logoutThunk.fulfilled,(state,action) => {
+                       state.message= action.payload.message;
+                       state.isLoading = false
+                       state.success = action.payload.success
+                       state.userInfo = null
+                       state.error = null
+                   }).addCase(logoutThunk.rejected, (state,action) => {
+                       state.isLoading = false;
+                       state.error = action.payload as string
+               } )
              }
 })
 
-export const {reset, resetMessage, resetError, urgentReset} = userSlice.actions
+export const {reset, resetMessage, resetErrorAndErrorMessage, urgentReset,resetSuccessAndSuccessMessage} = userSlice.actions
 export default userSlice.reducer

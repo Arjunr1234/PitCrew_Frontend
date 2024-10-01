@@ -30,10 +30,11 @@ export  const signInApi = async (signInData: SigninData): Promise<UserResponse> 
 
 export const logoutApi = async ():Promise<logoutResponse> =>{
         try {
-            const response = await axios.get(`${URL}/api/user/auth/login`);
+            const response = await axios.get(`${URL}/api/user/auth/logout`);
             if(response.data.success){
               localStorage.removeItem('user')
             }
+            console.log("This is the response logoutApi: ", response)
             return response.data
           
         } catch (error:any) {

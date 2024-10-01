@@ -12,7 +12,7 @@ function UserRoute() {
         <Route path={'/register'} element={<UserRegister/>}/>
         <Route path={'/login'} element={<UserLogin/>}/>
         <Route path={'/otp'} element={<UserOtp/>}/>
-        <Route path={'/userHome'} element={<UserHome/>}/>
+        <Route path={'/'} element={<UserHome/>}/>
      </Routes>
    
    </>
