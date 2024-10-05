@@ -5,6 +5,7 @@ import UserOtp from '../pages/user/auth/UserOtp'
 import UserHome from '../pages/user/userHome'
 
 
+
 function UserRoute() {
   return (
    <>
@@ -13,6 +14,7 @@ function UserRoute() {
         <Route path={'/login'} element={<UserLogin/>}/>
         <Route path={'/otp'} element={<UserOtp/>}/>
         <Route path={'/'} element={<UserHome/>}/>
+        
      </Routes>
    
    </>

@@ -1,0 +1,30 @@
+/* UserHome.css */
+@keyframes fadeInLeft {
+  0% {
+    transform: translateX(-50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInRight {
+  0% {
+    transform: translateX(50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-fadeInLeft {
+  animation: fadeInLeft 1s ease-out forwards;
+}
+
+.animate-fadeInRight {
+  animation: fadeInRight 1s ease-out forwards;
+}

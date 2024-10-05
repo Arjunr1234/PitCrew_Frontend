@@ -25,18 +25,16 @@ function Navbar() {
     try {
       await dispatch(logoutThunk()); 
       toast.success('Logged out successfully!');
-     // navigate('/login');
+     
     } catch (error) {
       toast.error('Failed to log out');
       console.error(error);
     }
   };
 
-  
-  
 
   return (
-    <nav className="bg-white p-4 rounded">
+    <nav className="bg-white p-4 rounded ">
       <div className="container mx-auto flex justify-between items-center">
         
         {/* Left Section: Logo and Site Name */}

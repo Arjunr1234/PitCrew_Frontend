@@ -44,14 +44,14 @@ function Signup() {
     if (!password) {
       newErrors.password = 'Password is required.';
     } else if (password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters long.';
+      newErrors.password = 'Password must be at least 6 characters long';
     }
 
     // Validate Mobile Number
     if (!mobile) {
-      newErrors.mobile = 'Mobile number is required.';
+      newErrors.mobile = 'Mobile number is required';
     } else if (!phoneRegex.test(mobile)) {
-      newErrors.mobile = 'Invalid phone number. Must be 10 digits, start with a non-zero digit, and have no spaces.';
+      newErrors.mobile = 'Please enter a 10 digit mobile number';
     }
 
     setErrors(newErrors);
@@ -81,8 +81,8 @@ function Signup() {
         phone: mobile,
         password,
       };
-
-      const response = await fetch('http://localhost:3000/api/provider/auth/send-otp', {
+       
+      const response = await fetch('http://localhost:3000/api/provider/auth/otp-send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -93,13 +93,14 @@ function Signup() {
       if (!response.ok) {
         throw new Error(`Server error: ${response.status}`);
       }
-
+                                                        
       const result = await response.json();
       console.log('This is the response:', result);
 
       if (response.ok) {
-        toast.success("Otp send Successfully")
-        navigate('provider/otp', { state: userData });
+        toast.success("Otp sent successfully");
+        console.log("This is the userDAta in signupPage: ",userData)
+        navigate('/provider/otp', { state: userData }); 
       } else {
         console.error('Signup failed:', result.message);
       }
@@ -115,7 +116,7 @@ function Signup() {
           <img alt="" />
           <h1 className="font-dm font-bold text-white text-2xl">PitCrew</h1>
         </div>
-        <div className="h-[50%] w-[15%] flex mt-6 space-x-3 hover:cursor-pointer group" onClick={() => navigate("provider/login")}>
+        <div className="h-[50%] w-[15%] flex mt-6 space-x-3 hover:cursor-pointer group" onClick={() => navigate("/provider/login")}>
           <h1 className="text-md font-dm text-white mt-2 group-hover:text-providerGreen">LOGIN</h1>
           <RiLoginCircleFill className="w-[20%] h-[100%] group-hover:text-providerGreen" />
         </div>

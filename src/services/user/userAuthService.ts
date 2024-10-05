@@ -1,7 +1,8 @@
 import axios from "axios";
+import { URL } from "../../utils/api";
 import { IuserSignupData, MainResponse, SigninData, UserResponse, logoutResponse } from "../../interface/user/iuserAuth";
 
-export const URL = "http://localhost:3000";
+
 
 export  const signInApi = async (signInData: SigninData): Promise<UserResponse> => {
   try {

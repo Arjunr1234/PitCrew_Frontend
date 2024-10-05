@@ -11,6 +11,9 @@ export default {
         madBlack: '#162B31',
         providerGreen:'#4dff4d',
       },
+      fontFamily: {
+        montserrat: ['Montserrat', 'sans-serif'],
+      },
     },
   },
   plugins: [],

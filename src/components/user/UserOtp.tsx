@@ -55,8 +55,8 @@ function UserOtp() {
       //otpVerifyAndSignupThunk.fulfilled.match(result)
       if (success) {
        
-        toast.success(message)
-        navigate('/userHome'); 
+        toast.success("Signup Successsfull!!")
+        navigate('/'); 
       } else if (otpVerifyAndSignupThunk.rejected.match(result)) {
         
         console.error('OTP verification failed:', result.payload || 'Error');

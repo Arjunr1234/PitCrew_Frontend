@@ -23,6 +23,7 @@ function UserOtp() {
   };
 
   const userData = location.state || {}
+  console.log("Thisis theuserdata in otp page: ", userData)
 
   // Handle key down (Backspace handling)
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
@@ -38,7 +39,7 @@ function UserOtp() {
 
   const validateOtp = (otp: string) => {
     
-    if (otp.length !== 4) {
+    if(otp.length !== 4) {
       toast.error('Please enter a valid otp!!');
       return false;
     }
@@ -46,33 +47,33 @@ function UserOtp() {
   };
 
   const handleSubmitOtp = async () => {
-    const otpValue = otp.join(''); // Join OTP array into a single string
+    const otpValue = otp.join(''); 
 
-    // Validate OTP before proceeding
+   
     if (!validateOtp(otpValue)) {
-      return; // Stop execution if OTP is invalid
+      return; 
     }
 
     try {
-      const response = await fetch('http://localhost:3000/api/user/auth/signup/verify-otp', {
+      const response = await fetch('http://localhost:3000/api/provider/auth/verify-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ otp: otpValue, userData }), 
+        body: JSON.stringify({ otp: otpValue, email:userData.email }), 
       });
 
       const result = await response.json();
-      console.log("OTP verification result:", result);
+      
 
       if (result.success) {
-        toast.success('OTP verified successfully!'); // Show success message
-        navigate('/userHome'); 
+        toast.success(result.message);
+        navigate('/provider/add-address',{state:userData}); 
       } else {
-        toast.error(result.message || 'OTP verification failed'); // Show error message
+        toast.error(result.message || 'OTP verification failed'); 
       }
     } catch (error) {
-      toast.error('Error verifying OTP'); // Show error toast if any exception occurs
+      toast.error('Error verifying OTP'); 
       console.error('Error verifying OTP:', error);
     }
   };
