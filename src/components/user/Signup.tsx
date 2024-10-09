@@ -86,6 +86,8 @@ function Signup() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
+
+        
       });
 
       if (!response.ok) {
@@ -95,10 +97,11 @@ function Signup() {
       const result = await response.json();
       console.log('This is the response:', result);
 
-      if (response.ok) {
+      if (result.success) {
         toast.success("Otp send Successfully")
-        navigate('/otp', { state: userData });
+        navigate('/otp', { state: userData,replace:true });
       } else {
+        toast.error(result.message)
         console.error('Signup failed:', result.message);
       }
     } catch (error) {

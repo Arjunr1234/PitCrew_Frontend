@@ -89,8 +89,10 @@ function Signup() {
         },
         body: JSON.stringify(data),
       });
-
+       console.log("This is the signupresonse: ", response)
       if (!response.ok) {
+         const errorResponse = await response.json();  
+         toast.error(errorResponse.message); 
         throw new Error(`Server error: ${response.status}`);
       }
                                                         

@@ -13,7 +13,7 @@ function ProviderRoute() {
              <Route path={'/register'} element={<ProviderSignup/>}/>
              <Route path={'/otp'} element={<ProviderOtp/>}/>
              <Route path={'/login'} element={<ProviderLogin/>}/>
-             <Route path={'/add-address'} element={<AddAddress/>}/>
+             <Route path={'/addaddress'} element={<AddAddress/>}/>
              <Route path={'/provider-home'} element={<ProviderHome/>}/>
          </Routes>
     </div>

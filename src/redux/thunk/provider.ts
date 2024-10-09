@@ -11,7 +11,7 @@ export const loginThunk = createAsyncThunk<ProviderLoginResponse, LoginData>(
     try {
       console.log("entered into loginThunk")
       const response = await providerLoginApi(logData);
-      console.log("This is the repsonse from loginThunk: ", response)
+      console.log("This is the repsonse from loginThunk: ", response);
       
       return response;
     } catch (error: any) {

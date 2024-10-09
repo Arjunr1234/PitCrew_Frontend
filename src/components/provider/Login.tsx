@@ -1,6 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch } from "../../interface/hooks";
 import { loginThunk } from "../../redux/thunk/provider";
+import loginImg from '../../images/providerLoginImg.png'
+import { useSelector } from "react-redux";
+import { toast } from "sonner";
+import { resetError, resetSuccess } from "../../redux/slice/providerAuthSlice";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -8,6 +13,21 @@ function Login() {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const dispatch = useAppDispatch();
+  const {error, errorMessage, success, message} = useSelector((state:any) => state.provider);
+  const navigate = useNavigate()
+  
+
+  useEffect(()=> {
+    if(error){
+      toast.error(errorMessage);
+      dispatch(resetError())
+    }
+    if(success){
+      toast.success(message);
+      navigate('/provider/provider-home');
+      dispatch(resetSuccess())
+    }
+  },[error, errorMessage, success, message])
 
   const handleLogin = () => {
     let valid = true;
@@ -56,14 +76,14 @@ function Login() {
     <div className="bg-black min-h-screen w-full ">
       <div className="h-[10%] w-[100%] flex flex-row justify-between">
         <div className="h-[50%] w-[15%] space-x-2 flex mt-6 ml-6">
-          <img alt="" />
+          <img   alt="" />
           <h1 className="font-dm p-2 font-bold text-white text-2xl">PitCrew</h1>
         </div>
       </div>
 
       <div className="flex flex-col lg:flex-row justify-between items-center h-full py-10">
         <div className="w-full lg:w-1/2 px-6 flex flex-col items-center lg:items-start text-center lg:text-left">
-          <img alt="Add Address" className="w-3/4 h-auto mb-6 mx-auto" />
+          <img src={loginImg} alt="Add Address" className="w-3/4 h-auto mb-6 mx-auto" />
           <h2 className="text-white text-center text-2xl font-bold mb-4 mx-auto">
             Welcome back, log in to manage your workshop.
           </h2>

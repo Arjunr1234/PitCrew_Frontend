@@ -1,14 +1,19 @@
 import { RiLoginCircleFill } from "react-icons/ri";
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom'; 
 import OtpImage from '../../../public/images/provider_enterOpt.png';
 import { toast } from 'sonner'; 
 
 function UserOtp() {
+
   const [otp, setOtp] = useState<string[]>(['', '', '', '']);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const navigate = useNavigate(); 
   const location = useLocation();
+  const [seconds, setSeconds] = useState<number>(60);
+  const [resend, setResend] = useState<boolean>(false);
+
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const value = e.target.value;
@@ -25,7 +30,7 @@ function UserOtp() {
   const userData = location.state || {}
   console.log("Thisis theuserdata in otp page: ", userData)
 
-  // Handle key down (Backspace handling)
+ 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
     if (e.key === 'Backspace') {
       const newOtp = [...otp];
@@ -45,6 +50,29 @@ function UserOtp() {
     }
     return true;
   };
+
+  useEffect(() => {
+    const storedSeconds = localStorage.getItem('usertimer');
+    if (storedSeconds) {
+      setSeconds(Number(storedSeconds));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (seconds > 0) {
+      const timerId = setInterval(() => {
+        setSeconds((prevSeconds) => {
+          const newSeconds = prevSeconds - 1;
+          localStorage.setItem('usertimer', newSeconds.toString());
+          return newSeconds;
+        });
+      }, 1000);
+
+      return () => clearInterval(timerId);
+    } else {
+      localStorage.removeItem('usertimer');
+    }
+  }, [seconds, resend]);
 
   const handleSubmitOtp = async () => {
     const otpValue = otp.join(''); 
@@ -67,8 +95,10 @@ function UserOtp() {
       
 
       if (result.success) {
+        console.log("////////////////////result.success")
         toast.success(result.message);
-        navigate('/provider/add-address',{state:userData}); 
+       navigate('/provider/addaddress',{state:userData,replace:true}); 
+        localStorage.removeItem("usertimer")
       } else {
         toast.error(result.message || 'OTP verification failed'); 
       }
@@ -77,6 +107,23 @@ function UserOtp() {
       console.error('Error verifying OTP:', error);
     }
   };
+    const handleResend = async () => {
+        if(userData.email){
+          const response = await fetch('http://localhost:3000/api/provider/auth/otp-send', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
+          });
+
+          if(response.ok){
+            toast.success("Resend otp Succesffully");
+            setSeconds(60);
+            setResend(!resend)
+          }
+        }
+    }
 
   return (
     <div className='h-screen bg-black md:h-screen flex-col'>
@@ -85,7 +132,7 @@ function UserOtp() {
           <img  alt="" />
           <h1 className='font-dm font-bold text-white text-2xl'>PitCrew</h1>
         </div>
-        <div className='h-[50%] w-[15%] flex mt-6 space-x-3'>
+        <div className='h-[50%] w-[15%] flex mt-6 space-x-3' onClick={() => navigate('/provider/login')}>
           <h1 className='text-md font-dm text-white mt-2'>LOGIN</h1>
           <RiLoginCircleFill className='w-[20%] h-[100%] text-white' />
         </div>
@@ -114,22 +161,34 @@ function UserOtp() {
                   key={index}
                   ref={el => (inputRefs.current[index] = el)} // Create ref for each input
                   className='w-[17%] h-[90px] rounded-md bg-gray-400 text-center text-black text-3xl'
-                  maxLength={1} // Allow only 1 character
+                  maxLength={1} 
                   value={digit}
                   onChange={e => handleChange(e, index)}
                   onKeyDown={e => handleKeyDown(e, index)}
                   type='text'
-                  inputMode='numeric' // Ensure mobile users see the numeric keyboard
+                  inputMode='numeric' 
                 />
               ))}
             </div>
+            <h1 className={seconds <= 10 ? 'mt-3 font-semibold text-sm text-red-500 h-[10px]' : 'mt-3 font-semibold text-sm h-[10px] text-white'}>
+              {seconds > 0 ? `${seconds} seconds left` : " "}
+            </h1>  
             <div className="h-[40px] w-[50%]">
+             {
+              seconds>0?
               <button
-                className='bg-providerGreen mt-10 w-[100%] h-[40px] rounded-3xl text-madBlack font-dm'
-                onClick={handleSubmitOtp} // Call handleSubmitOtp when button is clicked
-              >
-                Proceed
-              </button>
+              className='bg-providerGreen mt-10 w-[100%] h-[40px] rounded-3xl text-madBlack font-dm'
+              onClick={handleSubmitOtp} 
+            >
+              Proceed
+            </button>:
+             <button
+             className='bg-blue-400 mt-10 w-[100%] h-[40px] rounded-3xl text-madBlack font-dm'
+             onClick={handleResend} 
+           >
+             Resend
+           </button>
+             }
             </div>
           </div>
         </div>

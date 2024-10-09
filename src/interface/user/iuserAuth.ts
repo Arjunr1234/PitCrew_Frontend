@@ -2,7 +2,7 @@ export interface IuserInitialState {
   userInfo: userInfo | null
   isLoggedIn: boolean,
   isLoading: boolean,
-  error: string | null
+  error: string | null| boolean
   message: string
   success: null | boolean
 }

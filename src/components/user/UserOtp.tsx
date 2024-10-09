@@ -1,9 +1,9 @@
 import { RiLoginCircleFill } from "react-icons/ri";
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useLocation, useNavigate, } from 'react-router-dom'; 
 import OtpImage from '../../../public/images/otp.png'
 import { useAppDispatch } from "../../interface/hooks";
-import { otpVerifyAndSignupThunk } from "../../redux/slice/userAuthSlice";
+import { otpVerifyAndSignupThunk, resetErrorAndMessage, resetSuccessAndMessage } from "../../redux/slice/userAuthSlice";
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
@@ -16,6 +16,11 @@ function UserOtp() {
   const navigate = useNavigate(); // Initialize navigate function
   const location = useLocation();
   const dispatch = useAppDispatch() // Use AppDispatch as the type
+  const [seconds, setSeconds] = useState<number>(60);
+  const [resend, setResend] = useState<boolean>(false);
+
+
+
   
   
 
@@ -26,45 +31,111 @@ function UserOtp() {
       newOtp[index] = value;
       setOtp(newOtp);
       if (index < 3 && value !== '') {
-        inputRefs.current[index + 1]?.focus(); // Move focus to next input
+        inputRefs.current[index + 1]?.focus(); 
       }
     }
   };
 
   const userData = location.state || {}
-  const {message, success} = useSelector((state:RootState) => state.user)
+  const {message, success,error} = useSelector((state:RootState) => state.user)
 
-  // Handle key down (Backspace handling)
+
+  useEffect(() => {
+    if(success){
+      toast.success(message);
+      navigate('/');
+      localStorage.removeItem("usertimer")
+      dispatch(resetSuccessAndMessage())
+    }
+    if(error){
+      toast.error(message)
+      dispatch(resetErrorAndMessage())
+    }
+  },[success, error, message])
+
+  
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
     if (e.key === 'Backspace') {
       const newOtp = [...otp];
       newOtp[index] = '';
       setOtp(newOtp);
       if (index > 0) {
-        inputRefs.current[index - 1]?.focus(); // Move focus to previous input
+        inputRefs.current[index - 1]?.focus(); 
       }
     }
   };
 
+  const validateOtp = (otp: string) => {
+    
+    if(otp.length !== 4) {
+      toast.error('Please enter a valid otp!!');
+      return false;
+    }
+    return true;
+  };
+
+  useEffect(() => {
+    const storedSeconds = localStorage.getItem('usertimer');
+    if (storedSeconds) {
+      setSeconds(Number(storedSeconds));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (seconds > 0) {
+      const timerId = setInterval(() => {
+        setSeconds((prevSeconds) => {
+          const newSeconds = prevSeconds - 1;
+          localStorage.setItem('usertimer', newSeconds.toString());
+          return newSeconds;
+        });
+      }, 1000);
+
+      return () => clearInterval(timerId);
+    } else {
+      localStorage.removeItem('usertimer');
+    }
+  }, [seconds, resend]);
+
+
   const handleSubmitOtp = async () => {
+
+
+    const otpValue = otp.join('')
+    if (!validateOtp(otpValue)) {
+      return; 
+    }
     try {
       const otpValue = otp.join(''); 
 
       const result = await dispatch(otpVerifyAndSignupThunk({ userData, otp: otpValue }));
       console.log("This is the result in the otp Page: ", result)
-      //otpVerifyAndSignupThunk.fulfilled.match(result)
-      if (success) {
-       
-        toast.success("Signup Successsfull!!")
-        navigate('/'); 
-      } else if (otpVerifyAndSignupThunk.rejected.match(result)) {
-        
-        console.error('OTP verification failed:', result.payload || 'Error');
-      }
+      
     } catch (error) {
       console.error('Error verifying OTP:', error);
     }
+
+
+   
   };
+
+  const handleResend = async () => {
+
+    const response = await fetch('http://localhost:3000/api/user/auth/sendotp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if(response.ok){
+      toast.success("Resend otp Succesffully");
+      setSeconds(60);
+      setResend(!resend);
+    }
+        
+  }
 
   return (
     <div className='h-screen bg-black md:h-screen flex-col'>
@@ -111,13 +182,25 @@ function UserOtp() {
                 />
               ))}
             </div>
+            <h1 className={seconds <= 10 ? 'mt-3 font-semibold text-sm text-red-500 h-[10px]' : 'mt-3 font-semibold text-sm h-[10px] text-white'}>
+              {seconds > 0 ? `${seconds} seconds left` : " "}
+            </h1>
             <div className="h-[40px] w-[50%]">
+            {
+              seconds>0 ?
               <button
-                className='bg-customBlue mt-10 w-[100%] h-[40px] rounded-3xl text-madBlack font-dm'
-                onClick={handleSubmitOtp} 
-              >
-                Proceed
-              </button>
+              className='bg-providerGreen mt-10 w-[100%] h-[40px] rounded-3xl text-madBlack font-dm'
+              onClick={handleSubmitOtp} 
+            >
+              Proceed
+            </button>:
+             <button
+             className='bg-blue-400 mt-10 w-[100%] h-[40px] rounded-3xl text-madBlack font-dm'
+             onClick={handleResend}
+           >
+             Resend
+           </button>
+             }
             </div>
           </div>
         </div>

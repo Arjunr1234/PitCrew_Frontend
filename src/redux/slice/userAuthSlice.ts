@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { UserResponse, SigninData, IuserInitialState, logoutResponse, IuserSignupData } from "../../interface/user/iuserAuth";
 import {  logoutApi, signInApi, verifyAndSignupApi } from "../../services/user/userAuthService"; 
+import { boolean } from "yup";
 
 
 const storedUser = localStorage.getItem('user');
@@ -42,12 +43,14 @@ export const otpVerifyAndSignupThunk = createAsyncThunk<
   async ({ userData, otp }, { rejectWithValue }) => {
     try {
       const response = await verifyAndSignupApi(userData, otp);
+      console.log("This is a kind of resonponse in thunk: ", response)
       return response;
+      
     } catch (error: any) {
       if (error.response && error.response.data) {
         return rejectWithValue(error.response.data.message || "OTP verification failed");
       } else {
-        return rejectWithValue('Something went wrong during user signup');
+        return rejectWithValue('Otp vefication failedd');
       }
     }
   }
@@ -62,7 +65,7 @@ const initialState : IuserInitialState = {
      success:null,
      isLoggedIn:user?true:false,
      isLoading:false,
-     error:null,
+     error:null ,
      message:""
 
 }
@@ -80,11 +83,11 @@ const userSlice = createSlice({
                resetMessage:(state) =>{
                   state.message = ""
                },
-               resetSuccessAndSuccessMessage:(state) => {
+               resetSuccessAndMessage:(state) => {
                   state.success = null;
                   state.message = ''
                },
-               resetErrorAndErrorMessage:(state) => {
+               resetErrorAndMessage:(state) => {
                   state.error = null;
                   state.message = ""
                },
@@ -108,12 +111,14 @@ const userSlice = createSlice({
                    }).addCase(signInThunk.rejected, (state, action) => {
                        state.isLoading = false;
                        state.error = action.payload as string
+                       
                    })
 
                    .addCase(otpVerifyAndSignupThunk.pending, (state) => {
                         state.isLoading = true;
                         state.error = null;
                    } ).addCase(otpVerifyAndSignupThunk.fulfilled,(state,action) => {
+                       console.log("Entered into otpverifySignupThunk: ",action.payload)
                         state.isLoading = false;
                         state.message = action.payload.message;
                         state.success = true;
@@ -122,7 +127,10 @@ const userSlice = createSlice({
                         state.error = null;
                    }).addCase(otpVerifyAndSignupThunk.rejected, (state,action) => {
                         state.isLoading = false;
-                        state.error = action.payload as string
+                        console.log("This is the rejectedCase of otpVerfiySignupThunk: ", action.payload)
+                        state.message = action.payload as string
+                      //  state.success= false
+                        state.error = true  
                    })
 
                   
@@ -135,10 +143,10 @@ const userSlice = createSlice({
                        state.error = null
                    }).addCase(logoutThunk.rejected, (state,action) => {
                        state.isLoading = false;
-                       state.error = action.payload as string
+                       state.error = action.payload as string;
                } )
              }
 })
 
-export const {reset, resetMessage, resetErrorAndErrorMessage, urgentReset,resetSuccessAndSuccessMessage} = userSlice.actions
+export const {reset, resetMessage, resetErrorAndMessage, urgentReset,resetSuccessAndMessage} = userSlice.actions
 export default userSlice.reducer

@@ -27,7 +27,7 @@ const providerSlice = createSlice({
       state.message = null;
     },
     resetSuccess: (state) => {
-      state.success = null;
+      state.success = false;
       state.message = null;
     },
     resetError: (state) => {
@@ -45,9 +45,13 @@ const providerSlice = createSlice({
          state.message = action.payload.message + "Please wait admin to Verify";
          state.success = true;
          state.isLoading = false;
-     }).addCase(signupThunk.rejected, (state) => {
-         state.isLoading = true,
-         state.error = false
+         state.error = false,
+         state.errorMessage = null;
+     }).addCase(signupThunk.rejected, (state, action) => {
+         
+         state.isLoading = false;  
+         state.error = true;
+         state.errorMessage = action.error.message?action.error.message:"Signup failed";
      })
       
       .addCase(loginThunk.pending, (state) => {
@@ -55,8 +59,7 @@ const providerSlice = createSlice({
         state.error = false;
       })
       .addCase(loginThunk.fulfilled, (state, action) => {
-        console.log("Enter into the addCase for loginThunk", action.payload.provider);
-
+        console.log("Enter into the addCase fullfilled for loginThunk");
         
         state.providerInfo = {
           id: action.payload.provider._id,
@@ -70,8 +73,10 @@ const providerSlice = createSlice({
         state.success = action.payload.success;
         state.message = action.payload.message;
         state.isLoading = false;
+        state.error = false
       })
       .addCase(loginThunk.rejected, (state, action) => {
+        // console.log("This is the addcase login rejected: ", action.payload)
         state.isLoading = false;
         state.error = true;
         state.errorMessage = action.payload as string;
@@ -79,4 +84,5 @@ const providerSlice = createSlice({
   },
 });
 
+export const {resetSuccess, resetMessage, reset, resetError} = providerSlice.actions
 export default providerSlice.reducer;

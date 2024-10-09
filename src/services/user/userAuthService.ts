@@ -44,14 +44,22 @@ export const logoutApi = async ():Promise<logoutResponse> =>{
         }
 } 
 
-export const verifyAndSignupApi = async (userData:IuserSignupData,otp:string):Promise<MainResponse> => {
-       try {
-            const response = await axios.post(`${URL}/api/user/auth/signup/verify-otp`,{userData, otp});
-            return response.data
-            console.log("This is the response from verifyAndSignupApi: ", response)
-        
-       } catch (error) {
-           return {success: false, message:"something went wrong"}
-        
-       }
-}
+export const verifyAndSignupApi = async (userData: IuserSignupData, otp: string): Promise<MainResponse> => {
+  try {
+    const response = await axios.post(`${URL}/api/user/auth/signup/verify-otp`, { userData, otp });
+    console.log("This is the response from verifyAndSignupApi: ", response);
+
+    if (response.data.success) {
+      return response.data;
+    } else {
+      // Throw an error to trigger the rejected state
+      throw new Error(response.data.message || "OTP verification failed!");
+    }
+  } catch (error:any) {
+    console.error("Error during OTP verification:", error);
+    // Rethrow the error to propagate it to createAsyncThunk's rejected case
+    throw new Error(error.response?.data?.message || "Otp Verification failed!!");
+  }
+};
+
+

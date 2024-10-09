@@ -10,6 +10,7 @@ export default {
         customBlue: '#5DF0F9', 
         madBlack: '#162B31',
         providerGreen:'#4dff4d',
+        customViolet:'#7952B3,'
       },
       fontFamily: {
         montserrat: ['Montserrat', 'sans-serif'],

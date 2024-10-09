@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../interface/hooks';  
-import { resetSuccessAndSuccessMessage, signInThunk } from '../../redux/slice/userAuthSlice';  
+import { resetSuccessAndMessage, signInThunk } from '../../redux/slice/userAuthSlice';  
 import { useNavigate } from 'react-router-dom';
 import { FaUserPlus } from 'react-icons/fa';
 import { RootState } from '../../redux/store';
@@ -17,14 +17,15 @@ function Login() {
   const [passwordError, setPasswordError] = useState('');
 
   const { message, isLoading, success, userInfo } = useSelector((state: RootState) => state.user);
-  // useEffect(()=>{
-  //   if (success) {
-  //     toast.success(message)
-  //     dispatch(resetSuccessAndSuccessMessage())
-  //   }
+  useEffect(()=>{
+    if (success) {
+      toast.success(message)
+      navigate('/')
+      dispatch(resetSuccessAndMessage())
+    }
 
 
-  // },[message,success])
+  },[message,success])
 
   // Email validation regex pattern
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -45,7 +46,7 @@ function Login() {
       valid = false;
     }
 
-    // Check if password is empty
+    
     if (!password) {
       setPasswordError('Password is required');
       valid = false;
@@ -68,15 +69,16 @@ function Login() {
     try {
       await dispatch(signInThunk(logData));
       console.log("This is the message: ", message);
-      if (success) {
-         // toast.success(message)
-        toast.success("Successfully LoggedIn !!");
-        console.log("This is messagedasdajsdh: ",message);
-        console.log("This is userInfo", userInfo)
-        navigate('/');
-      } else {    
-        toast.error(message);
-      }
+      // if (success) {
+      //    // toast.success(message)
+      //   toast.success("Successfully LoggedIn !!");
+      //   console.log("This is messagedasdajsdh: ",message);
+      //   console.log("This is userInfo", userInfo)
+      //   navigate('/');
+      //   dispatch(resetSuccessAndMessage())
+      // } else {    
+      //   toast.error(message);
+      // }
      
     } catch (error) {
       console.error('Login error:', error);

@@ -6,7 +6,7 @@ import { RootState } from '../../redux/store';
 import { useAppDispatch } from '../../interface/hooks'; 
 import { toast } from 'sonner'; // Assuming you're using this for toast notifications
 import logo from '../../../public/images/logo.jpg';
-import { logoutThunk } from '../../redux/slice/userAuthSlice';
+import { logoutThunk, resetSuccessAndMessage } from '../../redux/slice/userAuthSlice';
 
 function Navbar() {
   const navigate = useNavigate();
@@ -25,6 +25,7 @@ function Navbar() {
     try {
       await dispatch(logoutThunk()); 
       toast.success('Logged out successfully!');
+      dispatch(resetSuccessAndMessage())
      
     } catch (error) {
       toast.error('Failed to log out');

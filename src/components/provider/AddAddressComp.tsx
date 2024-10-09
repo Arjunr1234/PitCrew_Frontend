@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Addaddress from '../../images/addAddressImg.png';
 import Map, { Marker } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useAppDispatch } from '../../interface/hooks';
 import { signupThunk } from '../../redux/thunk/provider';
 import { SignupData } from '../../interface/provider/iProviderAuth';
+import { useSelector } from 'react-redux';
+import { resetMessage, resetSuccess } from '../../redux/slice/providerAuthSlice';
+
 
 interface Viewport {
   longitude: number;
@@ -32,7 +35,20 @@ function AddAddressComp() {
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
   const [address, setAddress] = useState<string>('');  
   const [textAddress, setTextAddress] = useState<string>('');
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
+  const {success, message} = useSelector((state:any) => state.provider);
+  const navigate = useNavigate()
+
+  useEffect(()=>{
+     if(success){
+      console.log("Enteed in to the success")
+       
+       navigate('/provider/login')
+       toast.success(message)
+       dispatch(resetSuccess())
+     }
+     
+  },[success, message])
 
   const userData = location.state || {}
   const handleGetCurrentLocation = () => {
@@ -47,7 +63,7 @@ function AddAddressComp() {
             latitude,
             zoom: 14,
           });
-
+   
           setUserLocation({ longitude, latitude });
 
           const fetchedAddress = await fetchAddress(longitude, latitude);
@@ -58,7 +74,7 @@ function AddAddressComp() {
 
           console.log('Current Location:', { longitude, latitude });
           setLatitude(latitude);
-          setLongitude(longitude)
+          setLongitude(longitude);
 
         },
         (error) => {
@@ -69,6 +85,8 @@ function AddAddressComp() {
       console.error('Geolocation is not supported by this browser.');
     }
   };
+
+  
 
   
   const fetchAddress = async (longitude: number, latitude: number): Promise<string> => {
