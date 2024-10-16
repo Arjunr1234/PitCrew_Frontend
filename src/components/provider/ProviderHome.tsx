@@ -2,7 +2,7 @@
 function ProviderHome() {
   return (
     <div>
-      <h1>Welcome to ProviderHome</h1>
+      <h1 className="text-center text-lg ">Welcome to ProviderHome</h1>
     </div>
   )
 }

@@ -43,7 +43,7 @@ function UserOtp() {
   useEffect(() => {
     if(success){
       toast.success(message);
-      navigate('/');
+      navigate('/', {replace:true});
       localStorage.removeItem("usertimer")
       dispatch(resetSuccessAndMessage())
     }

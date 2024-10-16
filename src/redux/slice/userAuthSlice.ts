@@ -13,6 +13,9 @@ export const signInThunk = createAsyncThunk<UserResponse, SigninData>(
     try {
       const response = await signInApi(userData); 
       console.log("This is the response: ", response)
+      if (!response.success) {
+        return rejectWithValue(response.message || 'Sign-in failed');
+      }
       return response; 
     } catch (error: any) {
       
@@ -66,7 +69,8 @@ const initialState : IuserInitialState = {
      isLoggedIn:user?true:false,
      isLoading:false,
      error:null ,
-     message:""
+     message:"",
+     errorMessage:""
 
 }
 
@@ -91,6 +95,10 @@ const userSlice = createSlice({
                   state.error = null;
                   state.message = ""
                },
+               resetErrorAndErrorMessage:(state)=> {
+                   state.error = null,
+                   state.errorMessage = ""
+               },
                urgentReset:(state) => {
                    state.message = "";
                    state.success = null;
@@ -104,20 +112,22 @@ const userSlice = createSlice({
                        state.isLoading = true;
                        state.error = null
                    }).addCase(signInThunk.fulfilled, (state, action)=> {
+                      console.log("Ented into succuess signin, ", action.payload)
                        state.isLoading = false;
                        state.message = action.payload.message;
                        state.success = action.payload.success;
                        state.userInfo = action.payload.user?action.payload.user:null;
                    }).addCase(signInThunk.rejected, (state, action) => {
+                       console.log("Entered into loginthun reject: ", action.payload)
                        state.isLoading = false;
-                       state.error = action.payload as string
-                       
+                       state.error = true
+                       state.errorMessage = action.payload as string 
                    })
 
                    .addCase(otpVerifyAndSignupThunk.pending, (state) => {
                         state.isLoading = true;
                         state.error = null;
-                   } ).addCase(otpVerifyAndSignupThunk.fulfilled,(state,action) => {
+                   }).addCase(otpVerifyAndSignupThunk.fulfilled,(state,action) => {
                        console.log("Entered into otpverifySignupThunk: ",action.payload)
                         state.isLoading = false;
                         state.message = action.payload.message;
@@ -148,5 +158,5 @@ const userSlice = createSlice({
              }
 })
 
-export const {reset, resetMessage, resetErrorAndMessage, urgentReset,resetSuccessAndMessage} = userSlice.actions
+export const {reset, resetMessage, resetErrorAndMessage,resetErrorAndErrorMessage, urgentReset,resetSuccessAndMessage} = userSlice.actions
 export default userSlice.reducer

@@ -65,6 +65,7 @@ const adminSlice = createSlice({
                      state.success = action.payload.success;
                      state.message = action.payload.message;
                      state.isAdmin = false;
+                     state.isLoading = false;
                 }).addCase(adminLogoutThunk.rejected,(state)=> {
                      state.error = true;
                      state.errorMessage = "Error occured While logout"

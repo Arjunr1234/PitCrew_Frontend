@@ -1,34 +1,30 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import { FaTachometerAlt, FaUser, FaUsers, FaStore, FaSignOutAlt, } from 'react-icons/fa'; 
-import { FiSettings } from "react-icons/fi"
+import { FaTachometerAlt, FaUser, FaUsers, FaStore, FaSignOutAlt } from 'react-icons/fa'; // Importing icons from React Icons
 import { useAppDispatch } from '../../interface/hooks';
 import { adminLogoutThunk } from '../../redux/thunk/admin';
 import { resetSuccess } from '../../redux/slice/adminSlice';
 import Swal from 'sweetalert2';
 import { toast } from 'sonner';
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 
-function AdminLayout() {
+function ProviderLayout() {
 
    const dispatch = useAppDispatch();
-   const navigate = useNavigate()
- 
+   const navigate = useNavigate();
+   const {providerInfo} = useSelector((state:any) => state.provider)
+   
+   
    
    const handleLogout = async () => {
-    try {
-      await dispatch(adminLogoutThunk()).unwrap(); 
-      navigate('/admin/login'); 
-      dispatch(resetSuccess()); 
-      toast.success("Logout Successfull")
-    } catch (error) {
-      console.error("Logout failed", error);
-    }
+   
   };
 
   const confirmLogout = () => {
     
     Swal.fire({
       title: 'Are you sure?',
-      text: 'You will be logged out of your admin account!',
+      text: 'You will be logged out of your  account!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -47,43 +43,37 @@ function AdminLayout() {
   return (
     <div className="min-h-screen flex">
       {/* Sidebar */}
-      <div className="w-64 bg-violet-400 text-white">
+      <div className="w-64 bg-providerGreen text-white">
         <div className="p-4">
           <h1 className="text-2xl font-bold mb-6">Admin Panel</h1>
           <ul className="space-y-7">
             <li>
-              <Link to="/admin/dashboard" className=" text-black py-2 px-4 rounded hover:bg-gray-700 hover:text-white flex items-center">
+              <Link to="/provider/dashboard" className=" text-black py-2 px-4 rounded hover:bg-gray-700 hover:text-white flex items-center">
                 <FaTachometerAlt className="mr-3" /> {/* Dashboard Icon */}
                 Dashboard
               </Link>
             </li>
             <li>
-              <Link to="/admin/profile" className=" text-black py-2 px-4 rounded hover:bg-gray-700 hover:text-white flex items-center">
+              <Link to="/provider/profile" className=" text-black py-2 px-4 rounded hover:bg-gray-700 hover:text-white flex items-center">
                 <FaUser className="mr-3" /> {/* Profile Icon */}
                 Profile
               </Link>
             </li>
             <li>
-              <Link to="/admin/users" className=" text-black py-2 px-4 rounded hover:bg-gray-700 hover:text-white flex items-center">
+              <Link to="/provider/users" className=" text-black py-2 px-4 rounded hover:bg-gray-700 hover:text-white flex items-center">
                 <FaUsers className="mr-3" /> {/* Users Icon */}
                 Users
               </Link>
             </li>
             <li>
-              <Link to="/admin/providers" className=" text-black py-2 px-4 rounded hover:bg-gray-700 hover:text-white flex items-center">
+              <Link to="/provider/service" className=" text-black py-2 px-4 rounded hover:bg-gray-700 hover:text-white flex items-center">
                 <FaStore className="mr-3" /> {/* Providers Icon */}
-                Providers
-              </Link>
-            </li>
-            <li>
-              <Link to="/admin/services" className="text-black py-2 px-4 rounded hover:bg-gray-700 hover:text-white flex items-center">
-                <FiSettings className="mr-3" /> {/* Services Icon */}
-                Services
+                Service
               </Link>
             </li>
             <li>
               <button onClick={confirmLogout} className="w-full text-black py-2 px-4 rounded hover:bg-red-700 hover:text-white flex items-center">
-                <FaSignOutAlt className="mr-3" /> {/* Logout Icon */}
+                <FaSignOutAlt className="mr-3" />
                 Logout
               </button>
             </li>
@@ -99,4 +89,4 @@ function AdminLayout() {
   );
 }
 
-export default AdminLayout;
+export default ProviderLayout;

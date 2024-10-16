@@ -202,7 +202,7 @@ function Signup() {
                   <p className="mt-1 text-white text-md tracking-widest">SIGNUP WITH GOOGLE</p>
                 </div>
               </div>
-              <p className="text-white text-center hover:text-blue-400 cursor-pointer" onClick={() => navigate("provider/login")}>
+              <p className="text-white text-center hover:text-blue-400 cursor-pointer" onClick={() => navigate("/provider/login")}>
                 If you already have an account? Sign In
               </p>
             </div>

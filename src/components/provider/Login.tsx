@@ -24,9 +24,10 @@ function Login() {
     }
     if(success){
       toast.success(message);
-      navigate('/provider/provider-home');
+      navigate('/provider/dashboard');
       dispatch(resetSuccess())
     }
+   
   },[error, errorMessage, success, message])
 
   const handleLogin = () => {

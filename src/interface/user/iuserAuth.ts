@@ -5,6 +5,7 @@ export interface IuserInitialState {
   error: string | null| boolean
   message: string
   success: null | boolean
+  errorMessage:string
 }
 
 export interface userInfo {

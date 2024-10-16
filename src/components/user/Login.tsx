@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../interface/hooks';  
-import { resetSuccessAndMessage, signInThunk } from '../../redux/slice/userAuthSlice';  
+import { resetErrorAndErrorMessage, resetSuccessAndMessage, signInThunk } from '../../redux/slice/userAuthSlice';  
 import { useNavigate } from 'react-router-dom';
 import { FaUserPlus } from 'react-icons/fa';
 import { RootState } from '../../redux/store';
@@ -16,16 +16,24 @@ function Login() {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
-  const { message, isLoading, success, userInfo } = useSelector((state: RootState) => state.user);
+  const { message, isLoading, success, userInfo, error, errorMessage } = useSelector((state: RootState) => state.user);
   useEffect(()=>{
     if (success) {
       toast.success(message)
       navigate('/')
       dispatch(resetSuccessAndMessage())
     }
+    if(userInfo){
+      navigate('/')
+    }
+
+    if(error){
+      toast.error(errorMessage);
+      dispatch(resetErrorAndErrorMessage())
+    }
 
 
-  },[message,success])
+  },[message,success, error, errorMessage,userInfo])
 
   // Email validation regex pattern
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -33,11 +41,11 @@ function Login() {
   const validateForm = () => {
     let valid = true;
 
-    // Reset errors
+    
     setEmailError('');
     setPasswordError('');
 
-    // Check if email is empty or invalid
+   
     if (!email) {
       setEmailError('Email is required');
       valid = false;
@@ -52,11 +60,11 @@ function Login() {
       valid = false;
     }
 
-    // Clear error messages after 2 seconds
+    
     setTimeout(() => {
       setEmailError('');
       setPasswordError('');
-    }, 2000);  // 2 seconds
+    }, 2000);  
 
     return valid;
   };
@@ -68,6 +76,7 @@ function Login() {
 
     try {
       await dispatch(signInThunk(logData));
+      
       console.log("This is the message: ", message);
       // if (success) {
       //    // toast.success(message)

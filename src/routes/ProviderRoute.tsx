@@ -4,6 +4,7 @@ import ProviderOtp from '../pages/provider/auth/ProviderOtp';
 import AddAddress from '../pages/provider/auth/AddAddress';
 import ProviderLogin from '../pages/provider/auth/ProviderLogin';
 import ProviderHome from '../pages/provider/ProivderHome';
+import ProviderLayout from '../components/provider/ProviderLayout';
 
 
 function ProviderRoute() {
@@ -14,7 +15,11 @@ function ProviderRoute() {
              <Route path={'/otp'} element={<ProviderOtp/>}/>
              <Route path={'/login'} element={<ProviderLogin/>}/>
              <Route path={'/addaddress'} element={<AddAddress/>}/>
-             <Route path={'/provider-home'} element={<ProviderHome/>}/>
+             {/* <Route path={'/provider-home'} element={<ProviderHome/>}/> */}
+             <Route  element={<ProviderLayout/>}>
+                <Route path='dashboard' element={<ProviderHome/>}/>
+
+             </Route>
          </Routes>
     </div>
   )

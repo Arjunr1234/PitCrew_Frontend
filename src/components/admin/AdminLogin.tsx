@@ -15,10 +15,20 @@ function AdminLogin() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate()
 
+
+
   const {success, message, error, errorMessage} = useSelector((state:any) => state.admin)
   console.log("mesage", message, success)
 
-  useEffect(() => {
+  const {isAdmin} = useSelector((state:any) => state.admin);
+  
+   useEffect(() => {
+     if(isAdmin){
+       navigate('/admin/dashboard')
+     }
+   },[isAdmin])
+
+  useEffect(() => { 
      if(success){
       toast.success(message)
       navigate('/admin/dashboard')
@@ -32,10 +42,6 @@ function AdminLogin() {
 
   const validateInputs = (): boolean => {
     let isValid = true;
-    
-
-    
-
    
     if (!email.trim()) {
       setEmailError("Email cannot be Empty");

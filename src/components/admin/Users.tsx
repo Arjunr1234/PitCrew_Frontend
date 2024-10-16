@@ -69,10 +69,10 @@ function Users() {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4 text-center">Users Details</h1>
       <div className="flex flex-row justify-between items-center gap-4 px-8">
-  <div className="p-5 bg-green-300">
+  <div className="p-6 bg-white shadow-md rounded-lg">
     Active Users: {active}
   </div>
-  <div className="p-5 bg-green-300">
+  <div className="p-6 bg-white shadow-md rounded-lg">
     Blocked Users: {blocked}
   </div>
 </div>
