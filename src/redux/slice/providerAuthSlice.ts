@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ProviderInitialState } from "../../interface/provider/iProviderAuth";
-import { loginThunk, signupThunk } from "../thunk/provider";
+import { loginThunk, providerLogoutThunk, signupThunk } from "../thunk/provider";
+import { logoutThunk } from "./userAuthSlice";
 
 const provide = localStorage.getItem('provider');
 const provider = provide ? JSON.parse(provide) : null;
@@ -76,11 +77,24 @@ const providerSlice = createSlice({
         state.error = false
       })
       .addCase(loginThunk.rejected, (state, action) => {
-        // console.log("This is the addcase login rejected: ", action.payload)
         state.isLoading = false;
         state.error = true;
         state.errorMessage = action.payload as string;
-      });
+      })
+
+      .addCase(providerLogoutThunk.pending, (state) => {
+          state.isLoading = true;
+          state.error = false
+      })
+      .addCase(providerLogoutThunk.fulfilled, (state, action) => {
+          state.success = action.payload.success,
+          state.message = action.payload.message,
+          state.providerInfo = null;        
+      })
+      // .addCase(providerLogoutThunk.rejected, (state,action) => {
+      //     state.error = true;
+      //     state.errorMessage = "Failed to logout"
+      // })
   },
 });
 

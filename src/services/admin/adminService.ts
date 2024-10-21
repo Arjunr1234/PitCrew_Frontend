@@ -39,7 +39,7 @@ export const deleteBrand = async (id: string) => {
     }
 }
 
-export const addGeneralService = async(formData:FormData) => {
+export const addService = async(formData:FormData) => {
             try {
                  
                   const response = await axiosInstance.post(`${URL}/api/admin/services/add-service`,formData, {

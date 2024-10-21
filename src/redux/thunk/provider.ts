@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { LoginData, ProviderLoginResponse, ProviderSignupResponse, SignupData } from "../../interface/provider/iProviderAuth";
-import { providerLoginApi, providerSignupApi } from "../../services/provider/providerAuthService";
+import { providerLoginApi, providerLogoutApi, providerSignupApi } from "../../services/provider/providerAuthService";
 
 
 
@@ -46,4 +46,19 @@ export const signupThunk = createAsyncThunk<ProviderSignupResponse, SignupData>(
     }
   }
 );
+
+export const providerLogoutThunk = createAsyncThunk(
+     'provider/logout', 
+      async () => {
+           try {
+               const response = await providerLogoutApi();
+               console.log("This is the repsonse from logoutThunk: ", response)
+               return response
+            
+           } catch (error) {
+               console.log(error)
+            
+           }
+      }
+)
 

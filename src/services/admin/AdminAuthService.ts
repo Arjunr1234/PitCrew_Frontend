@@ -25,8 +25,9 @@ export const AdminLoginApi = async (logData:ILoginData) => {
 export const adminLogoutApi = async () => {
     try {
        const response = await axiosInstance.get(URL + '/api/admin/auth/logout')
+       console.log("This is the logoutApi resposne: ", response)
        return response.data
-      
+     
     } catch (error:any) {
         console.log(error)
         throw error

@@ -29,8 +29,13 @@ interface IAdminLogoutResponse{
 export const adminLogoutThunk = createAsyncThunk<IAdminLogoutResponse>(
   'admin/logout',
   async () => {
-    const response = await adminLogoutApi(); 
-    return response;
+    try {
+      const response = await adminLogoutApi(); 
+      return response
+    } catch (error) {
+        console.log(error)
+      
+    }
   }
 );
 

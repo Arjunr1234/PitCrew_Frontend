@@ -2,17 +2,12 @@ import React, { useRef, useState, useEffect } from "react";
 import { toast } from "sonner";
 import { BsThreeDots } from "react-icons/bs";
 import { FaTrash } from 'react-icons/fa';
-import { addGeneralService, addSubService, deleteService, getAllGeneralServices } from "../../services/admin/adminService";
+import {  addService, addSubService, deleteService, getAllGeneralServices } from "../../services/admin/adminService";
 import Swal from "sweetalert2";
+import { IService } from "../../interface/admin/iAdmin";
 
 // Define the Service type
-interface IService {
-    _id: string;
-    category: string;
-    serviceTypes: string;
-    imageUrl: string;
-    subTypes: string[];
-}
+
 
 function GeneralServices() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,12 +15,13 @@ function GeneralServices() {
   const [serviceName, setServiceName] = useState<string>("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState<string | null>(null); 
-  const [generalServices, setGeneralServices] = useState<IService[]>([]); 
+  const [generalServices, setGeneralServices] = useState<IService[]>([]);
+  const [loading, setLoading] = useState<boolean>(false) 
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [subServiceName, setSubServiceName] = useState<string>("");
 
-  // Fetch services using useEffect
+  
   useEffect(() => {
     const fetchServices = async () => {
       try {
@@ -44,7 +40,7 @@ function GeneralServices() {
     fetchServices();
   }, []);
 
-  // Handle input changes
+  
   const handleServiceNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setServiceName(e.target.value);
   };
@@ -70,9 +66,9 @@ function GeneralServices() {
     formData.append("serviceType", serviceName);
     formData.append("image", selectedFile);
     formData.append("category", "general");
-
+    setLoading(true);
     try {
-      const response = await addGeneralService(formData);
+      const response = await addService(formData);
       if (response.success) {
         toast.success("Service added successfully!!");
         setServiceName("");
@@ -85,6 +81,8 @@ function GeneralServices() {
       }
     } catch (error) {
       toast.error("Error in adding service");
+    }finally{
+       setLoading(false)
     }
   };
 
@@ -115,7 +113,7 @@ function GeneralServices() {
         closeDropdown();
       }
     };
-    document.addEventListener("mousedown", handleOutsideClick);
+      document.addEventListener("mousedown", handleOutsideClick);
     return () => {
       document.removeEventListener("mousedown", handleOutsideClick);
     };
@@ -153,25 +151,45 @@ function GeneralServices() {
     });
   };
 
-  // Handle add subservice (function definition without logic)
-  const handleAddSubservice = async (serviceId:string) => {
-     try {
+ 
+  const handleAddSubservice = async (serviceId: string) => {
+    if (!subServiceName) {
+      toast.error("Subservice name cannot be empty.");
+      return;
+    }
+  
+    try {
       const addService = await addSubService(serviceId, subServiceName);
-      if(addService.success){
-          toast.success("Successfully added");
-          
-      }else{
-          toast.error(addService.message)
+      if (addService.success) {
+        const updatedService = generalServices.map((service) =>
+          service._id === serviceId
+            ? { ...service, subTypes: [...service.subTypes, subServiceName] }
+            : service
+        );
+        if (selectedService && subServiceName) {
+          const updatedSelectedService = {
+            ...selectedService,
+            subTypes: [...(selectedService?.subTypes || []), subServiceName],
+          };
+          setSelectedService(updatedSelectedService);
+        } else {
+          console.error("selectedService or subServiceName is undefined");
+        }
+        
+        setGeneralServices(updatedService);
+        setSubServiceName(''); 
+        toast.success("Successfully added");
+      } else {
+        toast.error(addService.message);
       }
-      console.log("SerficdId: and subservic: ", serviceId, subServiceName)
-      
-     } catch (error:any) {
-      
-        toast.error(error.response.data.message)
-        setSubServiceName('')
-      
-     }
+      console.log("ServiceId and subServiceName: ", serviceId, subServiceName);
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || "An error occurred";
+      toast.error(errorMessage);
+      setSubServiceName('');
+    }
   };
+  
 
   return (
     <div>
@@ -188,15 +206,24 @@ function GeneralServices() {
             onChange={handleServiceNameChange}
             className="p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 w-1/2 text-center"
             placeholder="Add service"
+            disabled={loading}
           />
           <input
             onChange={handleSelectedFileChange}
             type="file"
             ref={fileInputRef}
             className="p-2 border border-gray-300 rounded-lg w-1/3 text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:bg-blue-50 file:text-blue-500 hover:file:bg-blue-100"
+            disabled={loading}
           />
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600" onClick={handleAddService}>
-            ADD
+          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600" disabled={loading} onClick={handleAddService}>
+          {loading ? (
+          <div className="flex items-center gap-x-2">
+            <div className="spinner border-t-transparent border-white border-2 rounded-full w-4 h-4 animate-spin"></div>
+            Adding...
+          </div>
+        ) : (
+          "Add"
+        )}
           </button>
         </div>
       </div>
