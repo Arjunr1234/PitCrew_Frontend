@@ -18,7 +18,6 @@ function AdminLogin() {
 
 
   const {success, message, error, errorMessage} = useSelector((state:any) => state.admin)
-  console.log("mesage", message, success)
 
   const {isAdmin} = useSelector((state:any) => state.admin);
   
@@ -81,6 +80,8 @@ function AdminLogin() {
        email,
        password
     }
+    console.log(adminData);
+    
      dispatch(resetAdminState())
     const response = dispatch(adminloginThunk(adminData));
 

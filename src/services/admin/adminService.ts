@@ -60,7 +60,9 @@ export const addService = async(formData:FormData) => {
 export const getAllGeneralServices = async () => {
     try {
         const response = await axiosInstance.get(`${URL}/api/admin/services/get-all-general-service`);
+        console.log("This iis the getall general service: ", response.data)
         return response.data;  
+       
     } catch (error: any) {
         
         if (error.response) {

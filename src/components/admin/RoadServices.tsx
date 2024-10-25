@@ -191,9 +191,9 @@ function RoadServices() {
                   <div >
                     <BsThreeDots className="absolute top-0 right-3 text-xl cursor-pointer"
                     onClick={() => toggleDropdown(service._id)}/>
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onClick={() => openModal(service)}>
+                    {/* <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onClick={() => openModal(service)}>
                        View
-                    </button>
+                    </button> */}
                   </div>
                 </div>
             ))}
@@ -231,11 +231,11 @@ function RoadServices() {
         <div className="mt-4 flex-1 overflow-y-auto space-y-2">
           {selectedService.subTypes.map((subtype, index) => (
             <div
-              key={index}
+              key={subtype._id}
               className="flex justify-between items-center bg-gray-100 p-2 rounded-md border border-gray-300"
             >
               
-              <p className="text-black ">{subtype}</p>
+              <p className="text-black ">{subtype.type}</p>
 
               <button
                 className="   p-1 bg-red-400 rounded-full "

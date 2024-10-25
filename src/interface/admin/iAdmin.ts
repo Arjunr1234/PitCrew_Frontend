@@ -3,5 +3,5 @@ export interface IService {
   category: string;
   serviceTypes: string;
   imageUrl: string;
-  subTypes: string[];
+  subTypes: {type:string, _id:string}[];
 }

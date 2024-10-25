@@ -6,8 +6,6 @@ import {  addService, addSubService, deleteService, getAllGeneralServices } from
 import Swal from "sweetalert2";
 import { IService } from "../../interface/admin/iAdmin";
 
-// Define the Service type
-
 
 function GeneralServices() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -159,36 +157,37 @@ function GeneralServices() {
     }
   
     try {
-      const addService = await addSubService(serviceId, subServiceName);
-      if (addService.success) {
-        const updatedService = generalServices.map((service) =>
-          service._id === serviceId
-            ? { ...service, subTypes: [...service.subTypes, subServiceName] }
-            : service
-        );
-        if (selectedService && subServiceName) {
-          const updatedSelectedService = {
-            ...selectedService,
-            subTypes: [...(selectedService?.subTypes || []), subServiceName],
-          };
-          setSelectedService(updatedSelectedService);
-        } else {
-          console.error("selectedService or subServiceName is undefined");
-        }
+      const response = await addSubService(serviceId, subServiceName);
+      if (response.success) {
+        const newSubService = response.subService; 
+        toast.success(response.message);
+  
         
-        setGeneralServices(updatedService);
-        setSubServiceName(''); 
-        toast.success("Successfully added");
-      } else {
-        toast.error(addService.message);
+        setSelectedService((prevSelectedService) => {
+          if (!prevSelectedService) return null;
+  
+          const updatedSubTypes = [...prevSelectedService.subTypes, newSubService];
+          return { ...prevSelectedService, subTypes: updatedSubTypes };
+        });
+  
+       
+        setGeneralServices((prevServices) => {
+          return prevServices.map((service) =>
+            service._id === serviceId
+              ? { ...service, subTypes: [...service.subTypes, newSubService] }
+              : service
+          );
+        });
+  
+       
+        setSubServiceName('');
       }
-      console.log("ServiceId and subServiceName: ", serviceId, subServiceName);
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "An error occurred";
       toast.error(errorMessage);
-      setSubServiceName('');
     }
   };
+  
   
 
   return (
@@ -294,11 +293,11 @@ function GeneralServices() {
         <div className="mt-4 flex-1 overflow-y-auto space-y-2">
           {selectedService.subTypes.map((subtype, index) => (
             <div
-              key={index}
+              key={subtype._id}
               className="flex justify-between items-center bg-gray-100 p-2 rounded-md border border-gray-300"
             >
               
-              <p className="text-black ">{subtype}</p>
+              <p className="text-black ">{subtype.type}</p>
 
               <button
                 className="   p-1 bg-red-400 rounded-full "

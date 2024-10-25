@@ -1,21 +1,23 @@
 import { useEffect , useState} from "react";
-import { getAllServices } from "../../services/provider/providerService";
+import { addGenralServices, getAllServices } from "../../services/provider/providerService";
 import { toast } from "sonner";
-import { IServices } from "../../interface/provider/iProvider";
+import { IGeneralService, IRoadService, IServiceData, IServices } from "../../interface/provider/iProvider";
+import { useSelector } from "react-redux";
 
 function FourWheelerAddService() {
-  const [generalServices, setGeneralServices] = useState<IServices[] | []>([]);
-         const [roadServices, setRoadServices] = useState<IServices[] | []>([])
+         const [generalServices, setGeneralServices] = useState<IGeneralService[] | []>([]);
+         const [roadServices, setRoadServices] = useState<IRoadService[] | []>([]);
+         const providerId = useSelector((state:any) => state.provider.providerInfo.id);
+
         
          useEffect(() => {
           const fetchData = async () => {
             try {
-              const response = await getAllServices();
+              const response = await getAllServices(providerId, 4);
               if (response.success) {
-                const services = response.services;
-                const generalService = services.filter((service: IServices) => service.category === 'general');
-                const roadServices = services.filter((service: IServices) => service.category === 'road');
-                setGeneralServices(generalService);
+                const generalServices = response.providerGeneralServiceData;
+                const roadServices = response.providerRoadServiceData;
+                setGeneralServices(generalServices);
                 setRoadServices(roadServices);
               }
             } catch (error) {
@@ -25,6 +27,42 @@ function FourWheelerAddService() {
         
           fetchData();  
         }, []); 
+        
+
+        const handleAddGeneralService = async(serviceId:string, category:string) => {
+              try {
+                    const serviceData:IServiceData = {
+                          serviceId:serviceId,
+                          category:category,
+                          providerId:providerId,
+                          vehicleType:"fourWheeler"
+                    }
+                    
+                  const response = await addGenralServices(serviceData);
+                  if(response.success){
+                       const updatedGeneralService = generalServices.map((service) => {
+                           if(service.typeid === serviceId){
+                               return {
+                                   ...service,
+                                   isAdded : true
+                               }
+                              
+                           }
+                           return service
+                       })
+                       setGeneralServices(updatedGeneralService)
+                       toast.success("Successfully added!!")
+                  }
+                  
+                  console.log("Resposne in hadleAddGeneralService: ", response);
+
+                  
+                
+              } catch (error) {
+                  console.log("Error in handleAddservice: ", error)
+                
+              }
+        }
         
         
   return (
@@ -41,19 +79,29 @@ function FourWheelerAddService() {
           <div className="bg-gray-200 rounded-md">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {generalServices.map((service) => (
-                <div key={service.id} className="bg-white shadow-lg rounded-lg p-4 flex items-center border border-gray-400 relative">
-                  <img src={service.imageUrl} alt={service.serviceType} className="w-16 h-16 object-cover rounded-lg" />
+                <div key={service.typeid} className="bg-white shadow-lg rounded-lg p-4 flex items-center border border-gray-400 relative">
+                  <img src={service.image} alt={service.typename} className="w-16 h-16 object-cover rounded-lg" />
                   <div className="flex-grow text-center">
-                    <h2 className="text-lg font-semibold">{service.serviceType}</h2>
+                    <h2 className="text-lg font-semibold">{service.typename}</h2>
                   </div>
 
                   <div>
-                    <button
-                      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    // onClick={() => openModal(service)}
-                    >
-                      View
-                    </button>
+                    {
+                      service.isAdded ?
+                        <button
+                          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+
+                        >
+                          View
+                        </button> :
+                        <button
+                          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                         onClick={() => handleAddGeneralService(service.typeid, 'general')}
+                        >
+                          Add
+                        </button>
+                    }
+                   
                   </div>
                 </div>
               ))}
@@ -65,10 +113,10 @@ function FourWheelerAddService() {
           <div className="bg-gray-200 rounded-md" >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {roadServices.map((service) => (
-                <div key={service.id} className="bg-white shadow-lg rounded-lg p-4 flex items-center border border-gray-400 relative">
-                  <img src={service.imageUrl} alt={service.serviceType} className="w-16 h-16 object-cover rounded-lg" />
+                <div key={service.typeid} className="bg-white shadow-lg rounded-lg p-4 flex items-center border border-gray-400 relative">
+                  <img src={service.image} alt={service.typename} className="w-16 h-16 object-cover rounded-lg" />
                   <div className="flex-grow text-center">
-                    <h2 className="text-lg font-semibold">{service.serviceType}</h2>
+                    <h2 className="text-lg font-semibold">{service.typename}</h2>
                   </div>
 
                   <div>
@@ -76,7 +124,7 @@ function FourWheelerAddService() {
                       className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                     // onClick={() => openModal(service)}
                     >
-                      View
+                      Add
                     </button>
                   </div>
                 </div>

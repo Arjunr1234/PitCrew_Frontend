@@ -10,8 +10,9 @@ export const adminloginThunk = createAsyncThunk<IAdminLoginResponse, ILoginData>
       console.log("Entered into logData: ", logData);
       
       const response = await AdminLoginApi(logData);
-      
+      console.log("This is the response: ", response)
       return response;
+      
 
     } catch (error: any) {
       console.error(error);

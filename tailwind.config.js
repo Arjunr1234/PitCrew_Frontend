@@ -9,6 +9,7 @@ export default {
       colors: {
         customBlue: '#5DF0F9', 
         madBlack: '#162B31',
+        madBlackHover:"",
         providerGreen:'#4dff4d',
         customViolet:'#7952B3,'
       },

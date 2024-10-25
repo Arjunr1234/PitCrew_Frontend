@@ -9,6 +9,7 @@ export const AdminLoginApi = async (logData:ILoginData) => {
          try {
 
           const response = await axiosInstance.post(URL + '/api/admin/auth/login', logData);
+          
           if(response.data.success){
             localStorage.setItem('isAdmin',JSON.stringify({isAdmin:true}))
           }
