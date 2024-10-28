@@ -1,7 +1,7 @@
 import { string } from "yup";
 import { axiosInstance } from "../../api/common";
 import { URL } from "../../utils/api";
-import { IAddBrandData, IServiceData } from "../../interface/provider/iProvider";
+import { IAddBrandData, IAddSubServiceData, IRemoveSubServiceData, IServiceData } from "../../interface/provider/iProvider";
 const twoWheelerId = "670f584ed53b8715190c2de9";
 const fourWheelerId = "671b3eb40f7b3bea4621af3e"
 
@@ -64,7 +64,7 @@ export const removeBrand = async(providerId:string, brandId:string) => {
        }
 }
 
-export const addGenralServices = async (data: IServiceData) => {
+export const addGenralRoadServices = async (data: IServiceData) => {
   try {
     const vehicleType = data.vehicleType==="fourWheeler"?fourWheelerId:twoWheelerId
 
@@ -85,3 +85,42 @@ export const addGenralServices = async (data: IServiceData) => {
 
   }
 }
+
+
+
+
+
+export const addSubService = async(data:IAddSubServiceData) => {
+
+      try {
+
+           const response = await axiosInstance.post(URL + '/api/provider/add-service/add-subtype',data);
+           console.log(response.data);
+           return response.data
+        
+      } catch (error) {
+          console.log("Error in addSubService: ", error)
+          throw error
+      }
+         
+}
+
+export const removeSubService = async(data: IRemoveSubServiceData) => {
+  try {
+    console.log("This is the data before delete: ", data);
+    const { providerId, serviceId, subServiceId, vehicleType } = data;
+
+    
+    const response = await axiosInstance.delete(
+      `${URL}/api/provider/add-service/remove-subtype?providerId=${providerId}&serviceId=${serviceId}&type=${subServiceId}&vehicleType=${vehicleType}`
+    );
+
+    return response.data;
+  } catch (error) {
+    console.log("Error in removeSubService: ", error);
+    throw error;
+  }
+};
+
+
+

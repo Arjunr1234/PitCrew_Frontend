@@ -2,7 +2,6 @@ import { useState, } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { RiLoginCircleFill } from 'react-icons/ri';
 import { useNavigate,  } from 'react-router-dom';
-//import signInImg from '../../../public/images/signIn.png'
 import { toast } from 'sonner';
 import signupImg from '../../../public/images/provider_signup.png'
 

@@ -10,8 +10,9 @@ export interface IServices{
 }
 
 interface SubType {
-  isAdded: boolean;
+  isAdded: boolean|undefined;
   type: string;
+  priceRange?:string|undefined;
   _id: string;
 }
 
@@ -20,7 +21,7 @@ interface SubType {
   image: string;
   isAdded: boolean;
   subType: SubType[];
-  typeid: string;
+  typeid: string ;
   typename: string;
 }
 
@@ -42,5 +43,20 @@ export  interface IServiceData{
   serviceId:string,
   category:string,
   providerId:string,
+  vehicleType:string
+}
+
+export interface IAddSubServiceData{
+  providerId:string,
+  serviceId:string,
+  newSubType:{type:string,startingPrice:number,vehicleType:string}
+}
+
+// remove subService
+
+export interface IRemoveSubServiceData{
+  providerId:string,
+  serviceId:string,
+  subServiceId:string,
   vehicleType:string
 }
