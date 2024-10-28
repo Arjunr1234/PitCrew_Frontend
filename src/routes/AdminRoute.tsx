@@ -23,36 +23,36 @@ import axios from "axios";
           children:ReactNode;
  }
 
-  const ProtectedRoute = ({children}: ProtectedRouteProps) => {
+  // const ProtectedRoute = ({children}: ProtectedRouteProps) => {
          
-             const navigate = useNavigate();
-             useEffect(() => {
-                axiosInstance.get(URL + '/api/admin/auth/verify-token').then((response) => {
-                    const adminData = JSON.parse(localStorage.getItem("isAdmin") || '{}');
-                    console.log("myr",adminData);
+  //            const navigate = useNavigate();
+  //            useEffect(() => {
+  //               axiosInstance.get(URL + '/api/admin/auth/verify-token').then((response) => {
+  //                   const adminData = JSON.parse(localStorage.getItem("isAdmin") || '{}');
+  //                   console.log("myr",adminData);
                     
-                    if(!adminData.isAdmin){
-                      toast.error("Session is expired, please login");
-                      navigate("/admin/login", {replace:true})
-                    }
-                }).catch((error) => {
-                     console.log("pri",error);
+  //                   if(!adminData.isAdmin){
+  //                     toast.error("Session is expired, please login");
+  //                     navigate("/admin/login", {replace:true})
+  //                   }
+  //               }).catch((error) => {
+  //                    console.log("pri",error);
 
-                     if(axios.isAxiosError(error)){
-                        const statusCode = error.response?.status;
-                        if(statusCode === 403){
-                          localStorage.removeItem("isAdmin");
-                          toast.error("Session expired please login!!");
-                          navigate('/admin/login', {replace:true})
-                        }
+  //                    if(axios.isAxiosError(error)){
+  //                       const statusCode = error.response?.status;
+  //                       if(statusCode === 403){
+  //                         localStorage.removeItem("isAdmin");
+  //                         toast.error("Session expired please login!!");
+  //                         navigate('/admin/login', {replace:true})
+  //                       }
                         
-                     }else{
-                      console.log("Something went wrong: ", error)
-                     }
-                })
-             })
-              return<>{children}</>
-  }
+  //                    }else{
+  //                     console.log("Something went wrong: ", error)
+  //                    }
+  //               })
+  //            })
+  //             return<>{children}</>
+  // }
 
 
 
@@ -63,7 +63,7 @@ function AdminRoute() {
 
         <Route path="login" element={<AdminLogin />} />
         <Route element={<AdminLayout />}>
-            <Route path="dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+            <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="profile" element={<AdminProfile/>}/>
             <Route path="users" element={<Users/>}/>
             <Route path="providers" element={<Providers/>}>

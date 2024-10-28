@@ -4,6 +4,7 @@ import { axiosInstance } from "../../api/common";
 import { URL } from "../../utils/api";
 import axios from "axios";
 import { toast } from "sonner";
+import Swal from "sweetalert2";
 
 function Users() {
   const [users, setUsers] = useState<Array<any>>([]);
@@ -60,10 +61,28 @@ function Users() {
          
      })
 
+    
+
      
         
 
   };
+
+  const confirmBlockAndUnBlockUser = (id:string, status:boolean) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `Do you want to ${status?"Block":"Unblock"}?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Confirm',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleBlockUnblock(id,status); 
+      }
+    });
+   }
 
   return (
     <div className="container mx-auto p-4">
@@ -104,7 +123,7 @@ function Users() {
                 </td>
                 <td className="py-2 text-center px-4">
                   <button
-                    onClick={() => handleBlockUnblock(user.id, !user.blocked)}
+                    onClick={() => confirmBlockAndUnBlockUser(user.id, !user.blocked)}
                     className={`w-full sm:w-24 px-4 py-2 rounded text-center ${
                       user.blocked
                         ? "bg-green-500 hover:bg-green-600 text-white"

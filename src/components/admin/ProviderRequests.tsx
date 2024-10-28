@@ -2,10 +2,14 @@ import { useLayoutEffect, useState } from "react"
 import { axiosInstance } from "../../api/common";
 import { URL } from "../../utils/api";
 import Swal from "sweetalert2";
+import { toast } from "sonner";
+
 
 function ProviderRequests() {
 
+
      const [pendingProviders, setPendingProviders] = useState<Array<any>>([]);
+    // const providerEmail = useSelector((state:any) => state.provider.providerInfo.email)
 
      useLayoutEffect(() => {
         axiosInstance.get(URL + '/api/admin/providers/get-pending-providers').then((response) => {
@@ -33,6 +37,24 @@ function ProviderRequests() {
           console.error('Error accepting provider:', error);  
         });
     };
+
+    const confirmReasonRejection = async(id:string, providerEmail:string) => {
+      const { value: text } = await Swal.fire({
+        input: "textarea",
+        inputLabel: "Reason for Rejection",
+        inputPlaceholder: "Type here...",
+        inputAttributes: {
+          "aria-label": "Type your message here"
+        },
+        showCancelButton: true
+      });
+      if (text) {
+          console.log("Entered into text: ", text)
+          handleReject(id, text, providerEmail)
+      }else{
+        toast.error("Please enter the reason for rejection!!")
+      }
+    }
      
      const confirmAccept = (id:string) => {
       Swal.fire({
@@ -59,12 +81,13 @@ function ProviderRequests() {
      }
     
 
-     const handleReject = (id:string) => {
-       axiosInstance.patch(URL + '/api/admin/providers/provider-accept-reject', { id, state: null })
+     const handleReject = (id:string, reason:string, providerEmail:string) => {
+       axiosInstance.patch(URL + '/api/admin/providers/provider-accept-reject', { id, state: null,reason,providerEmail })
        .then((response) => {
            if(response.data.success){
               const updatedPendingProviders = pendingProviders.filter((provider) => provider._id !== id)
-              setPendingProviders(updatedPendingProviders)
+              setPendingProviders(updatedPendingProviders);
+              toast.success("Rejected Successfully!!");
            }
        }).catch((error) => {
          console.error("Errorn in Rejecting Provider: ", error)
@@ -109,7 +132,7 @@ function ProviderRequests() {
              </td>
              <td className="py-2 text-center px-4">
                <button
-                 onClick={() => handleReject(provider._id)}
+                 onClick={() => confirmReasonRejection(provider._id, provider.email)}
                  className="w-full sm:w-24 px-4 py-2 rounded text-center bg-red-500 hover:bg-red-600 text-white" >
                  Reject
                </button>

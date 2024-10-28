@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useState  } from "react"
 import { toast } from "sonner";
-import { addGenralRoadServices, addSubService, getAllServices, removeSubService } from "../../services/provider/providerService";
+import { addGenralRoadServices, addSubService, getAllServices, removeService, removeSubService } from "../../services/provider/providerService";
 import { IAddSubServiceData, IGeneralService, IRoadService, IServiceData, IServices } from "../../interface/provider/iProvider";
 import { useSelector } from "react-redux";
 import { FiEdit } from "react-icons/fi";
@@ -283,6 +283,46 @@ function TwoWheelerAddService() {
         }
 
         const handleRemoveService = async (serviceId:string,category:string) => {
+                     try {
+                          const response = await removeService(providerId, serviceId, "2")
+
+                           if(response.success){
+                                if(category=== 'road'){
+
+                                   const updatedRoadService = roadServices.map((service) => {
+                                            if(service.typeid === serviceId){
+                                                return {
+                                                   ...service,
+                                                   isAdded:false
+                                                }
+                                            }
+                                            return service
+                                   })
+                                   setRoadServices(updatedRoadService)
+
+                                }else if(category === 'general'){
+
+                                     const updatedGeneralService = generalServices.map((service) => {
+                                            if(service.typeid === serviceId){
+                                                return {
+                                                   ...service,
+                                                   isAdded:false,
+                                                }
+                                            }
+                                            return service
+                                     })
+                                     setGeneralServices(updatedGeneralService)
+  
+                                }
+                                toast.success("Successfully removed!!")
+                           }
+                      
+                     } catch (error) {
+                         console.log("Error in  handleRemoveService: ",error);
+                         throw error
+                      
+                     }
+              
             
         }
 
@@ -298,11 +338,7 @@ function TwoWheelerAddService() {
             confirmButtonText: 'Remove',
           }).then((result) => {
             if (result.isConfirmed) {
-              if(category === 'road'){
-                
-              }
-              else if(category === 'general'){
-                              }
+                handleRemoveService(serviceId,category)
              
             }
           });          

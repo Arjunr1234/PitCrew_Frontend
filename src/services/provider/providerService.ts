@@ -122,5 +122,18 @@ export const removeSubService = async(data: IRemoveSubServiceData) => {
   }
 };
 
+export const removeService = async (providerId:string, serviceId:string, vehicleType:string) => {
+             try {
+
+              const response = await axiosInstance.delete(URL + `/api/provider/add-service/remove-service?providerId=${providerId}&serviceId=${serviceId}&vehicleType=${vehicleType}`);
+              return response.data
+              
+             } catch (error) {
+                console.log("Error in removeService: ",error);
+                throw error
+              
+             }
+}
+
 
 

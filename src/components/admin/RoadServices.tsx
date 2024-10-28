@@ -179,7 +179,7 @@ function RoadServices() {
                 <div key={service._id} className="bg-white shadow-lg rounded-lg p-4 flex items-center border border-gray-400 relative">
                   <img src={service.imageUrl} alt={service.serviceTypes} className="w-16 h-16 object-cover rounded-lg" />
                   <div className="flex-grow text-center">
-                    <h1>{service.serviceTypes}</h1>
+                    <h1 className="text-lg font-semibold">{service.serviceTypes}</h1>
                   </div> 
                   {dropdownOpen === service._id && (
                     <div className="absolute right-0 top-8 bg-white border border-gray-500 shadow-lg rounded-lg p-2 dropdown-menu">
