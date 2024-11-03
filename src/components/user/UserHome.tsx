@@ -2,10 +2,12 @@ import { useEffect, useRef } from 'react';
 import showImage from '../../images/userHome_img1.png';
 import tyreRollingImg from '../../images/tyre_rolling_img.png';
 import { FaCar, FaTools, FaHome, FaCogs, FaShieldAlt, FaSatelliteDish } from 'react-icons/fa'; 
+import { useNavigate } from 'react-router-dom';
 
 function UserHome() {
   const leftSectionRef = useRef<HTMLDivElement | null>(null);
   const rightSectionRef = useRef<HTMLDivElement | null>(null);
+  const navigate = useNavigate()
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -45,17 +47,18 @@ function UserHome() {
       <div className="bg-gradient-to-b from-customBlue mt-3 to-gray-100 py-10 rounded-t-3xl mx-3">
         <div className="container mx-auto flex flex-col lg:flex-row justify-between items-center">
           {/* Left Section: Text and Button */}
-          <div className="w-full lg:w-1/2 px-6 flex flex-col gap-5 text-center lg:text-left">
+          <div className="animate-fade-right w-full lg:w-1/2 px-6 flex flex-col gap-5 text-center lg:text-left">
             <h1 className="text-2xl font-bold text-gray-800 mb-2 lg:mb-4">24 x 7 on-spot</h1>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold">Bike and Car Repair Services</h1>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold animate-fade-right">Bike and Car Repair Services</h1>
             <p className="text-gray-600 mb-6">We offer reliable bike and car services anytime, anywhere.</p>
-            <button className="bg-gray-500 text-white px-6 py-2 self-center lg:self-start rounded-3xl hover:bg-blue-600">
+            <button className="bg-gray-500 text-white px-6 py-2 self-center lg:self-start rounded-3xl hover:bg-blue-600"
+            onClick={() => {navigate('/services')}}>
               Book Now
             </button>
           </div>
 
           {/* Right Section: Image */}
-          <div className="w-full lg:w-1/2 px-6 mt-8 lg:mt-0">
+          <div className="animate-fade-left animate-ease-out w-full lg:w-1/2 px-6 mt-8 lg:mt-0">
             <img src={showImage} alt="Bike and Car Service" className="w-full h-auto rounded" />
           </div>
         </div>

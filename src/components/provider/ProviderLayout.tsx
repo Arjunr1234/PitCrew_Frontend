@@ -18,6 +18,8 @@ function ProviderLayout() {
   const { providerInfo, message, success } = useSelector((state: any) => state.provider);
 
   useEffect(() => {
+    console.log("//////////////////////",providerInfo);
+    
       if(!providerInfo){
          navigate('/provider/login', {replace:true});
          toast.success(message)
@@ -27,6 +29,8 @@ function ProviderLayout() {
 
   const handleLogout = async () => {
      const logoutResponse = await dispatch(providerLogoutThunk()).unwrap()
+     if(logoutResponse.success){
+     }
      console.log("This is the logoutResponse: ",logoutResponse)
   };
 

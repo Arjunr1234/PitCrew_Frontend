@@ -1,13 +1,12 @@
-import axios from "axios";
+
 import { URL } from "../../utils/api";
 import { LoginData, SignupData } from "../../interface/provider/iProviderAuth";
-import { SigninData } from "../../interface/user/iuserAuth";
 import { axiosInstance } from "../../api/common";
 
 export const providerLoginApi = async (logData: LoginData) => {
   try {
     
-    const response = await axios.post(URL + '/api/provider/auth/login', logData);
+    const response = await axiosInstance.post(URL + '/api/provider/auth/login', logData);
     
     return response.data;
 
@@ -20,7 +19,7 @@ export const providerLoginApi = async (logData: LoginData) => {
 
 export const providerSignupApi = async (signupData: SignupData) => {
     try {
-       const response = await axios.post(URL + '/api/provider/auth/create-provider', signupData);
+       const response = await axiosInstance.post(URL + '/api/provider/auth/create-provider', signupData);
        return response.data
       
     } catch (error) {

@@ -7,6 +7,7 @@ import { useAppDispatch } from '../../interface/hooks';
 import { toast } from 'sonner'; // Assuming you're using this for toast notifications
 import logo from '../../../public/images/logo.jpg';
 import { logoutThunk, resetSuccessAndMessage } from '../../redux/slice/userAuthSlice';
+import Swal from 'sweetalert2';
 
 function Navbar() {
   const navigate = useNavigate();
@@ -33,26 +34,45 @@ function Navbar() {
     }
   };
 
+  const confirmLogout = () => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will be logged out of your account!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, log me out!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleLogout();
+      }
+    });
+  };
+
 
   return (
-    <nav className="bg-white p-4 rounded ">
-      <div className="container mx-auto flex justify-between items-center">
+    <nav className=" p-4 rounded border-b-2 bg-customBlue">
+      <div className="container mx-auto flex justify-between items-center ">
         
         {/* Left Section: Logo and Site Name */}
-        <div className="flex items-center">
+        <div className=" animate-pulse flex items-center">
           <img src={logo} alt="Site Logo" className="h-8 w-8 mr-2" />
           <span className="text-black text-2xl font-bold">PitCrew</span>
         </div>
 
         {/* Right Section: Buttons (hidden on mobile) */}
         <div className="hidden md:flex space-x-5">
-          <button className="text-black font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white">
+          <button className="text-black font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white"
+          onClick={() => navigate('/')}>
             Home
           </button>
-          <button className="text-black font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white">
+          <button className="text-black font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white"
+          onClick={() => navigate('/services')}>
             Service
           </button>
-          <button className="text-black font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white">
+          <button className="text-black font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white"
+          >
             About
           </button>
           <button className="text-black font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white">
@@ -64,7 +84,7 @@ function Navbar() {
 
           
           {userInfo ? (
-            <button className="text-white bg-gray-700 px-3 py-2 rounded-full" onClick={handleLogout}>
+            <button className="text-white bg-gray-700 px-3 py-2 rounded-full" onClick={confirmLogout}>
               Logout
             </button>
           ) : (

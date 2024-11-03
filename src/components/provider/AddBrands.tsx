@@ -12,7 +12,7 @@ export interface IBrand{
 function AddBrands() {
   const [BrandData, setBrandData] = useState<IBrand[]>([]); 
   const [searchQuery, setSearchQuery] = useState(""); 
-  const providerId = useSelector((state: any) => state.provider.providerInfo.id);
+  const providerId = useSelector((state: any) => state.provider.providerInfo?.id);
 
   useEffect(() => {
     const fetchBrands = async () => {

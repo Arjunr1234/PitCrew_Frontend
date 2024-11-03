@@ -21,7 +21,7 @@ function TwoWheelerAddService() {
 
          const [generalServices, setGeneralServices] = useState<IGeneralService[] | []>([]);
          const [roadServices, setRoadServices] = useState<IRoadService[] | []>([]);
-         const providerId = useSelector((state:any) => state.provider.providerInfo.id);
+         const providerId = useSelector((state:any) => state.provider.providerInfo?.id);
          const [showModal, setShowModal] = useState<boolean>(false);
          const [selectedService, setSelectedService] = useState<IGeneralService | null>(null);
          const [startingPrice, setStartingPrice] = useState<{[key:string]:number}>({});
@@ -237,7 +237,7 @@ function TwoWheelerAddService() {
                                           const { priceRange, ...updatedSubService} = subService
                                             return {
                                               ...updatedSubService,
-                                              isAdded:false
+                                              isAdded:false,
                                             }
                                         }
                                         return subService
@@ -255,20 +255,23 @@ function TwoWheelerAddService() {
                     subType: selectedService?.subType?.map((subService) => {
                       if (subService._id === subServiceId) {
                         const {priceRange, ...updatedSubService} = subService
+                        console.log("kkkk",subService,subServiceId);
                         
                         return {
                           ...updatedSubService,
                           isAdded: false,
+                          priceRange:undefined
                            
                         };
                       }
                       return subService;
                     }) ?? [], 
                   };
-                  // setStartingPrice((prevStartingPrice) => {
-                  //   const { [subServiceId]: _, ...updatedStartingPrice } = prevStartingPrice;
-                  //   return updatedStartingPrice;
-                  // });
+                  setStartingPrice((prevStartingPrice) => {
+                    const newStarting = {...prevStartingPrice};
+                    delete newStarting[subServiceId]
+                    return newStarting;
+                  });
                   setGeneralServices(updateGeneralService);
                   setSelectedService(updatedSelectedService)
                   toast.success("Successfully Removed")
@@ -364,7 +367,9 @@ function TwoWheelerAddService() {
 
         }
 
-        
+       useEffect(() => {
+        console.log("selectedService: ",selectedService )
+       },[selectedService]) 
         
   return (
     <div>
@@ -378,7 +383,7 @@ function TwoWheelerAddService() {
         <div className="flex flex-col gap-4">
           <h1 className="text-center text-xl font-semibold my-5">General services</h1>
           <div className="bg-gray-100 rounded-md">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="animate-fade animate-ease-out grid grid-cols-1 md:grid-cols-3 gap-4">
               {generalServices.map((service) => (
                 <div key={service.typeid} className="bg-white shadow-lg rounded-lg p-4 flex items-center border border-gray-400 relative">
                   <img src={service.image} alt={service.typename} className="w-16 h-16 object-cover rounded-lg" />
@@ -430,7 +435,7 @@ function TwoWheelerAddService() {
           <div className="bg-gray-100 rounded-md" >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {roadServices.map((service) => (
-                <div key={service.typeid} className="bg-white shadow-lg rounded-lg p-4 flex items-center border border-gray-400 relative">
+                <div key={service.typeid} className="animate-fade animate-ease-out bg-white shadow-lg rounded-lg p-4 flex items-center border border-gray-400 relative">
                   <img src={service.image} alt={service.typename} className="w-16 h-16 object-cover rounded-lg" />
                   <div className="flex-grow text-center">
                     <h2 className="text-lg font-semibold">{service.typename}</h2>
@@ -474,36 +479,38 @@ function TwoWheelerAddService() {
             </h2>
 
             <div className="space-y-4 mb-4">
-              {selectedService.subType.map((subItem) => (
+              {selectedService.subType.map((subItem) => {
+                  console.log("Price",subItem, startingPrice._id);
+               return (
                 <div key={subItem._id} className="flex items-center justify-between border-b border-gray-300 py-3">
-                  <span className="flex-shrink-0 text-lg font-semibold text-gray-700 w-1/3">
-                    {subItem.type}
-                  </span>
+                <span className="flex-shrink-0 text-lg font-semibold text-gray-700 w-1/3">
+                  {subItem.type}
+                </span>
+                <input
+                  type="number"
+                  value={startingPrice[subItem._id] || subItem.priceRange || ""} 
+                  onChange={(e) => handleStartingPriceChange(subItem._id, Number(e.target.value))}
+                  placeholder="Starting Price.."
+                  className="w-52 p-2 border border-gray-300 rounded text-center focus:outline-none focus:border-blue-500"
+                />
 
-                  <input
-                    type="number"
-                    value={subItem.priceRange || startingPrice._id} 
-                    onChange={(e) => handleStartingPriceChange(subItem._id, Number(e.target.value))}
-                    placeholder="Starting Price.."
-                    className="w-52 p-2 border border-gray-300 rounded text-center focus:outline-none focus:border-blue-500"
-                  />
-
-                  <div className="flex items-center space-x-3">
-                    {subItem.isAdded ? (
-                      <>
-                        <FiEdit className="text-blue-500 text-xl cursor-pointer hover:scale-110 transition transform" />
-                        <FaTrashAlt className="text-red-500 text-xl cursor-pointer hover:scale-110 transition transform" 
-                        onClick={() => confirmRemoveSubService(subItem._id, selectedService.typeid, subItem.type)}/>
-                      </>
-                    ) : (
-                      <IoMdAddCircleOutline
-                        className="text-green-500 text-2xl cursor-pointer hover:scale-110 transition transform"
-                        onClick={() => handleAddStartingPrice(subItem._id, selectedService.typeid)}
-                      />
-                    )}
-                  </div>
+                <div className="flex items-center space-x-3">
+                  {subItem.isAdded ? (
+                    <>
+                      {/* <FiEdit className="text-blue-500 text-xl cursor-pointer hover:scale-110 transition transform" /> */}
+                      <FaTrashAlt className="text-red-500 text-xl cursor-pointer hover:scale-110 transition transform" 
+                      onClick={() => confirmRemoveSubService(subItem._id, selectedService.typeid, subItem.type)}/>
+                    </>
+                  ) : (
+                    <IoMdAddCircleOutline
+                      className="text-green-500 text-2xl cursor-pointer hover:scale-110 transition transform"
+                      onClick={() => handleAddStartingPrice(subItem._id, selectedService.typeid)}
+                    />
+                  )}
                 </div>
-              ))}
+              </div>
+               )
+              })}
             </div>
           </div>
         </div>
