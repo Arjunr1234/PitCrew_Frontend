@@ -14,9 +14,10 @@ function AddVehicleDetailsComp() {
   const [vehicleBrand, setVehicleBrand] = useState<{ brandName: string; id: string } | null>(null);
   const [vehicleModel, setVehicleModel] = useState('');
   const [vehicleType, setVehicleType] = useState('');
-  const [kilometers, setKilometers] = useState<number>(0);
+  const [kilometers, setKilometers] = useState<number | null>(null);
   const [fuelType, setFuelType] = useState('');
   const [brandInput, setBrandInput] = useState('');
+  const [intialBrand, setInitialBrand] = useState<{ brandName: string; id: string }[] | []>([])
   const [filteredBrands, setFilteredBrands] = useState<{ brandName: string; id: string }[] | []>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [searchInput, setSearchInput] = useState('');
@@ -32,7 +33,12 @@ function AddVehicleDetailsComp() {
 
   const mapRef = useRef<Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null); 
-  const serviceId = locationUse.state?.serviceId
+  const {serviceId, serviceName} = locationUse.state
+  
+
+  useEffect(() =>{
+    console.log("This is serviceID and serviceName: ",serviceId, serviceName)
+  },[])
 
   const [center, setCenter] = useState<[number, number]>(INITIAL_CENTER);
   const [zoom, setZoom] = useState<number>(INITIAL_ZOOM);
@@ -74,6 +80,7 @@ function AddVehicleDetailsComp() {
   
       
       if (response.success && response.brandData) {
+        setInitialBrand(response.brandData)
         setFilteredBrands(response.brandData);
         
       } else {
@@ -191,7 +198,7 @@ function AddVehicleDetailsComp() {
     setVehicleBrand(null);
 
     if (input) {
-      const matches = filteredBrands.filter((brand) =>
+      const matches = intialBrand.filter((brand) =>
         brand.brandName.toLowerCase().startsWith(input.toLowerCase())
       );
       setFilteredBrands(matches);
@@ -203,7 +210,7 @@ function AddVehicleDetailsComp() {
   }
 
   const handleBrandSelect = (brandName: string, id: string) => {
-    console.log("Selected brand/////////////////////////////:", brandName, "ID:", id);
+    
     setVehicleBrand({ brandName, id });
     setBrandInput(brandName);
     setTimeout(() => {
@@ -223,12 +230,16 @@ function AddVehicleDetailsComp() {
         toast.error("Please add you location")
         return
        }
+       if(!kilometers){
+        toast.error("Please add Kilometers")
+        return
+       }
 
       validationInputData(vehicleNumber, vehicleModel, kilometers, vehicleType, fuelType, vehicleBrand,location)
-      const data = {serviceId, vehicleNumber, vehicleBrand, vehicleModel, kilometers, vehicleType,fuelType,location,  };
+      const data = {serviceId,serviceName, vehicleNumber, vehicleBrand, vehicleModel, kilometers, vehicleType,fuelType,location,  };
       navigate('/providers-shops', { state:{data}})
       
-      //const response = await vehicleDetailsService(data);
+      
 
     } catch (error) {
       console.log(error);
@@ -256,14 +267,16 @@ function AddVehicleDetailsComp() {
     }
     if (!vehicleBrand) {
       toast.error("Please Select Vehicle Brand!!")
+      return
     }
     if(!fuelType){
       toast.error("Please add Fuel Type!!")
       return
     }
-    console.log("location: ", location)
+    
     if(!location){
       toast.error("Please add Location!!")
+      return
     }
 
   }

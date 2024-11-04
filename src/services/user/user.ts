@@ -55,3 +55,15 @@ export const fetchBrandService = async() => {
           throw error
       }
 }
+
+export const getProviderDetailsWithSubService = async(providerId:string, vehicleType:string, serviceId:string) => {
+    try {
+        const data = {providerId, vehicleType, serviceId}
+        const response = await axiosInstance.post(URL + `/api/user/services/provider-serivce-view`, data);
+        return response.data
+      
+    } catch (error) {
+       console.log("Error in getProviderDetailsWithSubService: ", error)
+       throw error
+    }
+}

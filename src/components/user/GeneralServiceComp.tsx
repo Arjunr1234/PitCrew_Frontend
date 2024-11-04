@@ -61,7 +61,7 @@ function GeneralServiceComp() {
                   onClick={() => {
                      console.log("This is that serviceID: ", service.id);
                      
-                     navigate('/add-vehicle-details',{state:{serviceId:service.id}})
+                     navigate('/add-vehicle-details',{state:{serviceId:service.id, serviceName:service.serviceType}})
                   }}
                   key={service.id} 
                   className="transition-transform transform hover:scale-105 cursor-pointer animate-fade-up bg-white mx-6 border rounded-lg p-4 flex items-center hover:bg-gray-300 relative"

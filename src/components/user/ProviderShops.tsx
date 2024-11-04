@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { vehicleDetailsService } from "../../services/user/user";
 import { IworkshopDetails } from "../../interface/user/user";
@@ -7,7 +7,11 @@ function ProviderShopsComp() {
   const location = useLocation();
   const VehicleDetails = location.state?.data;
   const [providerDetails, setProviderDetails] = useState<IworkshopDetails[]>([]);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const navigate = useNavigate()
+  const [loading, setLoading] = useState(true); 
+
+ 
+  
 
   useEffect(() => {
     fetchWorkshopDetails();
@@ -31,8 +35,8 @@ function ProviderShopsComp() {
   return (
     <div className="h-screen bg-gray-200 flex justify-center">
     {loading ? (
-      <div className="flex items-center p-60 justify-center">
-        <p className="text-3xl animate-bounce font-semibold text-madBlack">
+      <div className="flex items-center p-80 justify-center">
+        <p className="text-4xl animate-bounce font-semibold text-madBlack">
           Searching for workshops...
         </p>
       </div>
@@ -65,7 +69,10 @@ function ProviderShopsComp() {
               </p>
   
               <div className="mt-4 flex justify-center">
-                <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+                <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                onClick={() => {
+                  navigate('/provider-service-view', {state:{vehicleDetails:VehicleDetails,providerId:provider.id}})
+                }}>
                   View
                 </button>
               </div>
