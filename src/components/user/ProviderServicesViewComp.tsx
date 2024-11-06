@@ -96,7 +96,7 @@ function ProviderServicesViewComp() {
       <div className="flex flex-col  md:flex-row bg-darkBlue h-full md:h-4/5 p-4 md:p-2 gap-4 md:gap-2">
         {/* Left section */}
         <div className="flex flex-col w-full md:w-1/2 h-64 md:h-full animate-flip-up">
-          <div className="flex flex-col m-6 py-5 ml-10 mt-16 text-white space-y-4">
+          <div className="flex flex-col font-montserrat m-6 py-5 ml-10 mt-16 text-white space-y-4">
             <h1 className="text-5xl font-bold">{vehicleDetails.serviceName}</h1>
             <h1 className="text-5xl my-10">Services</h1>
     
@@ -133,7 +133,7 @@ function ProviderServicesViewComp() {
 
         {/* Right section */}
         <div className="flex text-white flex-col justify-center items-center gap-10 w-full md:w-1/2 h-full animate-flip-up">
-          <h1 className="text-4xl md:text-6xl font-semibold text-center">
+          <h1 className="text-4xl md:text-6xl font-semibold font-atma text-center">
             {providerDetails?.providerDetails.workshopName || "Workshop Name"}
           </h1>
           <div className="p-4 md:p-10 h-40 md:h-80 w-40 md:w-80 rounded-full bg-black overflow-hidden">

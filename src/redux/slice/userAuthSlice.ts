@@ -80,6 +80,7 @@ const userSlice = createSlice({
              reducers:{
                reset:(state)=>{
                 state.userInfo = null,
+                state.success = null
                 state.isLoggedIn = false,
                 state.isLoading = false,
                 state.error = null;

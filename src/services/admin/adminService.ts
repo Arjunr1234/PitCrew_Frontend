@@ -1,5 +1,7 @@
 import { URL } from "../../utils/api";
 import { axiosInstance } from "../../api/common";
+import store from "../../redux/store";
+
 
 
 
@@ -10,6 +12,7 @@ export const getAllBrands = async() => {
          return response.data
         
      } catch (error) {
+        // store
           console.error("Error in fetching Brand: ", error)
           throw error
      }

@@ -81,14 +81,25 @@ function RoadServices() {
           }
 
           const handleAddService = async() => {
-                if(!serviceName){
-                  toast.error("Please provide a service name")
-                  return 
-                }
-                if(!selectFile){
-                   toast.error("Please add image")
-                   return
-                }
+            if (!serviceName || serviceName.trim() === '') {
+              toast.error("Please provide a valid service name");
+              return;
+            }
+            
+            
+          
+            
+            if (!selectFile) {
+              toast.error("Please select a file");
+              return;
+            }
+          
+            
+            const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!validImageTypes.includes(selectFile.type)) {
+              toast.error("Please upload an image (JPEG, PNG, GIF)");
+              return;
+            }
 
                 const formData = new FormData();
                 formData.append("serviceType", serviceName);

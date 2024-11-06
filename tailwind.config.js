@@ -22,6 +22,10 @@ export default {
         'dark-yellow': '0 4px 6px rgba(255, 215, 0, 0.5)', // Example RGBA for dark yellow
         'dark-yellow-lg': '0 10px 15px rgba(255, 215, 0, 0.7)', // Larger
       },
+      fontFamily: {
+        atma: ['Atma', 'sans-serif'],
+        montserrat: ['Montserrat', 'sans-serif'],
+      },
     },
   },
   plugins: [

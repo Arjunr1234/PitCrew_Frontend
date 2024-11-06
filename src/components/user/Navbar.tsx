@@ -1,5 +1,5 @@
 import {  useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { FaBars, FaTimes } from 'react-icons/fa'; // Icons for mobile menu
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
@@ -12,9 +12,10 @@ import Swal from 'sweetalert2';
 function Navbar() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Select user state from Redux to check if the user is logged in
+  
   const { userInfo } = useSelector((state: RootState) => state.user);
   
 
@@ -50,35 +51,38 @@ function Navbar() {
     });
   };
 
+  const isProviderServiceView = location.pathname.includes('/provider-service-view');
+  const navBarClass = isProviderServiceView ? 'bg-darkBlue' : 'bg-customBlue'
+  const navBartextColor = isProviderServiceView ? 'text-white' : 'text-black'
 
   return (
-    <nav className=" p-4 rounded border-b-2 bg-customBlue">
+    <nav className={` p-4 rounded  ${navBarClass}`}>
       <div className="container mx-auto flex justify-between items-center ">
         
         {/* Left Section: Logo and Site Name */}
         <div className=" animate-pulse flex items-center">
           <img src={logo} alt="Site Logo" className="h-8 w-8 mr-2" />
-          <span className="text-black text-2xl font-bold">PitCrew</span>
+          <span className="text-black text-4xl font-bold">PitCrew</span>
         </div>
 
         {/* Right Section: Buttons (hidden on mobile) */}
-        <div className="hidden md:flex space-x-5">
-          <button className="text-black font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white"
+        <div className={`hidden md:flex text-xl space-x-5 ${navBartextColor}`}>
+          <button className=" font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white"
           onClick={() => navigate('/')}>
             Home
           </button>
-          <button className="text-black font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white"
+          <button className=" font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white"
           onClick={() => navigate('/services')}>
             Service
           </button>
-          <button className="text-black font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white"
+          <button className=" font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white"
           >
             About
           </button>
-          <button className="text-black font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white">
+          <button className=" font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white">
             Contact
           </button>
-          <button className="text-black font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white" onClick={() => navigate('/provider/register')}>
+          <button className=" font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white" onClick={() => navigate('/provider/register')}>
             Add Workshop
           </button>
 

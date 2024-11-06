@@ -22,6 +22,7 @@ const providerSlice = createSlice({
     reset: (state) => {
       state.providerInfo = null;
       state.isLoading = false;
+      state.success = null;
       state.error = false;
     },
     resetMessage: (state) => {

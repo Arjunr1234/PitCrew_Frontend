@@ -20,6 +20,7 @@ function GetAllProvider() {
     axiosInstance
       .patch(URL + '/api/admin/providers/provider-block-unblock', { id, state: status })
       .then((response) => {
+        console.log("This is the status: ", response)
         if (response.data.success) {
           const updatedProviders = providers.map((provider) => {
             if (provider._id === id) {
@@ -46,6 +47,7 @@ function GetAllProvider() {
       confirmButtonText: 'Confirm',
     }).then((result) => {
       if (result.isConfirmed) {
+        console.log("This isthe id and status respective: ", id, status)
         handleBlockUnblock(id,status); 
       }
     });

@@ -36,9 +36,7 @@ function AddVehicleDetailsComp() {
   const {serviceId, serviceName} = locationUse.state
   
 
-  useEffect(() =>{
-    console.log("This is serviceID and serviceName: ",serviceId, serviceName)
-  },[])
+  
 
   const [center, setCenter] = useState<[number, number]>(INITIAL_CENTER);
   const [zoom, setZoom] = useState<number>(INITIAL_ZOOM);
@@ -74,26 +72,29 @@ function AddVehicleDetailsComp() {
     };
   }, [accessToken, location]);
 
-  const fetchVehicleBrand = async () => {
-    try {
-      const response = await fetchBrandService();
   
-      
-      if (response.success && response.brandData) {
-        setInitialBrand(response.brandData)
-        setFilteredBrands(response.brandData);
-        
-      } else {
-        console.log("Brand data is missing from the response:", response);
-      }
-      
-    } catch (error) {
-      console.log("Error in fetchingVehicleBrand: ", error);
-      throw error;
-    }
-  };
   
   useEffect(() => {
+
+    const fetchVehicleBrand = async () => {
+      try {
+        const response = await fetchBrandService();
+    
+        
+        if (response.success && response.brandData) {
+          setInitialBrand(response.brandData)
+          setFilteredBrands(response.brandData);
+          
+        } else {
+          console.log("Brand data is missing from the response:", response);
+        }
+        
+      } catch (error) {
+        console.log("Error in fetchingVehicleBrand: ", error);
+        throw error;
+      }
+    };
+    
     fetchVehicleBrand();
   }, []);
   
@@ -161,9 +162,7 @@ function AddVehicleDetailsComp() {
     setLocation(undefined); 
   }
 
-  useEffect(() => {
-     fetchVehicleBrand(); 
-  },[]);
+ 
 
  
 
@@ -258,7 +257,7 @@ function AddVehicleDetailsComp() {
       return
     }
     if (!vehicleType) {
-      toast.error('Please add vehicle type')
+      toast.error('Please add vehicle type');
       return
     }
     if (!kilometers) {

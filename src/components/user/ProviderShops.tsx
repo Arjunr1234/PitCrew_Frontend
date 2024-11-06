@@ -8,7 +8,7 @@ function ProviderShopsComp() {
   const VehicleDetails = location.state?.data;
   const [providerDetails, setProviderDetails] = useState<IworkshopDetails[]>([]);
   const navigate = useNavigate()
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true)
 
  
   
@@ -28,7 +28,7 @@ function ProviderShopsComp() {
       console.log("Error in fetching vehicle Details: ", error);
       throw error;
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 

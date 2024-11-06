@@ -49,14 +49,27 @@ function GeneralServices() {
     }
   };
 
-  // Add new service logic
+  
   const handleAddService = async () => {
-    if (!serviceName) {
-      toast.error("Please provide a service name");
+
+    
+    if (!serviceName || serviceName.trim() === '') {
+      toast.error("Please provide a valid service name");
       return;
     }
+    
+    
+  
+    
     if (!selectedFile) {
       toast.error("Please select a file");
+      return;
+    }
+  
+    
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    if (!validImageTypes.includes(selectedFile.type)) {
+      toast.error("Please upload an image (JPEG, PNG, GIF)");
       return;
     }
 
@@ -77,8 +90,9 @@ function GeneralServices() {
         const updatedServices = await getAllGeneralServices();
         setGeneralServices(updatedServices.services);
       }
-    } catch (error) {
-      toast.error("Error in adding service");
+    } catch (error:any) {
+      toast.error(error.response.data.message);
+      setServiceName("");
     }finally{
        setLoading(false)
     }

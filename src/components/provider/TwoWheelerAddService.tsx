@@ -15,9 +15,7 @@ import { BsThreeDots } from "react-icons/bs";
 
 
 
-function TwoWheelerAddService() {
-
- 
+function TwoWheelerAddService() { 
 
          const [generalServices, setGeneralServices] = useState<IGeneralService[] | []>([]);
          const [roadServices, setRoadServices] = useState<IRoadService[] | []>([]);
@@ -40,7 +38,7 @@ function TwoWheelerAddService() {
                 setRoadServices(roadServices);
               }
              } catch (error) {
-               toast.error("Failed to fetch the data");
+               console.log("Error in fetchData: ", error);
              }
           };
         

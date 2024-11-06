@@ -12,47 +12,12 @@ import Brands from "../components/admin/Brands";
 import GeneralServices from "../components/admin/GeneralServices";
 import RoadServices from "../components/admin/RoadServices";
 import AdminServices from "../pages/admin/AdminServices";
-import { Children, ReactNode, useEffect } from "react";
-import { axiosInstance } from "../api/common";
-import { URL } from "../utils/api";
-import { toast } from "sonner";
-import axios from "axios";
+import ProtectedRoute from "../utils/protecteRoutes/admin";
 
   
- interface ProtectedRouteProps{
-          children:ReactNode;
- }
 
-  // const ProtectedRoute = ({children}: ProtectedRouteProps) => {
-         
-  //            const navigate = useNavigate();
-  //            useEffect(() => {
-  //               axiosInstance.get(URL + '/api/admin/auth/verify-token').then((response) => {
-  //                   const adminData = JSON.parse(localStorage.getItem("isAdmin") || '{}');
-  //                   console.log("myr",adminData);
-                    
-  //                   if(!adminData.isAdmin){
-  //                     toast.error("Session is expired, please login");
-  //                     navigate("/admin/login", {replace:true})
-  //                   }
-  //               }).catch((error) => {
-  //                    console.log("pri",error);
 
-  //                    if(axios.isAxiosError(error)){
-  //                       const statusCode = error.response?.status;
-  //                       if(statusCode === 403){
-  //                         localStorage.removeItem("isAdmin");
-  //                         toast.error("Session expired please login!!");
-  //                         navigate('/admin/login', {replace:true})
-  //                       }
-                        
-  //                    }else{
-  //                     console.log("Something went wrong: ", error)
-  //                    }
-  //               })
-  //            })
-  //             return<>{children}</>
-  // }
+  
 
 
 
@@ -62,7 +27,9 @@ function AdminRoute() {
       <Routes>
 
         <Route path="login" element={<AdminLogin />} />
+     <Route element={<ProtectedRoute/>}>
         <Route element={<AdminLayout />}>
+
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="profile" element={<AdminProfile/>}/>
             <Route path="users" element={<Users/>}/>
@@ -76,7 +43,8 @@ function AdminRoute() {
                    <Route path="road-assistance" element={<RoadServices/>}  />
             </Route>
             <Route path="logout" element={<Logout/>} />
-        </Route>
+         </Route>
+      </Route> 
       </Routes>
     </>
   );
