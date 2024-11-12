@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { toast } from "sonner";
 import { BsThreeDots } from "react-icons/bs";
 import { FaTrash } from 'react-icons/fa';
-import {  addService, addSubService, deleteService, getAllGeneralServices } from "../../services/admin/adminService";
+import {  addService, addSubService, deleteService, getAllGeneralServices, removeSubService } from "../../services/admin/adminService";
 import Swal from "sweetalert2";
 import { IService } from "../../interface/admin/iAdmin";
 
@@ -202,6 +202,55 @@ function GeneralServices() {
     }
   };
   
+  const handleRemoveSubService = async (serviceId: string, subServiceId: string) => {
+    try {
+      const response = await removeSubService(serviceId, subServiceId);
+      if (response.success) {
+        setSelectedService((prevService) => {
+          if (prevService?._id === serviceId) {
+            const filteredSubService = prevService.subTypes.filter(
+              (service) => service._id !== subServiceId
+            );
+            return { ...prevService, subTypes: filteredSubService };
+          }
+          return prevService;
+        });
+
+        const updatedGeneralServices = generalServices.map((service) => {
+             if(service._id === serviceId){
+                 const filteredSubService = service.subTypes.filter((subService) => subService._id !== subServiceId)
+                 return{
+                   ...service,
+                   subTypes:filteredSubService
+                 }
+             }
+             return service
+        })
+        setGeneralServices(updatedGeneralServices);
+        toast.success('Removed successfully!!');
+      }
+    } catch (error) {
+      console.log("Error in handleRemoveSubService:", error);
+    }
+  };
+  
+
+  const confirmRemoveSubService = (serviceId:string, subServiceId:string) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to remove the Sub Service?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Confirm',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleRemoveSubService(serviceId, subServiceId);
+      }
+    });
+  }
+  
   
 
   return (
@@ -316,7 +365,7 @@ function GeneralServices() {
               <button
                 className="   p-1 bg-red-400 rounded-full "
               >
-                <FaTrash className="w-4 h-4 text-white" /> {/* Trash icon */}
+                <FaTrash className="w-4 h-4 text-white" onClick={() => confirmRemoveSubService(selectedService._id, subtype._id)} /> {/* Trash icon */}
               </button>
             </div>
           ))}

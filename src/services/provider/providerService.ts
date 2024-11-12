@@ -1,4 +1,4 @@
-import { string } from "yup";
+import { number, string } from "yup";
 import { axiosInstance } from "../../api/common";
 import { URL } from "../../utils/api";
 import { IAddBrandData, IAddSubServiceData, IRemoveSubServiceData, IServiceData } from "../../interface/provider/iProvider";
@@ -27,7 +27,6 @@ const handleError = (error: any): void => {
 
 export const getAllServices = async (providerId:string, vehicleType:number) => {
   try {
-      console.log("//////////////////////////////////////////////////////////////////////")
       const response = await axiosInstance.get(URL + `/api/provider/add-service/get-all-provider-service?id=${providerId}&vehicleType=${vehicleType}`);
       console.log("This is the getall servicedata received : ", response.data)
       return response.data;
@@ -46,22 +45,7 @@ export const getAllBrands = async (id: string) => {
     return response.data
 
   } catch (error: any) {
-  //   if (error.response) {
-
-  //     if (error.response.status === 403) {
-
-  //       store.dispatch(reset());
-  //       toast.error(error.response.data.message)
-
-  //     } else if (error.response.status === 401) {
-
-  //       console.log("Unauthorized access. Redirecting to login.");
-  //       store.dispatch(reset());
-
-  //     }
-  //   } else {
-  //     console.log("An unexpected error occurred:", error);
-  //   }
+ 
      handleError(error)
      throw error
     
@@ -173,6 +157,39 @@ export const removeService = async (providerId:string, serviceId:string, vehicle
               
              }
 }
+
+
+export const addSlotService = async(providerId:string, startingDate:Date, endingDate:Date, count:string) => {
+    try {
+      const data = {
+        providerId,
+        startingDate: startingDate.toISOString(),
+        endingDate: endingDate.toISOString(),
+        count
+      };
+
+        console.log("This is the data: ", data)
+         const response = await axiosInstance.post(URL + '/api/provider/bookings/add-slot', data )
+         console.log("This is respponse: ", response.data)
+    } catch (error) {
+        console.log("Error in addSlotService: ", error)
+        handleError(error);
+        throw error
+      
+    }
+}
+
+export const getAllSlotService = async(providerId:string) => {
+     try {
+           const response = await axiosInstance.get(URL + `/api/provider/bookings/get-all-slot?providerId=${providerId}`);
+           return response.data
+      
+     } catch (error) {
+         console.log("Error in  getAllSlotService: ", error)
+      
+     }
+}
+
 
 
 

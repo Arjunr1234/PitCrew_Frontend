@@ -13,6 +13,9 @@ import TwoWheelerAddService from '../components/provider/TwoWheelerAddService';
 import FourWheelerAddService from '../components/provider/FourWheelerAddService';
 import AddBrands from '../components/provider/AddBrands';
 import ProtectedRoute from '../utils/protecteRoutes/provider';
+import Bookings from '../components/provider/bookings';
+import CancellBookings from '../components/provider/CancellBookings';
+import AddSlot from '../components/provider/AddSlot';
 
 
 function ProviderRoute() {
@@ -29,7 +32,12 @@ function ProviderRoute() {
              <Route  element={<ProviderLayout/>}>
                 <Route path='dashboard' element={<ProviderHome/>}/>
                 {/* <Route path='profile' element={<ProviderProfile/>}/> */}
-                <Route path='bookings' element={<ProviderBooking/>}/>
+                
+                <Route path="bookings" element={<ProviderBooking />}>
+                   <Route path="bookings-list" element={<Bookings />} />
+                   <Route path="cancelled-bookings" element={<CancellBookings />} />
+                   <Route path="add-slot" element={<AddSlot />} />
+                </Route>
                 <Route path='services' element={<ProviderService/>}/>
                 <Route path='add-service' element={<ProviderAddService/>}/>
                 <Route path='add-service/two-wheeler-services' element={<TwoWheelerAddService/>}/>

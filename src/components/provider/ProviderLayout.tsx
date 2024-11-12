@@ -230,7 +230,7 @@ function ProviderLayout() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-6 bg-gray-100 overflow-auto h-screen"> {/* Ensure the outlet section is scrollable */}
+      <div className="flex-1  bg-gray-100 overflow-auto h-screen"> {/* Ensure the outlet section is scrollable */}
         <Outlet /> {/* This is where the page content will render */}
       </div>
     </div>

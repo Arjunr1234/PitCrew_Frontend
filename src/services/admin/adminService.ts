@@ -126,5 +126,17 @@ export const addSubService = async(id:string, subService:string) => {
         }
 }
 
+export const removeSubService = async(serviceId:string, subServiceId:string) => {
+     try {
+
+          const response = await axiosInstance.delete(URL + `/api/admin/services/remove-sub-service?serviceId=${serviceId}&subServiceId=${subServiceId}`);
+          return response.data
+        
+     } catch (error) {
+          console.log("Error occured while removeSubservice: ", error)
+          throw error
+     }
+}
+
 
 

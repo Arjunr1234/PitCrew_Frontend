@@ -105,7 +105,7 @@ function AddBrands() {
 
       {/* Brands grid section */}
       <div className="m-8 p-6 bg-gray-100 rounded-lg">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-down">
           {filteredBrands.length > 0 ? (
             filteredBrands.map((brand) => (
               <div

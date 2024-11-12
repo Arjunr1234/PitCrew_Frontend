@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from "react"
 import { BsThreeDots } from "react-icons/bs";
 import { FaTrash } from 'react-icons/fa';
 import { IService } from "../../interface/admin/iAdmin"
-import { addService, getAllRoadService } from "../../services/admin/adminService";
+import { addService, deleteService, getAllRoadService } from "../../services/admin/adminService";
 import { toast } from "sonner";
+import Swal from "sweetalert2";
 
 
 
@@ -127,8 +128,38 @@ function RoadServices() {
                    setLoading(false)
                 }
 
-
           }
+
+          const handleDeleteService = async(serviceId:string) => {
+            try {
+                 const response = await deleteService(serviceId);
+                 if(response.success){
+                  const updatedRoadService = roadServices.filter((service) => service._id !== serviceId);
+                  setRoadServices(updatedRoadService);
+                  toast.success('Removed successfully!!')
+                 }
+              
+            } catch (error) {
+                  console.log("Error  in handleDeleteService: ", error)
+                  
+            }
+        }
+
+        const confirmDelete = (serviceId:string, serviceName:string) => {
+          Swal.fire({
+            title: 'Are you sure?',
+            text: `Do you want to remove the ${serviceName} Service?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Confirm',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              handleDeleteService(serviceId);
+            }
+          });
+        }
 
   return (
     <div>
@@ -194,7 +225,8 @@ function RoadServices() {
                   </div> 
                   {dropdownOpen === service._id && (
                     <div className="absolute right-0 top-8 bg-white border border-gray-500 shadow-lg rounded-lg p-2 dropdown-menu">
-                       <button className="text-red-400 hover:bg-red-50 w-full text-left p-1 rounded-md">
+                       <button className="text-red-400 hover:bg-red-50 w-full text-left p-1 rounded-md"
+                       onClick={() => confirmDelete(service._id, service.serviceTypes)}>
                           Delete
                        </button>
                     </div>

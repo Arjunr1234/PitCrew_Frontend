@@ -3,6 +3,7 @@ import { FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { getProviderDetailsWithSubService } from "../../services/user/user";
 import { IProviderData, IServiceSubType } from "../../interface/user/user";
+import DatePicker from "react-datepicker";
 import { toast } from "sonner";
 
 
@@ -16,10 +17,11 @@ function ProviderServicesViewComp() {
      fetchProviderSubServiceDetails()
   },[])
 
- 
   
   const [providerDetails, setProviderDetails] = useState<IProviderData | null>(null); 
-  const [selectedSubService, setSelectedSubService] = useState<IServiceSubType[] | null>(null)
+  const [selectedSubService, setSelectedSubService] = useState<IServiceSubType[] | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
 
   const fetchProviderSubServiceDetails = async() => {
@@ -61,6 +63,8 @@ function ProviderServicesViewComp() {
      
   }
 
+  const closeModal = () => setIsModalOpen(false)
+
   const handleRemoveSubService = (id:string) => {
        setProviderDetails((prevDetails) => {
           return  prevDetails?
@@ -83,16 +87,33 @@ function ProviderServicesViewComp() {
 
 
   const handleBookService = () => {
+  
     if(!selectedSubService || selectedSubService?.length === 0){
       toast.error("Please select service!!");
       return 
     }
+    if(!selectedDate){
+      toast.error("Please select a date!!");
+      return
+    }
+    console.log("This is date: ", selectedDate)
+
+    setIsModalOpen(true)
     toast.success("success fully booked")
     
 }
 
+const calculateTotalPrice = (subServices:any) => {
+  return subServices.reduce((total:any, service:any) => total + Number(service.startingPrice), 0);
+};
+
+
+useEffect(() => {
+  console.log("This is the selectedService; ", selectedSubService)
+},[selectedSubService])
+
   return (
-    <div className="h-screen bg-gray-200">
+    <div className="h-screen ">
       <div className="flex flex-col  md:flex-row bg-darkBlue h-full md:h-4/5 p-4 md:p-2 gap-4 md:gap-2">
         {/* Left section */}
         <div className="flex flex-col w-full md:w-1/2 h-64 md:h-full animate-flip-up">
@@ -136,21 +157,41 @@ function ProviderServicesViewComp() {
           <h1 className="text-4xl md:text-6xl font-semibold font-atma text-center">
             {providerDetails?.providerDetails.workshopName || "Workshop Name"}
           </h1>
-          <div className="p-4 md:p-10 h-40 md:h-80 w-40 md:w-80 rounded-full bg-black overflow-hidden">
-            <img
-              src={vehicleDetails?.workshopImage || ""}
-              alt="Workshop"
-              className="h-full w-full object-cover"
-              
-            />
-          </div>
         </div>
       </div>
 
       {/* Service section */}
-      <div className="p-10 flex flex-col">
+      <div className="p-10 flex flex-col ">
         <div className="text-center">
-          <h1 className="text-5xl font-semibold">Services</h1>
+        <div className="flex items-center flex-col gap-y-3 md:flex-row bg-gray-200 rounded-lg  justify-between w-full mb-6">
+  {/* Centered H1 */}
+  <h1 className="text-5xl font-semibold mx-auto">Services</h1>
+
+  {/* Right Aligned Input Box */}
+  <div className="relative max-w-sm m-3">
+  
+  <DatePicker
+    selected={selectedDate}
+    onChange={(date: Date | null) => setSelectedDate(date)}
+    inline
+    minDate={new Date()}
+    dateFormat="yyyy/MM/dd"
+    className="bg-gray-50 border  border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+  />
+</div>
+
+</div>
+
+          
+        
+
+          
+
+              
+<div id="datepicker-inline" inline-datepicker data-date="02/25/2024"></div>
+
+
+
           {providerDetails && providerDetails.services.subType.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
               {providerDetails.services.subType.map((service) => (
@@ -188,6 +229,59 @@ function ProviderServicesViewComp() {
           )}
         </div>
       </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80">
+          <div className="bg-white flex flex-col p-6 rounded-lg h-4/5 w-11/12 md:w-2/5 gap-y-2">
+            <div className="">
+              <h1 className="text-2xl text-center font-montserrat font-semibold">Confim Booking</h1>
+            </div>
+            <div className=" rounded-lg  p-5 flex flex-col gap-y-3">
+              <div className="flex flex-row font-montserrat p-2 rounded-lg text-white bg-darkBlue text-center text-2xl font-semibold justify-around">
+
+                <h1>{providerDetails?.providerDetails.workshopName}</h1>
+              </div>
+
+              <div className="table w-full bg-blue-100 p-2 rounded-lg">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className=" text-center">
+                      <th className="p-2 border-b">Service Type</th>
+                      <th className="p-2 border-b">Starting Price</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {selectedSubService?.map((service, index) => (
+                      <tr className="text-center" key={service._id}>
+                        <td className="p-2 border-b">{service.type}</td>
+                        <td className="p-2 border-b">₹ {service.startingPrice}</td>
+                      </tr>
+                    ))}
+                    {/* Total row */}
+
+                  </tbody>
+                </table>
+              </div>
+              <div className="p-2 bg-blue-100 rounded-lg text-center">
+
+                <h1 className="text-2xl font-montserrat">Total Price</h1>
+                <h1 className=" text-3xl font-montserrat">₹ {calculateTotalPrice(selectedSubService)}</h1>
+
+
+              </div>
+              <div className="flex flex-row mt-2 rounded-lg gap-x-2">
+                <button className="p-2 bg-red-500 hover:bg-red-600 w-full rounded-lg" onClick={closeModal}>Cancell</button>
+                <button className="p-2 bg-customYellow hover:bg-yellow-500 w-full rounded-lg">Proceed Payment</button>
+              </div>
+
+
+
+            </div>
+          </div>
+        </div>
+      )}
+
+      
 
 
 

@@ -251,7 +251,7 @@ function FourWheelerAddService() {
   }
 
   return (
-      <div>
+      <div className="p-6">
       <div className="bg-gray-300 h-20 rounded-xl flex flex-row justify-center items-center mb-5">
         <h1 className="text-center items-center text-2xl font-semibold">Add Four wheeler Services</h1>
       </div>
@@ -264,7 +264,7 @@ function FourWheelerAddService() {
           <div className="bg-gray-100 rounded-md">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {generalServices.map((service) => (
-                <div key={service.typeid} className="animate-fade animate-ease-out bg-white shadow-lg rounded-lg p-4 flex items-center border border-gray-400 relative">
+                <div key={service.typeid} className=" animate-ease-out bg-white shadow-lg rounded-lg p-4 flex items-center border border-gray-400 relative animate-fade-down">
                   <img src={service.image} alt={service.typename} className="w-16 h-16 object-cover rounded-lg" />
                   <div className="flex-grow text-center">
                     <h2 className="text-lg font-semibold">{service.typename}</h2>
@@ -312,7 +312,7 @@ function FourWheelerAddService() {
           <div className="bg-gray-100 rounded-md">
             <div className=" animate-fade animate-ease-out grid grid-cols-1 md:grid-cols-3 gap-4">
               {roadServices.map((service) => (
-                <div key={service.typeid} className="bg-white shadow-lg rounded-lg p-4 flex items-center border border-gray-400 relative">
+                <div key={service.typeid} className="bg-white shadow-lg rounded-lg p-4 flex items-center border border-gray-400 relative animate-fade-down">
                   <img src={service.image} alt={service.typename} className="w-16 h-16 object-cover rounded-lg" />
                   <div className="flex-grow text-center">
                     <h2 className="text-lg font-semibold">{service.typename}</h2>

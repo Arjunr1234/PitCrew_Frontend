@@ -160,6 +160,7 @@ function AddVehicleDetailsComp() {
 
   const resetLocation = () => {
     setLocation(undefined); 
+    setSearchInput('')
   }
 
  
@@ -220,11 +221,18 @@ function AddVehicleDetailsComp() {
   const handleProceed = async () => {
 
     try {
-
-       if(!vehicleBrand){
+      if (!vehicleNumber) {
+        toast.error("Please add vehicle number")
+        return
+      }
+      if(!vehicleBrand){
         toast.error("Please add vehicle Brand")
         return
-       }
+        }
+        if (!vehicleModel) {
+          toast.error("Please Vehicle Model")
+          return
+        }
        if(!location){
         toast.error("Please add you location")
         return
@@ -233,8 +241,18 @@ function AddVehicleDetailsComp() {
         toast.error("Please add Kilometers")
         return
        }
+       if (!vehicleType) {
+        toast.error('Please add vehicle type');
+        return
+      }
+      if(!fuelType){
+        toast.error("Please add Fuel Type!!")
+        return
+      }
 
-      validationInputData(vehicleNumber, vehicleModel, kilometers, vehicleType, fuelType, vehicleBrand,location)
+
+
+    //  validationInputData(vehicleNumber, vehicleModel, kilometers, vehicleType, fuelType, vehicleBrand,location)
       const data = {serviceId,serviceName, vehicleNumber, vehicleBrand, vehicleModel, kilometers, vehicleType,fuelType,location,  };
       navigate('/providers-shops', { state:{data}})
       
@@ -316,7 +334,7 @@ function AddVehicleDetailsComp() {
                   <input
                     type="text"
                     placeholder="Search..."
-                    value={location?.place_name}
+                    value={location?.place_name  ?? searchInput ?? ""}
                     className="p-2 pl-4 w-full rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                     onChange={(e) => setSearchInput(e.target.value)}
                   />
