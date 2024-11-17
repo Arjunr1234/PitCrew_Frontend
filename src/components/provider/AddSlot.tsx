@@ -3,8 +3,9 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { addMonths } from "date-fns";
 import { useSelector } from "react-redux";
-import { addSlotService, getAllSlotService } from "../../services/provider/providerService";
+import { addSlotService, getAllSlotService, removeSlotService, updateSlotCountService } from "../../services/provider/providerService";
 import { toast } from "sonner";
+import Swal from "sweetalert2";
 
 function AddSlot() {
 
@@ -20,7 +21,13 @@ function AddSlot() {
   const [startDate, setStartDate] = useState<Date | null>(new Date());
   const [endDate, setEndDate] = useState<Date | null >(null);
   const [slotCount, setSlotCount] = useState<string>("");
-  const [addedSlot, setAddedSlot] = useState<SlotData[]>([])
+  const [addedSlot, setAddedSlot] = useState<SlotData[]>([]);
+  const [addedDates, setAddedDates] = useState<Date[]>([])
+  const highlightedDates = [
+    new Date("2024-11-13"),
+    new Date("2024-11-15"),
+    new Date("2024-11-20"),
+  ];
 
 
   const onChange = (dates: [Date | null, Date | null]) => {
@@ -37,6 +44,8 @@ function AddSlot() {
            if(response.success){
               console.log("This is the addes slot: ", response);
               setAddedSlot(response.slotData);
+              const updateAddedDate = response.slotData.map((slot:any) => new Date(slot.date));
+              setAddedDates(updateAddedDate);
            }
          } catch (error) {
             console.log("Error in fetchAllSlot: ", error)
@@ -58,16 +67,19 @@ function AddSlot() {
     setSlotCount(value); 
   };
 
-  const increaseOrDecreaseCount = (id:string, state:number) => {
-
-  }
+  
 
   
   const handleAddSlot = async() => {
     console.log("This is startingDate: ", startDate, endDate)
-    if (!startDate || !endDate) {
+    if (!startDate ) {
       toast.error("Start date and end date must be valid.");
       return;
+    }
+    const slotCountValue = Number(slotCount)
+    if (!slotCount || isNaN(slotCountValue) || slotCountValue <= 0) {
+      toast.error("Please provide a valid slot count!!");
+      return
     }
     
     console.log("Slot Added:", {
@@ -75,18 +87,120 @@ function AddSlot() {
       endDate,
       slotCount,
     });
-    const response = await addSlotService(providerId, startDate, endDate, slotCount)
-    
-    closeModal();
+    try {
+      const response = await addSlotService(providerId, startDate, endDate , slotCount);
+      if(response.success){
+         const updateSlot = [...addedSlot, ...response.slotData];
+         const updateAddedDate = updateSlot.map((slot) => new Date(slot.date));
+         setAddedDates(updateAddedDate)
+         setAddedSlot(updateSlot)
+         toast.success("Successfully added!!");
+         setSlotCount('');
+         setStartDate(null);
+         setEndDate(null)
+      }
+      
+      closeModal();
+      
+    } catch (error:any) {
+        console.log("Error occured in handleAddSlot:", error);
+        toast.error(error.response.data.message)
+      
+    }
   };
 
-  const handleRemoveSlot = (id:string) => {
+  const handleRemoveSlot = async(slotId:string, date:Date) => {
+       try {
+          const removedDate = new Date(date)
+          console.log("removedDate: ", removedDate)
+           const response = await removeSlotService(slotId);
+           if(response.success){
+              const filterdSlot = addedSlot.filter((slot) => slot._id !== slotId);
+              setAddedSlot(filterdSlot);
+              const updateAddedDates = addedDates.filter(
+                (slot: any) => new Date(slot.date).toISOString() !== new Date(date).toISOString()
+              );
+              setAddedDates(updateAddedDates);
+              toast.success('Removed Successfully!!')
+           }
+        
+       } catch (error) {
+           console.log("Error in handleRemoveSlot: ", error);
+   
+       }
+  }
 
+  const handleIncrementCount = async(slotId:string, state:number) => {
+         try {
+              const response = await updateSlotCountService(slotId, state);
+              if(response.success){
+                 const updateSlot = addedSlot.map((slot) => {
+                     if(slot._id === slotId){
+                      const newCount = slot.count+1
+                        return{
+                          ...slot,
+                          count:slot.count + 1
+                        }
+                     }
+                     return slot
+                 })
+                 setAddedSlot(updateSlot)
+              }
+
+          
+         } catch (error) {
+             console.log("Error in hadleIncrementCount; ", error)
+             
+         }
+  }
+
+  const handleDecrementCount = async(slotId:string, state:number) => {
+     try {
+      const response = await updateSlotCountService(slotId, state);
+      if(response.success){
+         const updateSlot = addedSlot.map((slot) => {
+              if(slot._id === slotId){
+                  return{
+                      ...slot,
+                      count:slot.count-1
+                  }
+              }
+              return slot
+         })
+         setAddedSlot(updateSlot)
+      }
+      
+     } catch (error) {
+         console.log("Error in handleDecrementCount: ",error);
+
+      
+     }
   }
 
   useEffect(() => {
     console.log("This is the addesSlot////////////////:", addedSlot )
-  },[])
+  },[addedSlot])
+
+  const confimRemoveSlot = (slotId:string, date:Date) => {
+    Swal.fire({
+      title: `Are you sure ?`,
+      text: `Do you want to remove slot ?`,
+      showCancelButton: true,
+      cancelButtonColor: '#d33',
+      icon: 'question',
+      confirmButtonColor: '#3085d6',
+      confirmButtonText: 'Remove',
+    }).then((result) => {
+      if (result.isConfirmed) {
+         
+            handleRemoveSlot(slotId, date)
+      }
+    });  
+  }
+
+  useEffect(() => {
+    console.log("This is added Dates: ", addedDates)
+  },[addedDates])
 
   return (
     <>
@@ -105,7 +219,7 @@ function AddSlot() {
           <h1 className="text-3xl text-black text-center">Available Slots</h1>
           <table className="table w-full justify-between mt-4 bg-white shadow-md rounded-lg">
             <thead >
-              <tr className="bg-blue-500 text-white  justify-between">
+              <tr className="bg-providerBluePrimary text-white  justify-between">
                 <th className="p-2 text-left">Date</th>
                 <th className="p-2 text-left">Day</th>
                 <th className="p-2 text-left">Count</th>
@@ -127,7 +241,7 @@ function AddSlot() {
         <td className="p-2 flex items-center gap-2">
           {/* Minus Button */}
           <button
-            onClick={() => increaseOrDecreaseCount(slot._id, -1)}
+            onClick={() => handleDecrementCount(slot._id, -1)}
             className="px-2 py-1 bg-gray-300 text-black rounded hover:bg-gray-400"
             disabled={slot.count <= 1}
           >
@@ -139,15 +253,15 @@ function AddSlot() {
 
           {/* Plus Button */}
           <button
-            onClick={() => increaseOrDecreaseCount(slot._id, 1)}
+            onClick={() => handleIncrementCount(slot._id, 1)}
             className="px-2 py-1 bg-gray-300 text-black rounded hover:bg-gray-400"
-          >
+             >
             +
           </button>
         </td>
         <td className="">
           <button
-            onClick={() => handleRemoveSlot(slot._id)}
+            onClick={() => confimRemoveSlot(slot._id,  slot.date)}
             className="px-4 py-1 bg-red-500 text-white rounded hover:bg-red-600"
           >
             Remove
@@ -164,7 +278,7 @@ function AddSlot() {
         {/* Modal */}
         {isModalOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg w-[90%] h-[80%] max-w-md shadow-lg relative">
+            <div className="bg-white p-6 rounded-lg w-[90%] h-auto max-w-md shadow-lg relative">
               {/* Close Button */}
               <button
                 onClick={closeModal}
@@ -194,6 +308,8 @@ function AddSlot() {
                     selectsRange
                     inline
                     showDisabledMonthNavigation
+                    highlightDates={addedDates}
+                    excludeDates={addedDates}
                   />
                 </div>
               </div>

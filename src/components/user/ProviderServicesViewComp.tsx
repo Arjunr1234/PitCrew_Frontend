@@ -1,10 +1,12 @@
 import { useLocation } from "react-router-dom";
 import { FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { getProviderDetailsWithSubService } from "../../services/user/user";
+import { getProviderDetailsWithSubService, paymentService } from "../../services/user/user";
 import { IProviderData, IServiceSubType } from "../../interface/user/user";
 import DatePicker from "react-datepicker";
 import { toast } from "sonner";
+import { useSelector } from "react-redux";
+import {loadStripe} from '@stripe/stripe-js'
 
 
 
@@ -21,12 +23,15 @@ function ProviderServicesViewComp() {
   const [providerDetails, setProviderDetails] = useState<IProviderData | null>(null); 
   const [selectedSubService, setSelectedSubService] = useState<IServiceSubType[] | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [platformFee, setPlatformFee] = useState<number>(50)
+  const {id, mobile} = useSelector((state:any) => state.user?.userInfo);
+ 
+
 
 
   const fetchProviderSubServiceDetails = async() => {
       try {
-
           const vehicleType = vehicleDetails.vehicleType;
           const serviceId = vehicleDetails.serviceId
           const response = await getProviderDetailsWithSubService(providerId, vehicleType, serviceId );
@@ -52,13 +57,11 @@ function ProviderServicesViewComp() {
             })}}:
          null)
          const addedService = providerDetails?.services.subType.find((service) => service._id === id);
-         
-    
         
-        setSelectedSubService((prevService) => {
+         setSelectedSubService((prevService) => {
            if(!addedService) return prevService
            return prevService?[...prevService, addedService]:[addedService]
-        })
+         })
  
      
   }
@@ -99,17 +102,52 @@ function ProviderServicesViewComp() {
     console.log("This is date: ", selectedDate)
 
     setIsModalOpen(true)
-    toast.success("success fully booked")
+    
     
 }
 
 const calculateTotalPrice = (subServices:any) => {
-  return subServices.reduce((total:any, service:any) => total + Number(service.startingPrice), 0);
+  return subServices.reduce((total:number, service:any) => total + Number(service.startingPrice), 0);
 };
+
+const handlePayment = async() => {
+  const stripe = await loadStripe("pk_test_51QKE0SD1bTTHz7SzeCjfvIjGNtWxFrZBIu4QGS8ulkdu5SHR6PXO8OiwsrVvxsI9XIsTo8CCdPHejQdobj76B8AD00u1gc5H98")
+    const data = {
+       vehicleDetails,
+       providerId,
+       userId:id,
+       selectedServices:selectedSubService,
+       userPhone:mobile,
+       platformFee:platformFee,
+       slotId:"6731d96a9d40b68a476db09e",
+       totalPrice:calculateTotalPrice(selectedSubService),      
+    }
+    console.log("This is the data: ", data)
+    try {
+        const response = await paymentService(data);
+
+        const session = response.session
+        // if(session.success){
+        //    window.location.href = session.url
+        // }
+
+        const result = stripe?.redirectToCheckout({
+          sessionId:session.id
+        })
+
+        
+      
+    } catch (error) {
+        
+      
+    }
+}
 
 
 useEffect(() => {
-  console.log("This is the selectedService; ", selectedSubService)
+  console.log("This is the selectedService; ", selectedSubService);
+  console.log("This is the vehicleDetails; ", vehicleDetails)
+
 },[selectedSubService])
 
   return (
@@ -232,7 +270,7 @@ useEffect(() => {
 
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80">
-          <div className="bg-white flex flex-col p-6 rounded-lg h-4/5 w-11/12 md:w-2/5 gap-y-2">
+          <div className="bg-white flex flex-col p-6 rounded-lg h-auto w-11/12 md:w-2/5 gap-y-2">
             <div className="">
               <h1 className="text-2xl text-center font-montserrat font-semibold">Confim Booking</h1>
             </div>
@@ -262,16 +300,20 @@ useEffect(() => {
                   </tbody>
                 </table>
               </div>
+              <div className="p-2 justify-around flex flex-row bg-blue-100 rounded-lg text-center">
+                  <h1 className="text-md text-orange-400">Platform fee</h1>
+                  <h1>₹ {platformFee}</h1>
+              </div>
               <div className="p-2 bg-blue-100 rounded-lg text-center">
 
-                <h1 className="text-2xl font-montserrat">Total Price</h1>
-                <h1 className=" text-3xl font-montserrat">₹ {calculateTotalPrice(selectedSubService)}</h1>
+                <h1 className="text-2xl font-montserrat ">Total Price</h1>
+                <h1 className=" text-3xl font-montserrat">₹ {calculateTotalPrice(selectedSubService) + platformFee}</h1>
 
 
               </div>
               <div className="flex flex-row mt-2 rounded-lg gap-x-2">
                 <button className="p-2 bg-red-500 hover:bg-red-600 w-full rounded-lg" onClick={closeModal}>Cancell</button>
-                <button className="p-2 bg-customYellow hover:bg-yellow-500 w-full rounded-lg">Proceed Payment</button>
+                <button className="p-2 bg-customYellow hover:bg-yellow-500 w-full rounded-lg" onClick={handlePayment}>Proceed Payment</button>
               </div>
 
 

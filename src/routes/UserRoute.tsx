@@ -10,6 +10,7 @@ import AddVehicleDetails from '../pages/user/AddVehicleDetails'
 import ProvidersShop from '../pages/user/ProvidersShop'
 import ProviderServicesView from '../pages/user/ProviderServicesView'
 import ProtectedRoute from '../utils/protecteRoutes/user'
+import PaymentSuccess from '../components/user/paymentSuccess'
 
 
 
@@ -33,6 +34,7 @@ function UserRoute() {
          <Route path={'/add-vehicle-details'} element= {<AddVehicleDetails/>}/>
          <Route path={'/providers-shops'} element={<ProvidersShop/>}/>
          <Route path={'/provider-service-view'} element={<ProviderServicesView/>}/>
+         <Route path={'/payment-success'} element={<PaymentSuccess/>}/>
       </Route>
    </Routes>
    

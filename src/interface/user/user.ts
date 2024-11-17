@@ -66,3 +66,38 @@ export interface IServiceSubType {
   _id: string;
   isAdded: boolean;
 }
+
+//Booking - payment
+
+interface VehicleBrand {
+  brandName: string;
+  id: string;
+}
+
+
+interface VehicleDetails {
+  fuelType: 'Petrol' | 'Diesel'; 
+  kilometers: number;
+  vehicleModel: string;
+  vehicleNumber: string;
+  vehicleType: 'twoWheeler' | 'fourWheeler'; 
+  vehicleBrand: VehicleBrand;
+}
+
+
+interface LocationDetails {
+  place_name: string;
+  coordinates: [number, number];
+}
+
+
+export interface BookingData {
+  providerId: string;
+  userId: string;
+  userPhone: string;
+  serviceId: string;
+  serviceName: string;
+  totalPrice: number;
+  vehicleDetails: VehicleDetails;
+  location: LocationDetails;
+}

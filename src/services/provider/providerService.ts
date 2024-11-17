@@ -159,18 +159,19 @@ export const removeService = async (providerId:string, serviceId:string, vehicle
 }
 
 
-export const addSlotService = async(providerId:string, startingDate:Date, endingDate:Date, count:string) => {
+export const addSlotService = async(providerId:string, startingDate:Date, endingDate:Date | null, count:string) => {
     try {
       const data = {
         providerId,
         startingDate: startingDate.toISOString(),
-        endingDate: endingDate.toISOString(),
+        endingDate: endingDate?.toISOString(),
         count
       };
 
         console.log("This is the data: ", data)
          const response = await axiosInstance.post(URL + '/api/provider/bookings/add-slot', data )
-         console.log("This is respponse: ", response.data)
+         console.log("This is respponse: ", response.data);
+         return response.data
     } catch (error) {
         console.log("Error in addSlotService: ", error)
         handleError(error);
@@ -188,6 +189,32 @@ export const getAllSlotService = async(providerId:string) => {
          console.log("Error in  getAllSlotService: ", error)
       
      }
+}
+
+export const updateSlotCountService = async(slotId:string, state:number) => {
+   try {
+         const response = await axiosInstance.patch(URL + `/api/provider/bookings/update-slot`, {slotId, state});
+         return response.data
+    
+   } catch (error) {
+       console.log("Error in getAll service: ", error)
+       handleError(error);
+       throw error
+   }
+}
+
+export const removeSlotService = async (slotId:string) => {
+      try {
+
+        const response = await axiosInstance.delete(URL + `/api/provider/bookings/remove-slot?slotId=${slotId}`);
+        return response.data
+        
+      } catch (error) {
+         console.log("Error in removeSlotService: ", error);
+         handleError(error);
+         throw error
+        
+      }
 }
 
 

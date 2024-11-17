@@ -4,6 +4,7 @@ import { reset } from "../../redux/slice/userAuthSlice";
 import store from "../../redux/store";
 import { URL } from "../../utils/api"
 import { toast } from "sonner";
+import { BookingData } from "../../interface/user/user";
 
 
 interface IVehicleDetailsData{
@@ -85,5 +86,32 @@ export const getProviderDetailsWithSubService = async(providerId:string, vehicle
        console.log("Error getProviderDetailsWithSubservice: ",error);
        handleError(error);
        throw error
+    }
+}
+
+
+
+export const paymentService = async(data:any) => {
+   try {
+
+       const response = await axiosInstance.post(URL + `/api/user/bookings/service-booking-payment`, {data});
+        return response.data  
+      
+    
+   } catch (error) {
+       console.log("Error in paymentService: ", error)
+       handleError(error);
+       throw error
+   }
+}
+
+export const changePaymentStatusService = async(paymentSessionId:string, bookId:string) => {
+    try {
+        const response = await axiosInstance.patch(URL + '/api/user/bookings/change-payment-status-success', {paymentSessionId, bookId})
+        return response.data
+      
+    } catch (error) {
+
+      
     }
 }

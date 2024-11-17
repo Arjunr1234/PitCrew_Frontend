@@ -10,7 +10,10 @@ export default {
         customBlue: '#5DF0F9', 
         madBlack: '#162B31',
         madBlackHover:"",
-        providerGreen:'#4dff4d',
+      //  providerGreen:'#4dff4d',
+        providerGreen:'#78C1F3',
+        providerBluePrimary:"#78C1F3",
+        providerBlueSecondary:"#9BE8D8",
         customViolet:'#7952B3',
         darkBlue:'#06278a',
         customYellow:"#ffb400"
