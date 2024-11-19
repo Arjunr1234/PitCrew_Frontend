@@ -1,5 +1,5 @@
 
-function Bookings() {
+function BookingsComp() {
   return (
     <>
       <h1>This is Bookings</h1>
@@ -7,4 +7,4 @@ function Bookings() {
   )
 }
 
-export default Bookings
+export default BookingsComp

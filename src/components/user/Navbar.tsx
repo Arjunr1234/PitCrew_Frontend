@@ -79,8 +79,9 @@ function Navbar() {
           >
             About
           </button>
-          <button className=" font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white">
-            Contact
+          <button className=" font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white"
+          onClick={() => navigate('/user-profile')}>
+            Profile
           </button>
           <button className=" font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white" onClick={() => navigate('/provider/register')}>
             Add Workshop

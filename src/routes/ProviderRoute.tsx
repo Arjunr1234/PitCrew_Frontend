@@ -5,7 +5,7 @@ import AddAddress from '../pages/provider/auth/AddAddress';
 import ProviderLogin from '../pages/provider/auth/ProviderLogin';
 import ProviderHome from '../pages/provider/ProivderHome';
 import ProviderLayout from '../components/provider/ProviderLayout';
-// import ProviderProfile from '../pages/provider/providerProfile';
+import ProviderProfile from '../pages/provider/ProviderProfile';
 import ProviderBooking from '../pages/provider/ProviderBooking';
 import ProviderService from '../pages/provider/ProviderService';
 import ProviderAddService from '../pages/provider/ProviderAddService';
@@ -13,7 +13,7 @@ import TwoWheelerAddService from '../components/provider/TwoWheelerAddService';
 import FourWheelerAddService from '../components/provider/FourWheelerAddService';
 import AddBrands from '../components/provider/AddBrands';
 import ProtectedRoute from '../utils/protecteRoutes/provider';
-import Bookings from '../components/provider/bookings';
+import BookingsComp from '../components/provider/Bookings';
 import CancellBookings from '../components/provider/CancellBookings';
 import AddSlot from '../components/provider/AddSlot';
 
@@ -31,10 +31,10 @@ function ProviderRoute() {
          <Route element={<ProtectedRoute/>}>  
              <Route  element={<ProviderLayout/>}>
                 <Route path='dashboard' element={<ProviderHome/>}/>
-                {/* <Route path='profile' element={<ProviderProfile/>}/> */}
+                <Route path='profile' element={<ProviderProfile/>}/>
                 
                 <Route path="bookings" element={<ProviderBooking />}>
-                   <Route path="bookings-list" element={<Bookings />} />
+                   <Route path="bookings-list" element={<BookingsComp />} />
                    <Route path="cancelled-bookings" element={<CancellBookings />} />
                    <Route path="add-slot" element={<AddSlot />} />
                 </Route>

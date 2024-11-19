@@ -1,12 +1,13 @@
 
-import Profile from "../../components/provider/profile"
+
+import ProfileComp from "../../components/provider/profile"
 
 
 
 function ProviderProfile() {
   return (
     <>
-      <Profile/>
+      <ProfileComp/>
     </>
   )
 }

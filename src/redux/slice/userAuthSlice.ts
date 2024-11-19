@@ -104,6 +104,12 @@ const userSlice = createSlice({
                    state.message = "";
                    state.success = null;
                    state.error = null
+               },
+               updateUserProfile:(state, action) => {
+                   if(state.userInfo){
+                      state.userInfo.name = action.payload.name;
+                      state.userInfo.mobile = action.payload.phone;
+                   }
                }
              },
              extraReducers:(builder) => {
@@ -159,5 +165,5 @@ const userSlice = createSlice({
              }
 })
 
-export const {reset, resetMessage, resetErrorAndMessage,resetErrorAndErrorMessage, urgentReset,resetSuccessAndMessage} = userSlice.actions
+export const {reset, resetMessage, resetErrorAndMessage,resetErrorAndErrorMessage, urgentReset,resetSuccessAndMessage, updateUserProfile} = userSlice.actions
 export default userSlice.reducer

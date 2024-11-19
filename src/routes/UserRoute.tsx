@@ -11,6 +11,9 @@ import ProvidersShop from '../pages/user/ProvidersShop'
 import ProviderServicesView from '../pages/user/ProviderServicesView'
 import ProtectedRoute from '../utils/protecteRoutes/user'
 import PaymentSuccess from '../components/user/paymentSuccess'
+import Profile from '../pages/user/Profile'
+import ProfileDetailsComp from '../components/user/ProfileDetailsComp'
+import BookingDetails from '../components/user/BookingDetails'
 
 
 
@@ -35,6 +38,10 @@ function UserRoute() {
          <Route path={'/providers-shops'} element={<ProvidersShop/>}/>
          <Route path={'/provider-service-view'} element={<ProviderServicesView/>}/>
          <Route path={'/payment-success'} element={<PaymentSuccess/>}/>
+         <Route path={'/user-profile'} element={<Profile/>}>
+           <Route path={'/user-profile/profile-details'}  element={<ProfileDetailsComp/>} />
+           <Route path={'/user-profile/booking-details'} element={<BookingDetails/>}/>
+         </Route>
       </Route>
    </Routes>
    

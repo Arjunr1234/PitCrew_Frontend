@@ -4,7 +4,7 @@ import { reset } from "../../redux/slice/userAuthSlice";
 import store from "../../redux/store";
 import { URL } from "../../utils/api"
 import { toast } from "sonner";
-import { BookingData } from "../../interface/user/user";
+import { BookingData, IProfileEditData } from "../../interface/user/user";
 
 
 interface IVehicleDetailsData{
@@ -111,7 +111,51 @@ export const changePaymentStatusService = async(paymentSessionId:string, bookId:
         return response.data
       
     } catch (error) {
-
+      handleError(error)
       
     }
+}
+
+export const getUserDetailsService = async(userId:string) => {
+           try {
+
+               const response = await axiosInstance.get(URL + `/api/user/profile/get-user?userId=${userId}`)
+               return response.data
+            
+           } catch (error) {
+              console.log("Error in getUserDetailsService: ", error);
+              handleError(error)
+            
+           }         
+}
+
+
+export const editUserProfileService = async(data:IProfileEditData) => {
+      try {
+          const response = await axiosInstance.patch(URL + `/api/user/profile/edit-profile`, data)
+          return response.data
+        
+      } catch (error) {
+        console.log("Error in editUserProfile: ", error)
+        handleError(error)
+      }
+}
+
+export const updateProfilePicService = async(data:FormData) => {
+     try {
+        console.log("This is the formdata: ", data)
+         const response = await axiosInstance.post(URL + '/api/user/profile/update-profile-img', data,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+         );
+         return response.data
+      
+     } catch (error) {
+        console.log("Error in updateProfilePicService: ", error);
+        handleError(error)
+      
+     }
 }

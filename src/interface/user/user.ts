@@ -101,3 +101,10 @@ export interface BookingData {
   vehicleDetails: VehicleDetails;
   location: LocationDetails;
 }
+
+//This is the details of editProfileData
+
+export interface IProfileEditData{
+  name:string,
+  phone:string
+}
