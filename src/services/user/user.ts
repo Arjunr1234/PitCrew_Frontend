@@ -89,6 +89,21 @@ export const getProviderDetailsWithSubService = async(providerId:string, vehicle
     }
 }
 
+export const checkAvalibeSlotService = async (date:Date, providerId:string) => {
+  try {
+      console.log("This si the date: ", date)
+      const formattedDate = date.toLocaleDateString("en-CA")
+       console.log("This is the date: ", formattedDate)
+       const response = await axiosInstance.get(URL + `/api/user/bookings/check-avaliable-slot?providerId=${providerId}&date=${formattedDate}`);
+       return response.data
+  } catch (error:any) {
+      console.log("Error in checkAvaliableService: ", error);
+      handleError(error);
+      toast.error(error.response.data.message)
+      throw error   
+  }
+}
+
 
 
 export const paymentService = async(data:any) => {

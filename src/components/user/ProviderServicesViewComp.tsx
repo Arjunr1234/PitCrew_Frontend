@@ -1,12 +1,13 @@
 import { useLocation } from "react-router-dom";
 import { FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { getProviderDetailsWithSubService, paymentService } from "../../services/user/user";
+import { checkAvalibeSlotService, getProviderDetailsWithSubService, paymentService } from "../../services/user/user";
 import { IProviderData, IServiceSubType } from "../../interface/user/user";
 import DatePicker from "react-datepicker";
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
 import {loadStripe} from '@stripe/stripe-js'
+import DefaultImg from '../../images/providerDefaltImg.jpg'
 
 
 
@@ -24,7 +25,8 @@ function ProviderServicesViewComp() {
   const [selectedSubService, setSelectedSubService] = useState<IServiceSubType[] | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [platformFee, setPlatformFee] = useState<number>(50)
+  const [platformFee, setPlatformFee] = useState<number>(50);
+  const [selectedSlotId, setSelectedSlotId] = useState<string | null>(null)
   const {id, mobile} = useSelector((state:any) => state.user?.userInfo);
  
 
@@ -89,7 +91,7 @@ function ProviderServicesViewComp() {
   }
 
 
-  const handleBookService = () => {
+  const handleBookService = async() => {
   
     if(!selectedSubService || selectedSubService?.length === 0){
       toast.error("Please select service!!");
@@ -101,7 +103,13 @@ function ProviderServicesViewComp() {
     }
     console.log("This is date: ", selectedDate)
 
-    setIsModalOpen(true)
+
+     const checkAvalibleSlot = await checkAvalibeSlotService(selectedDate, providerDetails?.providerDetails._id as string);
+     if(checkAvalibleSlot.success){
+      setSelectedSlotId(checkAvalibleSlot.slotId)
+      setIsModalOpen(true)
+     }
+    
     
     
 }
@@ -119,7 +127,7 @@ const handlePayment = async() => {
        selectedServices:selectedSubService,
        userPhone:mobile,
        platformFee:platformFee,
-       slotId:"6731d96a9d40b68a476db09e",
+       slotId:selectedSlotId,
        totalPrice:calculateTotalPrice(selectedSubService),      
     }
     console.log("This is the data: ", data)
@@ -192,10 +200,16 @@ useEffect(() => {
 
         {/* Right section */}
         <div className="flex text-white flex-col justify-center items-center gap-10 w-full md:w-1/2 h-full animate-flip-up">
-          <h1 className="text-4xl md:text-6xl font-semibold font-atma text-center">
-            {providerDetails?.providerDetails.workshopName || "Workshop Name"}
-          </h1>
-        </div>
+  <h1 className="text-4xl md:text-6xl font-semibold font-atma text-center">
+    {providerDetails?.providerDetails.workshopName || "Workshop Name"}
+  </h1>
+  <img 
+    src={providerDetails?.providerDetails.logoUrl || DefaultImg} 
+    alt="Profile Picture" 
+    className="w-32 h-32 md:w-80 md:h-80 rounded-full border-4 border-white shadow-lg object-cover" 
+  />
+</div>
+
       </div>
 
       {/* Service section */}
@@ -290,7 +304,7 @@ useEffect(() => {
                   </thead>
                   <tbody>
                     {selectedSubService?.map((service, index) => (
-                      <tr className="text-center" key={service._id}>
+                      < tr className="text-center" key={service._id} >
                         <td className="p-2 border-b">{service.type}</td>
                         <td className="p-2 border-b">₹ {service.startingPrice}</td>
                       </tr>

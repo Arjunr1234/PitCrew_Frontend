@@ -1,4 +1,3 @@
-import { number, string } from "yup";
 import { axiosInstance } from "../../api/common";
 import { URL } from "../../utils/api";
 import { IAddBrandData, IAddSubServiceData, IProviderProfileData, IRemoveSubServiceData, IServiceData } from "../../interface/provider/iProvider";
@@ -261,6 +260,19 @@ export const updateProfilePicture = async (data: FormData) => {
     handleError(error)
     throw error
   }
+}
+
+export const getBookingsService = async(userId:string) => {
+    try {
+
+        const response = await axiosInstance.get(URL + `/api/user/bookings/get-all-bookings?userId=${userId}`);
+        return response.data
+      
+    } catch (error) {
+        console.log("Error in getBookingService: ", error);
+        handleError(error)
+      
+    }
 }
 
 

@@ -7,29 +7,23 @@ import { toast } from "sonner";
 function PaymentSuccess() {
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(window.location.search);
-  const sessionId = searchParams.get('session_id');
-  const bookId = searchParams.get('book_id')
-
-  // setTimeout(() => {
-  //   navigate("/");
-  // }, 5000);  
+  const sessionId = searchParams.get("session_id");
+  const bookId = searchParams.get("book_id");
 
   useEffect(() => {
-     const changePaymentStatus = async() => {
+    const changePaymentStatus = async () => {
       if (sessionId && bookId) {
-        const response = await changePaymentStatusService(sessionId , bookId );
-        toast.success("successfully chnaged");
-
+        const response = await changePaymentStatusService(sessionId, bookId);
+        toast.success("Successfully changed payment status");
         console.log("Payment status changed:", response);
       } else {
         console.error("Session ID or Book ID is missing");
-        toast.error('Session_id and book_id are missing')
+        toast.error("Session ID and Book ID are missing");
       }
-     }
+    };
 
-     changePaymentStatus();
-
-  },[])
+    changePaymentStatus();
+  }, []);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-100 to-green-200">
@@ -41,12 +35,20 @@ function PaymentSuccess() {
         <p className="text-gray-600 mb-4">
           Thank you for your booking. Your payment has been processed successfully.
         </p>
-        <button
-          onClick={() => navigate("/")}
-          className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition duration-300"
-        >
-          Go to Home
-        </button>
+        <div className="flex justify-center space-x-4">
+          <button
+            onClick={() => navigate("/")}
+            className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition duration-300"
+          >
+            Go to Home
+          </button>
+          <button
+            onClick={() => navigate(`/user-profile/booking-details`)}
+            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
+          >
+            View Booking
+          </button>
+        </div>
       </div>
     </div>
   );
