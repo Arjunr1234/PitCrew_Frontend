@@ -60,3 +60,13 @@ export interface IRemoveSubServiceData{
   subServiceId:string,
   vehicleType:string
 }
+
+// providerProfile
+
+export interface IProviderProfileData {
+  workshopName: string;
+  ownerName: string;
+  phone: string;
+  about: string;
+  providerId: string;
+}

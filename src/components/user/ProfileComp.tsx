@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import Image from "../../images/providerLoginImg.png";
+import Image from "../../images/userProfileDefaltImg.png"
 import Swal from 'sweetalert2';
 import { toast } from 'sonner';
 import { logoutThunk, resetSuccessAndMessage } from '../../redux/slice/userAuthSlice';

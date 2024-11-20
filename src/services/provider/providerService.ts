@@ -1,7 +1,7 @@
 import { number, string } from "yup";
 import { axiosInstance } from "../../api/common";
 import { URL } from "../../utils/api";
-import { IAddBrandData, IAddSubServiceData, IRemoveSubServiceData, IServiceData } from "../../interface/provider/iProvider";
+import { IAddBrandData, IAddSubServiceData, IProviderProfileData, IRemoveSubServiceData, IServiceData } from "../../interface/provider/iProvider";
 import store from "../../redux/store";
 import { toast } from "sonner";
 import { reset } from "../../redux/slice/providerAuthSlice";
@@ -203,18 +203,64 @@ export const updateSlotCountService = async(slotId:string, state:number) => {
    }
 }
 
-export const removeSlotService = async (slotId:string) => {
-      try {
+export const removeSlotService = async (slotId: string) => {
+  try {
 
-        const response = await axiosInstance.delete(URL + `/api/provider/bookings/remove-slot?slotId=${slotId}`);
-        return response.data
-        
-      } catch (error) {
-         console.log("Error in removeSlotService: ", error);
-         handleError(error);
-         throw error
-        
+    const response = await axiosInstance.delete(URL + `/api/provider/bookings/remove-slot?slotId=${slotId}`);
+    return response.data
+
+  } catch (error) {
+    console.log("Error in removeSlotService: ", error);
+    handleError(error);
+    throw error
+
+  }
+}
+
+export const getProviderDetailsService = async (providerId: string) => {
+  try {
+
+    const response = await axiosInstance.get(URL + `/api/provider/profile/get-provider-details?providerId=${providerId}`);
+    return response.data
+
+  } catch (error) {
+    console.log("Error in updateProviderProfile: ", error);
+    handleError(error);
+    throw error
+
+  }
+}
+
+
+
+
+export const updatePoviderProfile = async (data: IProviderProfileData) => {
+  try {
+    const response = await axiosInstance.put(URL + '/api/provider/profile/edit-profile', data)
+    return response.data
+  } catch (error) {
+    console.log("Error in updateProviderProfile: ", error);
+    handleError(error)
+    throw error
+
+  }
+}
+
+export const updateProfilePicture = async (data: FormData) => {
+  try {
+    const response = await axiosInstance.post(URL + `/api/provider/profile/update-profile-pic`, data,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       }
+    )
+    return response.data
+  } catch (error) {
+    console.log("Error ocuured in updateProfilePicture: ", error);
+    handleError(error)
+    throw error
+  }
 }
 
 
