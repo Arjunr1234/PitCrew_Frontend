@@ -64,7 +64,7 @@ function GeneralServiceComp() {
                      navigate('/add-vehicle-details',{state:{serviceId:service.id, serviceName:service.serviceType}})
                   }}
                   key={service.id} 
-                  className="transition-transform transform hover:scale-105 cursor-pointer animate-fade-up bg-white mx-6 border rounded-lg p-4 flex items-center hover:bg-gray-300 relative"
+                  className="transition-transform transform hover:scale-105 cursor-pointer animate-fade-up bg-gray-300 mx-6 border rounded-lg p-4 flex items-center hover:bg-gray-400 relative"
                 >
                   <img
                     src={service.imageUrl}

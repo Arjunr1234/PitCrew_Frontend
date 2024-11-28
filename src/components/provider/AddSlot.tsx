@@ -230,7 +230,7 @@ function AddSlot() {
     <>
       <div className="bg-gray-200 rounded-lg p-2 h-[100%] flex flex-col gap-y-2">
         <div className="h-10 flex flex-row justify-end ">
-          {/* Add Slot Button */}
+          
           <button
             onClick={openModal}
             className="p-2 mx-6 bg-blue-500 hover:bg-blue-600 rounded-lg text-white"
@@ -238,7 +238,7 @@ function AddSlot() {
             Add Slot
           </button>
         </div>
-        {/* table for listing slot */}
+        
         <div className="flex flex-col  ">
         <h1 className="text-3xl  text-black text-center">Available Slots</h1>
         <table className="table w-full justify-between mt-4 bg-white shadow-md ">
@@ -307,7 +307,7 @@ function AddSlot() {
         </table>
       </div>
 
-      {/* Pagination Controls */}
+    
       <div className="flex justify-center mt-4">
         <button
           onClick={() => handlePageChange(currentPage - 1)}

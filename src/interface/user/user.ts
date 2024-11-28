@@ -108,3 +108,57 @@ export interface IProfileEditData{
   name:string,
   phone:string
 }
+
+// Booking Comp
+
+export interface IBookingDetails {
+  _id: string;
+  serviceType: string;
+  userId: string;
+  providerId: string;
+  slotId: string;
+  serviceId: string;
+  vehicleDetails: {
+    number: string;
+    model: string;
+    brand: string;
+    kilometersRun: number;
+    fuelType: string;
+    vehicleType: string;
+  };
+  location: {
+    address: string;
+    coordinates: [number, number];
+  };
+  userPhone: string;
+  bookingDate: string;
+  amount: number;
+  platformFee: number;
+  subTotal: number;
+  paymentId: string;
+  reason: string;
+  paymentStatus: string;
+  status: string;
+  selectedSubServices: {
+    type: string;
+    startingPrice: string;
+    _id: string;
+    isAdded: boolean;
+  }[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  serviceName: string;
+  providerDetails:IProviderDetails
+}
+export interface IProviderDetails {
+  _id: string;
+  workshopName: string;
+  ownerName: string;
+  workshopDetails: any;
+  email: string;
+  mobile: string;
+  logUrl:string;
+}
+
+

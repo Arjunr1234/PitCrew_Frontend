@@ -37,13 +37,13 @@ function PaymentSuccess() {
         </p>
         <div className="flex justify-center space-x-4">
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/",{replace:true})}
             className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition duration-300"
           >
             Go to Home
           </button>
           <button
-            onClick={() => navigate(`/user-profile/booking-details`)}
+            onClick={() => navigate(`/user-profile/booking-details`, {replace:true})}
             className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
           >
             View Booking

@@ -37,12 +37,12 @@ function BookingComp() {
         
 
         {/* Cancelled Bookings Tab */}
-        <Link to={'/provider/bookings/cancelled-bookings'}>
+        {/* <Link to={'/provider/bookings/cancelled-bookings'}>
            <div className={`flex-1   bg-gray-500 rounded-lg p-4  cursor-pointer transition-all duration-200 shadow-md flex items-center justify-center gap-2  ${activeLink === 'cancelled-bookings' ? 'bg-green-400    ':'hover:ring-4 hover:ring-violet-500'}`}>
            <MdCancel size={24} />
            <h1 className="text-center font-semibold">Cancelled Bookings</h1>
            </div>
-        </Link>
+        </Link> */}
         
 
         {/* Add Slot Tab */}

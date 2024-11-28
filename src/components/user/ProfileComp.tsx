@@ -117,9 +117,7 @@ function ProfileComp() {
           <div className="relative h-36 w-36">
             <img
               alt="Profile picture"
-              className="rounded-full border-4 border-white object-cover shadow-lg"
-              height={144}
-              width={144}
+              className=" h-40 w-40 rounded-full border-4 border-white object-cover shadow-lg"
               src={profilePic}
             />
 
@@ -178,9 +176,15 @@ function ProfileComp() {
       </div>
 
       {/* Right Section for Nested Routes */}
-      <div className="flex flex-col ml-6 rounded-lg bg-gray-200 animate-flip-down">
-        <Outlet />
+      <div className="flex flex-col scroll-m-1 ml-6 rounded-lg bg-gray-200 animate-flip-down">
+        {/* Scrollable Wrapper for the Outlet */}
+        <div
+          className="scrollable-outlet overflow-y-auto h-full max-h-[calc(100vh-110px)] p-1 rounded-lg bg-white  shadow-md"
+        >
+          <Outlet />
+        </div>
       </div>
+
     </div>
   );
 }

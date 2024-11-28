@@ -70,3 +70,13 @@ export interface IProviderProfileData {
   about: string;
   providerId: string;
 }
+
+// userDetails for chat 
+
+export interface IUserDataChat {
+  _id: string;
+  name: string;
+  phone: string;
+  email: string;
+  imageUrl: string;
+}

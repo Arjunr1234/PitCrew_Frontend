@@ -14,6 +14,9 @@ import PaymentSuccess from '../components/user/paymentSuccess'
 import Profile from '../pages/user/Profile'
 import ProfileDetailsComp from '../components/user/ProfileDetailsComp'
 import BookingDetails from '../components/user/BookingDetails'
+import PaymentFailed from '../components/user/paymentFailed'
+import ChatUser from '../components/user/ChatUser'
+import BookingView from '../components/user/BookingView'
 
 
 
@@ -38,9 +41,12 @@ function UserRoute() {
          <Route path={'/providers-shops'} element={<ProvidersShop/>}/>
          <Route path={'/provider-service-view'} element={<ProviderServicesView/>}/>
          <Route path={'/payment-success'} element={<PaymentSuccess/>}/>
+         <Route path={'/payment-cancelled'} element={<PaymentFailed/>} />
          <Route path={'/user-profile'} element={<Profile/>}>
+           <Route path={'/user-profile/user-chat'} element={<ChatUser/>}/>
            <Route path={'/user-profile/profile-details'}  element={<ProfileDetailsComp/>} />
            <Route path={'/user-profile/booking-details'} element={<BookingDetails/>}/>
+           <Route path={'/user-profile/booking-view'} element={<BookingView/>}/>
          </Route>
       </Route>
    </Routes>

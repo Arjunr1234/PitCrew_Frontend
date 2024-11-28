@@ -16,6 +16,8 @@ import ProtectedRoute from '../utils/protecteRoutes/provider';
 import BookingsComp from '../components/provider/Bookings';
 import CancellBookings from '../components/provider/CancellBookings';
 import AddSlot from '../components/provider/AddSlot';
+import BookingView from '../components/provider/BookingView';
+import Chat from '../components/provider/Chat';
 
 
 function ProviderRoute() {
@@ -32,8 +34,9 @@ function ProviderRoute() {
              <Route  element={<ProviderLayout/>}>
                 <Route path='dashboard' element={<ProviderHome/>}/>
                 <Route path='profile' element={<ProviderProfile/>}/>
-                
                 <Route path="bookings" element={<ProviderBooking />}>
+                   <Route path='provider-chat' element={<Chat/>}/>
+                   <Route path='booking-view' element={<BookingView/>} />
                    <Route path="bookings-list" element={<BookingsComp />} />
                    <Route path="cancelled-bookings" element={<CancellBookings />} />
                    <Route path="add-slot" element={<AddSlot />} />

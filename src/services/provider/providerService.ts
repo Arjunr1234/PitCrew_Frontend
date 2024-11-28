@@ -261,7 +261,7 @@ export const updateProfilePicture = async (data: FormData) => {
     throw error
   }
 }
-
+// shift to this to user
 export const getBookingsService = async(userId:string) => {
     try {
 
@@ -273,6 +273,18 @@ export const getBookingsService = async(userId:string) => {
         handleError(error)
       
     }
+}
+
+export const fetchBookingsService = async(providerId:string) => {
+      try {
+        const response = await axiosInstance.get(URL + `/api/provider/bookings/get-all-bookings?providerId=${providerId}`);
+        console.log("This is the repsoen servcie: ", response)
+        return response.data
+        
+      } catch (error) {
+        console.log("Error in getBookingService: ", error)
+        handleError(error)
+      }
 }
 
 
