@@ -145,32 +145,46 @@ export const getUserDetailsService = async(userId:string) => {
 }
 
 
-export const editUserProfileService = async(data:IProfileEditData) => {
-      try {
-          const response = await axiosInstance.patch(URL + `/api/user/profile/edit-profile`, data)
-          return response.data
-        
-      } catch (error) {
-        console.log("Error in editUserProfile: ", error)
-        handleError(error)
-      }
+export const editUserProfileService = async (data: IProfileEditData) => {
+  try {
+    const response = await axiosInstance.patch(URL + `/api/user/profile/edit-profile`, data)
+    return response.data
+
+  } catch (error) {
+    console.log("Error in editUserProfile: ", error)
+    handleError(error)
+  }
 }
 
-export const updateProfilePicService = async(data:FormData) => {
-     try {
-        console.log("This is the formdata: ", data)
-         const response = await axiosInstance.post(URL + '/api/user/profile/update-profile-img', data,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          }
-         );
-         return response.data
-      
-     } catch (error) {
-        console.log("Error in updateProfilePicService: ", error);
-        handleError(error)
-      
-     }
+export const updateProfilePicService = async (data: FormData) => {
+  try {
+    console.log("This is the formdata: ", data)
+    const response = await axiosInstance.post(URL + '/api/user/profile/update-profile-img', data,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
+    return response.data
+
+  } catch (error) {
+    console.log("Error in updateProfilePicService: ", error);
+    handleError(error)
+
+  }
+}
+
+export const fetchAllChatService = async (userId: string, providerId: string) => {
+  try {
+
+    const response = await axiosInstance.get(URL + `/api/chat/get-all-chats?userId=${userId}&providerId=${providerId}`);
+    return response.data
+
+  } catch (error) {
+    console.log("Error in fetchAllChatService: ", error);
+    handleError(error);
+    throw error
+
+  }
 }

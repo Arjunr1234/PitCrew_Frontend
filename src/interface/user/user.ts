@@ -161,4 +161,18 @@ export interface IProviderDetails {
   logUrl:string;
 }
 
+// userChat section
+
+export interface ChatMessage {
+  sender: string; 
+  message: string;
+  type: "text" ;
+  delete: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+
+
+
 

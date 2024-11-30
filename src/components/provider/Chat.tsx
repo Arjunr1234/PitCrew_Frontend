@@ -1,46 +1,127 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { IUserDataChat } from "../../interface/provider/iProvider";
+import { useSocket } from "../../Context/SocketIO";
+import { ChatMessage } from "../../interface/user/user";
+import { fetchAllChatService } from "../../services/user/user";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+
+// const chat:ChatMessage[] = [
+//   {
+//     sender: "user",
+//     message: "Hello, I need help with my booking.",
+//     type: "text",
+//     delete: false,
+//     createdAt: "2024-11-27T10:00:00Z",
+//     updatedAt: "2024-11-27T10:00:00Z"
+//   },
+//   {
+//     sender: "provider",
+//     message: "Hi, sure! Could you please provide your booking ID?",
+//     type: "text",
+//     delete: false,
+//     createdAt: "2024-11-27T10:01:00Z",
+//     updatedAt: "2024-11-27T10:01:00Z"
+//   },
+//   {
+//     sender: "user",
+//     message: "My booking ID is 12345.",
+//     type: "text",
+//     delete: false,
+//     createdAt: "2024-11-27T10:02:00Z",
+//     updatedAt: "2024-11-27T10:02:00Z"
+//   },
+//   {
+//     sender: "provider",
+//     message: "Thank you! I’ll check the details and get back to you shortly.",
+//     type: "text",
+//     delete: false,
+//     createdAt: "2024-11-27T10:03:00Z",
+//     updatedAt: "2024-11-27T10:03:00Z"
+//   }
+// ]
 
 function Chat() {
-  const [messages, setMessages] = useState([
-    { id: 1, text: "Hello! How are you?", type: "incoming" },
-    { id: 2, text: "I'm good, thank you! How about you?", type: "outgoing" },
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [booking, setBooking] = useState<any>(null);
   const [newMessage, setNewMessage] = useState("");
-  const [userData, setUserData] = useState<IUserDataChat | null>(null)
-  const messagesEndRef = useRef<HTMLDivElement>(null); 
+  const [userData, setUserData] = useState<IUserDataChat | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  let { socket } = useSocket();
+  const {providerInfo} = useSelector((state:RootState) => state.provider)
+  
+  const bookingData = location.state?.bookingData;
 
-  const userDetails = location.state?.userData
 
+  useEffect(() => {
+
+    if(socket){
+       socket?.emit("joinChatRoom", {userId:bookingData?.userId, providerId:bookingData?.providerId, online:"PROVIDER"})
+    } 
+},[socket]);
   
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-
+  
   useEffect(() => {
-    console.log("This is userData: ", userDetails);
-    setUserData(userDetails)
+    if (bookingData) {
+      
+      setUserData(bookingData.userData);
+      setBooking(bookingData);
+  
+      if (bookingData.userId && bookingData.providerId) {
+        fetchMessages(bookingData.userId, bookingData.providerId);
+      }
+    }
     
-  },[])
-
+  }, [bookingData]);
   
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+  
+  const fetchMessages = async (userId: string, providerId: string) => {
+    try {
+      const response = await fetchAllChatService(userId, providerId);
+      if (response.success) {
+        console.log("These are the fetched messages: ", response.chatData.messages);
+        setMessages(response.chatData.messages);
+      }
+    } catch (error) {
+      console.log("Error in fetchMessages: ", error);
+    }
+  };
+
+  useEffect(() => {
+    socket?.on("receiveMessage", (messageDetails:any) => {
+       
+       setMessages(messageDetails.messages)
+    });
+    return () => {
+     socket?.off("receiveMessage");
+   };
+ },[socket]);
+  
 
   const handleSendMessage = () => {
     if (newMessage.trim() === "") return;
 
-    const messageToAdd = {
-      id: messages.length + 1,
-      text: newMessage,
-      type: "outgoing",
-    };
+    const messageDetails = {
+      senderId:bookingData?.providerId,
+      receiverId:bookingData?.userId,
+      bookingId:bookingData._id,
+      name:providerInfo?.workshopname,
+      message:newMessage,
+      sender:"provider"
+    }
 
-    setMessages([...messages, messageToAdd]); 
-    setNewMessage(""); 
+        console.log("This is messgeDetails: ", messageDetails)
+
+        socket?.emit("sendMessage", { messageDetails});
+        setNewMessage("") 
   };
 
   return (
@@ -57,34 +138,48 @@ function Chat() {
 
   {/* Messages Section */}
   <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-white">
-    {messages.map((msg) => (
+  {messages.map((msg, index) => (
+    <div
+      key={index}
+      className={`flex ${
+        msg.sender === "provider" ? "justify-end" : "items-start"
+      }`}
+    >
+      {msg.sender === "user" && (
+        <img
+          src={userData?.imageUrl} 
+          alt="Provider"
+          className="rounded-full w-8 h-8 mr-3"
+        />
+      )}
+      
       <div
-        key={msg.id}
-        className={`flex ${
-          msg.type === "outgoing" ? "justify-end" : "items-start"
-        }`}
+        className={`${
+          msg.sender === "provider"
+            ? "bg-blue-500 text-white rounded-br-none"
+            : "bg-gray-200 text-gray-700 rounded-bl-none"
+        } px-4 py-2 rounded-xl shadow-md max-w-xs`}
       >
-        {msg.type === "incoming" && (
-          <img
-            src={userData?.imageUrl}
-            alt="User"
-            className="rounded-full w-8 h-8 mr-3"
-          />
-        )}
-        <div
-          className={`${
-            msg.type === "outgoing"
-              ? "bg-blue-500 text-white"
-              : "bg-gray-200 text-gray-700"
-          } px-4 py-2 rounded-xl shadow-md max-w-xs`}
-        >
-          <p className="text-sm">{msg.text}</p>
-        </div>
+        <p className="text-sm">{msg.message}</p>
+        <p className="text-xs text-gray-500 mt-1">
+          {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+        </p>
       </div>
-    ))}
-    {/* Invisible div to track scrolling */}
-    <div ref={messagesEndRef} />
-  </div>
+
+      {msg.sender === "provider" && (
+        <img
+          src={booking?.providerImage} 
+          alt="provider"
+          className="rounded-full w-8 h-8 ml-3"
+        />
+      )}
+    </div>
+  ))}
+
+  {/* Invisible div to track scrolling */}
+  <div ref={messagesEndRef} />
+</div>
+
 
   {/* Input Section */}
   <div className="flex items-center p-4 bg-gray-300 border-t border-gray-300">

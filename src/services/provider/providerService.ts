@@ -287,6 +287,18 @@ export const fetchBookingsService = async(providerId:string) => {
       }
 }
 
+export const changeBookingStatus = async (bookingId: string, status: string) => {
+  try {
+
+    const response = await axiosInstance.patch(URL + '/api/provider/bookings/change-status', { bookingId, status });
+    return response.data
+  } catch (error) {
+    console.log("Error in changeBookingStatus: ", error);
+    handleError(error);
+
+  }
+}
+
 
 
 

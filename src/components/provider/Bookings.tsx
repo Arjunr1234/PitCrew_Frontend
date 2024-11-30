@@ -15,8 +15,6 @@ function BookingsComp() {
     const fetchBookingDetails = async() => {
        const response = await fetchBookingsService(providerId)
         if(response.success){
-          toast.success("Successfully get the data");
-          console.log("This si the response", response)
           setBookingDetails(response.bookingData)
         }else{
           toast.error("Failed to fetch the data!!");
