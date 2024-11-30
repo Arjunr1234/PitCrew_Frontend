@@ -7,41 +7,6 @@ import { useSelector } from 'react-redux';
 import { useSocket } from '../../Context/SocketIO';
 import { fetchAllChatService } from '../../services/user/user';
 
-// const chat:ChatMessage[] = [
-//   {
-//     sender: "user",
-//     message: "Hello, I need help with my booking.",
-//     type: "text",
-//     delete: false,
-//     createdAt: "2024-11-27T10:00:00Z",
-//     updatedAt: "2024-11-27T10:00:00Z"
-//   },
-//   {
-//     sender: "provider",
-//     message: "Hi, sure! Could you please provide your booking ID?",
-//     type: "text",
-//     delete: false,
-//     createdAt: "2024-11-27T10:01:00Z",
-//     updatedAt: "2024-11-27T10:01:00Z"
-//   },
-//   {
-//     sender: "user",
-//     message: "My booking ID is 12345.",
-//     type: "text",
-//     delete: false,
-//     createdAt: "2024-11-27T10:02:00Z",
-//     updatedAt: "2024-11-27T10:02:00Z"
-//   },
-//   {
-//     sender: "provider",
-//     message: "Thank you! I’ll check the details and get back to you shortly.",
-//     type: "text",
-//     delete: false,
-//     createdAt: "2024-11-27T10:03:00Z",
-//     updatedAt: "2024-11-27T10:03:00Z"
-//   }
-// ]
-
 
 function ChatUser() {
 

@@ -222,11 +222,11 @@ function BookingView() {
         <div className=" p-4 bg-gray-50 rounded-lg shadow-md">
           <table className="table-auto w-full border-collapse border border-gray-200">
             <thead>
-              <tr className="bg-blue-400 text-white">
-                <th className="border border-blue-400 px-6 py-3 text-left font-semibold uppercase">
+              <tr className="bg-customGrey text-white">
+                <th className="border border-customGrey px-6 py-3 text-left font-semibold uppercase">
                   Service Type
                 </th>
-                <th className="border border-blue-400 px-6 py-3 text-right font-semibold uppercase">
+                <th className="border border-customGrey px-6 py-3 text-right font-semibold uppercase">
                   Starting Price (₹)
                 </th>
               </tr>
@@ -268,11 +268,11 @@ function BookingView() {
                 </td>
               </tr>
               {/* Grand Total Row */}
-              <tr className="bg-blue-400 text-white font-bold">
-                <td className="border border-blue-400 px-6 py-3 text-right">
+              <tr className="bg-customGrey text-white font-bold">
+                <td className=" px-6 py-3 text-right">
                   Grand Total
                 </td>
-                <td className="border border-blue-400 px-6 py-3 text-right">
+                <td className=" px-6 py-3 text-right">
                   ₹{bookingDetails?.subTotal}
                 </td>
               </tr>

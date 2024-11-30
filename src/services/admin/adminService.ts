@@ -138,5 +138,16 @@ export const removeSubService = async(serviceId:string, subServiceId:string) => 
      }
 }
 
+export const fetchAllBookingsService = async() => {
+      try {
+         const response = await axiosInstance.get(URL + `/api/admin/bookings/get-all-bookings`);
+         return response.data
+        
+      } catch (error) {
+         console.log("Error occured in fetchAllBookings: ", error)
+         throw error
+      }
+}
+
 
 

@@ -16,6 +16,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { IBookingDetails } from '../../interface/user/user';
 import { toast } from 'sonner';
 import Swal from 'sweetalert2';
+import { changeBookingStatus } from '../../services/provider/providerService';
 
 function BookingView() {
   const [selectedBooking, setSelectedBooking] = useState<IBookingDetails | null>(null);
@@ -42,11 +43,30 @@ function BookingView() {
     setIsVehicleDetailsVisible(!isVehicleDetailsVisible);
   };
 
-  const handleAcceptVehicle = () => {
+  const handleAcceptVehicle = async(bookingId:string) => {
+      try {
 
+          const response = await changeBookingStatus(bookingId, 'Delivered');
+          if (response.success) {
+            toast.success('Delivered Successfully');
+            setSelectedBooking((prev) =>
+              prev
+                ? {
+                    ...prev,
+                    status: 'Delivered', 
+                  }
+                : null
+            );
+          }
+        
+      } catch (error) {
+          console.log("Error in handleAcceptVehicle: ", error);
+          throw error
+        
+      }
   }
 
-  const confimAccept = () => {
+  const confimAccept = (bookingId:string) => {
     Swal.fire({
       title: 'Are you sure?',
       text: 'By accepting, you confirm that you have received the vehicle', 
@@ -57,7 +77,7 @@ function BookingView() {
       confirmButtonText: 'Confirm',
     }).then((result) => {
       if (result.isConfirmed) {
-        handleAcceptVehicle();  
+        handleAcceptVehicle(bookingId);  
       }
     });
     
@@ -101,7 +121,7 @@ function BookingView() {
             <h1 className="text-xl font-semibold text-center p-5">
               Status:
               <span
-                className={`px-4 py-3 text-center font-semibold ${selectedBooking?.status === 'Completed'
+                className={`px-4 py-3 text-center font-semibold ${selectedBooking?.status === 'Delivered'
                     ? 'text-green-500'
                     : selectedBooking?.status === 'pending'
                       ? 'text-yellow-500'
@@ -116,7 +136,7 @@ function BookingView() {
             {selectedBooking?.status === 'ready for delivery' ? (
               <div className="flex items-center flex-col justify-center">
                 <button className="p-3 px-7 bg-green-400 text-white font-semibold rounded-lg shadow-lg hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-300"
-                onClick={confimAccept}>
+                onClick={() => confimAccept(selectedBooking._id)}>
                   Accept
                 </button>
                 <p className='text-orange-400 text-sm animate-pulse animate-infinite'>Please Accept request to receive the vehicle</p>

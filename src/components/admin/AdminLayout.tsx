@@ -1,6 +1,6 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { FaTachometerAlt, FaUser, FaUsers, FaStore, FaSignOutAlt, } from 'react-icons/fa'; 
-import { FiSettings } from "react-icons/fi"
+import { FiCalendar, FiSettings } from "react-icons/fi"
 import { useAppDispatch } from '../../interface/hooks';
 import { adminLogoutThunk } from '../../redux/thunk/admin';
 import { resetSuccess } from '../../redux/slice/adminSlice';
@@ -45,7 +45,7 @@ function AdminLayout() {
   
   
   return (
-    <div className="min-h-screen flex">
+    <div className="h-screen flex">
       {/* Sidebar */}
       <div className="w-64 bg-violet-400 text-white">
         <div className="p-4">
@@ -57,12 +57,7 @@ function AdminLayout() {
                 Dashboard
               </Link>
             </li>
-            <li>
-              <Link to="/admin/profile" className=" text-black py-2 px-4 rounded hover:bg-gray-700 hover:text-white flex items-center">
-                <FaUser className="mr-3" /> {/* Profile Icon */}
-                Profile
-              </Link>
-            </li>
+           
             <li>
               <Link to="/admin/users" className=" text-black py-2 px-4 rounded hover:bg-gray-700 hover:text-white flex items-center">
                 <FaUsers className="mr-3" /> {/* Users Icon */}
@@ -73,6 +68,12 @@ function AdminLayout() {
               <Link to="/admin/providers" className=" text-black py-2 px-4 rounded hover:bg-gray-700 hover:text-white flex items-center">
                 <FaStore className="mr-3" /> {/* Providers Icon */}
                 Providers
+              </Link>
+            </li>
+            <li>
+              <Link to="/admin/bookings" className=" text-black py-2 px-4 rounded hover:bg-gray-700 hover:text-white flex items-center">
+                <FiCalendar className="mr-3" /> {/* Profile Icon */}
+                Bookings
               </Link>
             </li>
             <li>
@@ -92,8 +93,8 @@ function AdminLayout() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-6 bg-gray-100">
-        <Outlet />
+      <div className="flex-1 p-6 overflow-y-auto bg-gray-100">
+          <Outlet />
       </div>
     </div>
   );

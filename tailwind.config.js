@@ -17,14 +17,16 @@ export default {
         providerBlueSecondary:"#9BE8D8",
         customViolet:'#7952B3',
         darkBlue:'#06278a',
-        customYellow:"#ffb400"
+        customYellow:"#ffb400",
+        adminSecondary:"#9B7EBD",
+        customGrey:"#A59D84"
       },
       fontFamily: {
         montserrat: ['Montserrat', 'sans-serif'],
       },
       boxShadow: {
-        'dark-yellow': '0 4px 6px rgba(255, 215, 0, 0.5)', // Example RGBA for dark yellow
-        'dark-yellow-lg': '0 10px 15px rgba(255, 215, 0, 0.7)', // Larger
+        'dark-yellow': '0 4px 6px rgba(255, 215, 0, 0.5)', 
+        'dark-yellow-lg': '0 10px 15px rgba(255, 215, 0, 0.7)', 
       },
       fontFamily: {
         atma: ['Atma', 'sans-serif'],
