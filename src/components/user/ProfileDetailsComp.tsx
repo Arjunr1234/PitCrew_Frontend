@@ -53,6 +53,20 @@ function UserProfileForm() {
   // Function to handle update button click
   const handleUpdateClick = async() => {
     try {
+      if(!modalUserName.trim()){
+         toast.error("Please add name");
+         return
+      }
+      if(!modalPhone.trim()){
+        toast.error("Please add phone number");
+        return
+      }
+      const phoneRegex = /^[0-9]+$/;
+  
+  if (!phoneRegex.test(modalPhone)) {
+      toast.error("Please add a valid phone number");
+      return;
+  }
       const data = {
         name:modalUserName,
         phone:modalPhone,

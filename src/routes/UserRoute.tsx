@@ -17,6 +17,7 @@ import BookingDetails from '../components/user/BookingDetails'
 import PaymentFailed from '../components/user/paymentFailed'
 import ChatUser from '../components/user/ChatUser'
 import BookingView from '../components/user/BookingView'
+import ResetPassword from '../components/user/ResetPassword'
 
 
 
@@ -43,6 +44,7 @@ function UserRoute() {
          <Route path={'/payment-success'} element={<PaymentSuccess/>}/>
          <Route path={'/payment-cancelled'} element={<PaymentFailed/>} />
          <Route path={'/user-profile'} element={<Profile/>}>
+          <Route path={'/user-profile/reset-password'} element={<ResetPassword/>} />
            <Route path={'/user-profile/user-chat'} element={<ChatUser/>}/>
            <Route path={'/user-profile/profile-details'}  element={<ProfileDetailsComp/>} />
            <Route path={'/user-profile/booking-details'} element={<BookingDetails/>}/>

@@ -299,6 +299,18 @@ export const changeBookingStatus = async (bookingId: string, status: string) => 
   }
 }
 
+export const resetPasswordService = async(providerId:string, currentPassword:string, newPassword:string) => {
+  try {
+       const response = await axiosInstance.put(URL + '/api/provider/profile/reset-password',{providerId, currentPassword, newPassword});
+       return response.data
+    
+  } catch (error) {
+      console.log('Error in resetPassword: ', error);
+      handleError(error);
+      throw error
+    
+  }
+}
 
 
 

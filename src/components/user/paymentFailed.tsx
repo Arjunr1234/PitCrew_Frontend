@@ -9,6 +9,10 @@ function paymentFailed() {
     navigate('/provider-service-view'); // Replace with your payment route
   };
 
+  setTimeout(() => {
+     navigate('/')
+  },3000)
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-red-50 text-center px-4">
       <div className="animate-bounce">
@@ -35,18 +39,18 @@ function paymentFailed() {
       <p className="mt-2 text-gray-600">
         We're sorry, but your payment could not be processed. Please try again.
       </p>
-      <button
+      {/* <button
         onClick={handleRetry}
         className="mt-6 bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg shadow-lg transition-transform transform hover:scale-105 focus:outline-none"
       >
         Retry Payment
-      </button>
-      <button
+      </button> */}
+      {/* <button
         onClick={() => navigate('/')}
         className="mt-3 text-red-600 hover:underline focus:outline-none"
       >
         Go to Home
-      </button>
+      </button> */}
     </div>
   );
 }

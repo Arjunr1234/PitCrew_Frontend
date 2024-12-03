@@ -188,3 +188,29 @@ export const fetchAllChatService = async (userId: string, providerId: string) =>
 
   }
 }
+
+export const resetPasswordService = async(userId:string, currentPassword:string, newPassword:string) => {
+  try {
+       const response = await axiosInstance.put(URL + '/api/user/profile/reset-password',{userId, currentPassword, newPassword});
+       return response.data
+    
+  } catch (error) {
+      console.log('Error in resetPassword: ', error)
+      handleError(error)
+      throw error
+    
+  }
+}
+
+export const cancellBookingService = async (bookingId:string, reason:string) => {
+    try {
+         const response = await axiosInstance.put(URL + '/api/user/bookings/cancell-booking', {bookingId, reason});
+         return response.data
+      
+    } catch (error) {
+       console.log("Error in cancellBookingService: ", error);
+       handleError(error);
+       throw error
+      
+    }
+}

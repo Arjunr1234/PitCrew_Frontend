@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import { updateProfilePicService } from "../../services/user/user";
 import providerImg from '../../images/providerDefaltImg.jpg'
+import { useNavigate } from "react-router-dom";
 
 function ProfileComp() {
   const workshopData = {
@@ -38,7 +39,8 @@ function ProfileComp() {
   const [modalAbout, setModalAbout] = useState<string>("")
   const fileInputRef = useRef<HTMLInputElement>(null);
   const {id} = useSelector((state:any) => state.provider?.providerInfo);
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate()
 
   useEffect(() => {
 
@@ -76,6 +78,30 @@ function ProfileComp() {
   };
 
   const handleUpdate = async () => {
+
+    if(!modalWorkshopName.trim()){
+      toast.error("Please add workshopName");
+      return
+    }
+    if(!ownerName.trim()){
+      toast.error("Please add owner name");
+      return
+    }
+    if (!modalPhone.trim()) {
+      toast.error("Please add phone number");
+      return;
+  }
+  
+  const phoneRegex = /^[0-9]+$/;
+  
+  if (!phoneRegex.test(modalPhone)) {
+      toast.error("Please add a valid phone number");
+      return;
+  }
+    if(!modalAbout.trim()){
+      toast.error("Please add about");
+      return
+    }
    
     const data = {
       workshopName:modalWorkshopName,
@@ -143,27 +169,38 @@ function ProfileComp() {
          throw error
         
       }
-
-
     }
-    
-
-
   }
+
+  
 
 
   return (
     <div className="bg-gray-100 h-screen flex justify-center items-center animate-fade-down">
       <div className="flex flex-col p-6 gap-y-6 w-full max-w-4xl">
         {/* Title Section */}
-        <div className="p-5 bg-white rounded-lg shadow-md relative">
-          <h1 className="font-atma text-4xl text-center text-blue-400">
+        <div className="p-5 flex bg-white rounded-lg shadow-md relative">
+          <h1 className="font-atma flex-1 text-4xl text-center text-blue-400">
             Workshop Details
           </h1>
-          <button className="p-1 absolute top-2 right-2 rounded-lg bg-providerBlueSecondary hover:bg-providerBluePrimary"
-            onClick={handleModalOpen}>
-            Edit
-          </button>
+          <div className="flex gap-x-3">
+            <button className="p-2  rounded-lg bg-providerBlueSecondary hover:bg-providerBluePrimary"
+              onClick={handleModalOpen}>
+              Edit
+            </button>
+            <div className="relative group">
+              <button
+                className="p-2 rounded-lg bg-providerBlueSecondary hover:bg-providerBluePrimary"
+                onClick={() => navigate('/provider/reset-password')}
+              >
+                🔑
+              </button>
+              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 shadow-lg">
+                Reset Password
+              </div>
+            </div>
+
+          </div>
         </div>
 
         {/* Workshop Details Section */}

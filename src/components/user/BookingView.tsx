@@ -4,13 +4,12 @@ import {
   FaMapMarkerAlt,
   FaCar,
   FaGasPump,
-  FaCogs,
   FaPhoneAlt,
   FaCommentDots,
   FaChevronDown,
   FaChevronUp,
   FaUser,
-  FaMotorcycle, FaRupeeSign, FaRoad, FaIdCard, FaKey, FaCircle, FaHashtag
+  FaMotorcycle, FaRoad, FaIdCard,  FaCircle, 
 } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { IBookingDetails } from '../../interface/user/user';

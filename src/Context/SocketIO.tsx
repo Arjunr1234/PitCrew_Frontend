@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { io, Socket } from "socket.io-client";
 import { RootState } from "../redux/store";
+import { URL } from "../utils/api";
 
 interface ISocketContext {
     socket: Socket | null;
@@ -21,7 +22,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     useEffect(() => {
         if (loggedUser) {
             
-            const newSocket = io("http://localhost:3000", {
+            const newSocket = io( URL , {
                 query: {
                     userId: loggedUser,
                 },

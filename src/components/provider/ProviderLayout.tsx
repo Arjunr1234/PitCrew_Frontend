@@ -119,18 +119,7 @@ function ProviderLayout() {
                 Bookings
               </Link>
             </li>
-            <li>
-              <Link
-                to="/provider/services"
-                onClick={() => setIsMenuOpen(false)}
-                className={`text-black py-2 px-4 rounded hover:bg-gray-700 hover:text-white flex items-center ${
-                  isActiveRoute('/provider/services') ? 'bg-gray-700 text-white' : ''
-                }`}
-              >
-                <FaStore className="mr-3" />
-                Services
-              </Link>
-            </li>
+          
             <li>
               <Link
                 to="/provider/add-service"
@@ -194,17 +183,7 @@ function ProviderLayout() {
                 Bookings
               </Link>
             </li>
-            <li>
-              <Link
-                to="/provider/services"
-                className={`text-black py-2 px-4 rounded hover:bg-gray-700 hover:text-white flex items-center ${
-                  isActiveRoute('/provider/services') ? 'bg-gray-700 text-white' : ''
-                }`}
-              >
-                <FaStore className="mr-3" />
-                Services
-              </Link>
-            </li>
+           
             <li>
               <Link
                 to="/provider/add-service"

@@ -35,7 +35,7 @@ function BookingView() {
   }
 
   const handleChangeStatus = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-     console.log("Status; ",e.target.value)
+    console.log("Status; ", e.target.value)
     try {
       const status = e.target.value
       const response = await changeBookingStatus(booking._id, status);
@@ -87,14 +87,28 @@ function BookingView() {
         {/* status section */}
 
         <div className="flex flex-row justify-around items-center p-4 bg-gray-200 border  rounded-md">
-          {/* Current Status */}
+         
           <div className="flex items-center">
             <h1 className="text-xl font-semibold mr-2">Status:</h1>
-            <h1 className="text-xl font-semibold text-orange-300">{currentStatus}</h1>
+            <h1
+              className={`text-xl font-semibold ${currentStatus === "Pending"
+                  ? "text-orange-300"
+                  : currentStatus === "Delivered"
+                    ? "text-green-500"
+                    : currentStatus === "cancelled"
+                      ? "text-red-500"
+                      : "text-gray-500"
+                }`}
+            >
+              {currentStatus}
+            </h1>
           </div>
 
+
           {/* Dropdown for Status Change */}
-          <div className="flex items-center">
+          {(currentStatus !== "Delivered" && currentStatus !== "cancelled") &&
+          (
+            <div className="flex items-center">
             <h1 className="mr-2 text-black font-semibold">Change Status:</h1>
             <select
               value={currentStatus}
@@ -108,10 +122,18 @@ function BookingView() {
               ))}
             </select>
           </div>
+          ) }
+
+          {
+            currentStatus === 'cancelled' ?  <div className="flex items-center">
+            <h1 className="mr-2 text-black font-semibold text-orange-400">Reason for Cancellation:</h1>
+              {bookingDetails.reason}
+          </div>:""
+          }
         </div>
 
         <div className="flex flex-row gap-y-2 px-4 mt-5">
-          <div className={`flex-1 bg-blue-100 p-4 rounded-lg shadow-lg ${!isUserDetailsVisble? 'bg-blue-400 text-white':""}`}>
+          <div className={`flex-1 bg-blue-100 p-4 rounded-lg shadow-lg ${!isUserDetailsVisble ? 'bg-blue-400 text-white' : ""}`}>
             <div
               className="flex justify-between items-center cursor-pointer"
               onClick={toggleUserDetails}
@@ -155,7 +177,7 @@ function BookingView() {
         {/* vehicle Details */}
 
         <div className="flex flex-row gap-1 px-4 py-2">
-          <div className={`flex-1 bg-blue-100 p-4 rounded-lg shadow-lg ${!isVehicleDetailsVisible? 'bg-blue-400 text-white':""}`}>
+          <div className={`flex-1 bg-blue-100 p-4 rounded-lg shadow-lg ${!isVehicleDetailsVisible ? 'bg-blue-400 text-white' : ""}`}>
             <div
               className="flex justify-between items-center cursor-pointer"
               onClick={toggleVehicleDetails}

@@ -75,10 +75,10 @@ function Navbar() {
           onClick={() => navigate('/services')}>
             Service
           </button>
-          <button className=" font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white"
+          {/* <button className=" font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white"
           >
             About
-          </button>
+          </button> */}
           <button className=" font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white"
           onClick={() => navigate('/user-profile')}>
             Profile

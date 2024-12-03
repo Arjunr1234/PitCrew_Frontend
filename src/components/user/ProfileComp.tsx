@@ -14,7 +14,6 @@ function ProfileComp() {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-  const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const { name, id } = useSelector((state: any) => state.user.userInfo);
   const [profilePic, setProfilePic] = useState<string>(Image)
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -166,6 +165,13 @@ function ProfileComp() {
           >
             🛒 Bookings
           </Link>
+          <Link
+            to={"/user-profile/reset-password"}
+            className="flex items-center gap-3 rounded-lg px-4 py-2 text-black font-medium transition-all hover:bg-gray-700 hover:text-white"
+          >
+            🔑 Reset Password
+          </Link>
+
           <button
             className="flex items-center gap-3 rounded-lg px-4 py-2 text-black font-medium transition-all hover:bg-red-600 hover:text-white"
             onClick={confirmLogout}

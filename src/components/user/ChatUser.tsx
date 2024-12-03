@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import workshopImg from '../../images/providerDefaltImg.jpg';
 import { useLocation } from 'react-router-dom';
-import { ChatMessage, IProviderDetails } from '../../interface/user/user';
-import { FaPaperPlane, FaSmile } from 'react-icons/fa';
+import { ChatMessage } from '../../interface/user/user';
+import { FaPaperPlane } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { useSocket } from '../../Context/SocketIO';
 import { fetchAllChatService } from '../../services/user/user';

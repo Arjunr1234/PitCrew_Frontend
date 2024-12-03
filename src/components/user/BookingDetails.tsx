@@ -6,15 +6,19 @@ import { FaPhoneAlt, FaCommentDots } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { FaEnvelope, FaMapMarkerAlt, FaCar, FaGasPump, FaCogs } from 'react-icons/fa';
 import { toast } from "sonner";
+import Swal from "sweetalert2";
+import { cancellBookingService } from "../../services/user/user";
 
 function BookingDetails() {
 
-
+  
   const [bookings, setBookings] = useState<IBookingDetails[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedBooking, setSelectedBooking] = useState<IBookingDetails | null>(null);
   const navigate = useNavigate()
   const { id } = useSelector((state: any) => state.user?.userInfo);
+
+  
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -51,6 +55,83 @@ function BookingDetails() {
     setSelectedBooking(null);
     setIsModalOpen(false)
   }
+
+  const handleCancellBooking = async(bookingId:string, reason:string) => {
+     try {
+        console.log('This is the bookingId: ', bookingId);
+        console.log("This is the reason: ", reason);
+        const response = await cancellBookingService(bookingId, reason);
+        if(response.success){
+           const changeStatusBooking = bookings.map((booking) => {
+              if(booking._id === bookingId){
+                 return { 
+                  ...booking, status:"cancelled",reason:reason,
+                 }
+              }
+              else{
+                return booking
+              }
+           })
+           setBookings(changeStatusBooking)
+           toast.success("Successfully Cancelled!!")
+        }
+
+
+     } catch (error:any) {
+       console.log("Error in handleCancellService: ", error)
+       toast.error(error.response.data.message)
+     }
+  }
+
+
+  const handleCancelTerms = async (bookingId: string) => {
+    const { value: accept } = await Swal.fire({
+      title: "Cancellation Terms and Conditions",
+      html: `
+        <div style="text-align: left; font-size: 14px;">
+          <p>1. If you cancel at least 24 hours before the scheduled booking date, you will receive a full refund, excluding the platform fee.</p>
+          <p>2. If you cancel within 24 hours of the scheduled booking date, 25% of the total payment will be deducted, and the remaining amount will be refunded.</p>
+        </div>
+      `,
+      input: "checkbox",
+      inputValue: 0,
+      inputPlaceholder: "I agree to the terms and conditions",
+      confirmButtonText: `
+        Proceed&nbsp;<i class="fa fa-arrow-right"></i>
+      `,
+      inputValidator: (result) => {
+        return !result && "You need to agree with the terms and conditions!";
+      },
+      showCancelButton: true,
+      cancelButtonText: "Cancel",
+    });
+  
+    if (accept) {
+      // Show the second SweetAlert for additional input
+      const { value: reason } = await Swal.fire({
+        title: "Cancellation Reason",
+        input: "textarea",
+        inputLabel: "Reason for Cancellation",
+        inputPlaceholder: "Type your cancellation reason here...",
+        inputAttributes: {
+          "aria-label": "Type your cancellation reason here",
+        },
+        confirmButtonText: "Submit",
+        showCancelButton: true,
+        cancelButtonText: "Cancel",
+      });
+  
+      if (reason) {
+           handleCancellBooking(bookingId, reason)
+      } else {
+        Swal.fire("Cancellation reason not provided!", "", "info");
+      }
+    } else {
+      Swal.fire("Action canceled!", "", "error");
+    }
+  };
+  
+  
   return (
     <div className="overflow-x-auto rounded-lg">
       <table className="table-auto border-collapse border  border-gray-300 w-full shadow-md rounded-lg">
@@ -98,14 +179,17 @@ function BookingDetails() {
                 </button>
               </td>
               <td className=" px-4 py-3 text-center">
-                <button className="px-4 py-2 bg-red-500 text-white rounded-md shadow hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105">
-                  Cancel
-                </button>
+               {booking.status !== 'cancelled'?
+               ( <button className="px-4 py-2 bg-red-500 text-white rounded-md shadow hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105"
+                onClick={() => handleCancelTerms(booking._id)}>
+                  Cancell
+                </button>):("")}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+    
       {
         isModalOpen && selectedBooking && (
           <div className="fixed inset-0 bg-black bg-opacity-10 flex items-center justify-center z-50 rounded-xl">
