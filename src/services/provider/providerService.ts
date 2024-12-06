@@ -312,6 +312,18 @@ export const resetPasswordService = async(providerId:string, currentPassword:str
   }
 }
 
+export const fetchSingleBookingService = async(bookingId:string) => {
+    try {
+        const response = await axiosInstance.get(URL + `/api/provider/bookings/get-single-booking?bookingId=${bookingId}`);
+        return response.data
+      
+    } catch (error) {
+        console.log("Error in fetchSingleBookingService; ", error)
+        handleError(error);
+        throw error
+    }
+}
+
 
 
 

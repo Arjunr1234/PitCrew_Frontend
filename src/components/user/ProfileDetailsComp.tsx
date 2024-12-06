@@ -45,12 +45,12 @@ function UserProfileForm() {
     setIsModalOpen(true);
   };
 
-  // Function to handle cancel button click
+  
   const handleCancelClick = () => {
     setIsModalOpen(false);
   };
 
-  // Function to handle update button click
+
   const handleUpdateClick = async() => {
     try {
       if(!modalUserName.trim()){

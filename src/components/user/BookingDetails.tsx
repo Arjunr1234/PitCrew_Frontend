@@ -10,7 +10,6 @@ import Swal from "sweetalert2";
 import { cancellBookingService } from "../../services/user/user";
 
 function BookingDetails() {
-
   
   const [bookings, setBookings] = useState<IBookingDetails[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);

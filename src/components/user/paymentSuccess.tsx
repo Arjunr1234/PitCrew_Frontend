@@ -14,7 +14,7 @@ function PaymentSuccess() {
     const changePaymentStatus = async () => {
       if (sessionId && bookId) {
         const response = await changePaymentStatusService(sessionId, bookId);
-        toast.success("Successfully changed payment status");
+        
         console.log("Payment status changed:", response);
       } else {
         console.error("Session ID or Book ID is missing");

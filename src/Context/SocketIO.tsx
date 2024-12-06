@@ -26,7 +26,8 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
                 query: {
                     userId: loggedUser,
                 },
-            });
+            }
+        );
 
             newSocket.on("connect", () => {
                 console.log("Socket connected:", newSocket);

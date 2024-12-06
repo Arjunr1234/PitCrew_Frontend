@@ -428,7 +428,7 @@ function TwoWheelerAddService() {
           </div>
           
         </div>
-        <div className="flex flex-col gap-4">
+        {/* <div className="flex flex-col gap-4">
           <h1 className="text-center text-xl font-semibold my-5">Road Services</h1>
           <div className="bg-gray-100 rounded-md" >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -460,7 +460,7 @@ function TwoWheelerAddService() {
               ))}
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
       {showModal && selectedService && (
         <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center">

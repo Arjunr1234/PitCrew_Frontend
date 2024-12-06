@@ -4,7 +4,7 @@ import { reset } from "../../redux/slice/userAuthSlice";
 import store from "../../redux/store";
 import { URL } from "../../utils/api"
 import { toast } from "sonner";
-import { BookingData, IProfileEditData } from "../../interface/user/user";
+import { BookingData, IProfileEditData, IReviewData } from "../../interface/user/user";
 
 
 interface IVehicleDetailsData{
@@ -211,6 +211,21 @@ export const cancellBookingService = async (bookingId:string, reason:string) => 
        console.log("Error in cancellBookingService: ", error);
        handleError(error);
        throw error
+      
+    }
+}
+
+
+export const addRatingService  = async(reviewData:IReviewData) => {
+    try {
+
+       const response = await axiosInstance.post(URL + '/api/user/bookings/add-rating',reviewData );
+       return response.data
+      
+    } catch (error) {
+        console.log("Error in addRatingService: ", error);
+        handleError(error);
+        throw error
       
     }
 }

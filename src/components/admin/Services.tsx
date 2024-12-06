@@ -41,13 +41,13 @@ function Services() {
             <p className="text-gray-600 text-center">View and list all Brands</p>
           </div>
         </Link>
-        <Link to={'/admin/services/road-assistance'} onClick={() => setActiveLink('road-assistance')}>
+        {/* <Link to={'/admin/services/road-assistance'} onClick={() => setActiveLink('road-assistance')}>
           <div className={`flex-1 p-4 bg-white shadow-md rounded-lg m-2 transition-shadow duration-300
             ${activeLink === 'road-assistance' ? 'ring-4 ring-violet-400' : 'hover:ring-4 hover:ring-violet-800'}`}>
             <h2 className="text-xl text-center font-bold">Road Services</h2>
             <p className="text-gray-600 text-center">View and list of all Road services</p>
           </div>
-        </Link>
+        </Link> */}
       </div>
 
       <div className="flex-1 bg-grey-200 p-4">

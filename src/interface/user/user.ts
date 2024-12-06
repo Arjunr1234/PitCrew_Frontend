@@ -139,6 +139,11 @@ export interface IBookingDetails {
   reason: string;
   paymentStatus: string;
   status: string;
+  reviewAdded?:boolean;
+  rating?:{
+    rating: number ;
+    feedback: string ;
+};
   selectedSubServices: {
     type: string;
     startingPrice: string;
@@ -170,6 +175,16 @@ export interface ChatMessage {
   delete: boolean;
   createdAt: string;
   updatedAt: string;
+}
+//reivew and rating
+
+export interface IReviewData{
+    userId:string,
+    providerId:string,
+    serviceId:string,
+    bookingId:string,
+    rating:number,
+    feedback:string
 }
 
 
