@@ -91,19 +91,21 @@ function UserProfileForm() {
   };
 
   return (
-    <div className="flex items-center relative justify-center min-h-[100%] rounded-xl bg-providerBlueSecondary">
+    <div className="flex items-center relative justify-center min-h-[100%] rounded-xl 
+    bg-gradient-to-br from-gray-300 to-newGreen
+    ">
       <div className="w-full h-auto max-w-md p-6 bg-white rounded-lg">
         {/* Form Heading */}
         <h1 className="text-center text-3xl font-bold text-gray-800 mb-6">User Details</h1>
 
         {/* Edit Button */}
-        <div className="absolute top-2 right-2 p-2 bg-blue-400 rounded-lg">
-          <button onClick={handleEditClick}>Edit</button>
+        <div className="absolute top-2 right-2 p-2 px-4 bg-black rounded-lg text-white w-16">
+          <button className = "font-semibold" onClick={handleEditClick}>Edit</button>
         </div>
 
         {/* Name Field */}
         <div className="mb-4">
-          <label htmlFor="name" className="block text-sm font-medium text-center text-gray-700 mb-1">
+          <label htmlFor="name" className="block text-sm font-medium text-start text-gray-700 mb-1">
             Name
           </label>
           <input
@@ -111,13 +113,13 @@ function UserProfileForm() {
             type="text"
             value={useName}
             readOnly
-            className="w-full border text-center border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-500 bg-gray-200"
+            className="w-full border text-start border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-500 bg-gray-200"
           />
         </div>
 
         {/* Phone Field */}
         <div className="mb-4">
-          <label htmlFor="phone" className="block text-sm font-medium text-center text-gray-700 mb-1">
+          <label htmlFor="phone" className="block text-sm font-medium text-start text-gray-700 mb-1">
             Phone
           </label>
           <input
@@ -125,13 +127,13 @@ function UserProfileForm() {
             type="tel"
             value={phone}
             readOnly
-            className="w-full border text-center border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-500 bg-gray-200"
+            className="w-full border text-start border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-500 bg-gray-200"
           />
         </div>
 
         {/* Email Field */}
         <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-medium text-center text-gray-700 mb-1">
+          <label htmlFor="email" className="block text-sm font-medium text-start text-gray-700 mb-1">
             Email
           </label>
           <input
@@ -139,7 +141,7 @@ function UserProfileForm() {
             type="email"
             value={email}
             readOnly
-            className="w-full border text-center border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-500 bg-gray-200"
+            className="w-full border text-start border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-500 bg-gray-200"
           />
         </div>
       </div>

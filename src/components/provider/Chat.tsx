@@ -6,6 +6,7 @@ import { ChatMessage } from "../../interface/user/user";
 import { fetchAllChatService } from "../../services/user/user";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import TypingAnimation from "../user/TypingAnimation";
 
 // const chat:ChatMessage[] = [
 //   {
@@ -51,8 +52,9 @@ function Chat() {
   const location = useLocation();
   let { socket } = useSocket();
   const {providerInfo} = useSelector((state:RootState) => state.provider)
-  
+  const [isUserOnline, setisUserOnline] = useState<boolean>();
   const bookingData = location.state?.bookingData;
+  const [isUserTyping, setIsUserTyping] = useState<boolean>()
 
 
   useEffect(() => {
@@ -61,6 +63,45 @@ function Chat() {
        socket?.emit("joinChatRoom", {userId:bookingData?.userId, providerId:bookingData?.providerId, online:"PROVIDER"})
     } 
 },[socket]);
+
+useEffect(() => {
+   if(socket){
+
+    socket.on("receiverIsOnline", ({ user_id }) => {
+      // Handle online status (update UI, etc...)
+      console.log(`${user_id} is online`);
+      setisUserOnline(true)
+    });
+
+    socket.on("receiverIsOffline", ({ user_id }) => {
+      // Handle offline status (update UI, etc.)
+      console.log(`${user_id} is offline`);
+      setisUserOnline(false);
+    });
+
+      socket.on("userOffline",({userId}) => {
+        if(userId === bookingData?.userId){
+          setisUserOnline(false)
+          console.log("user went offline");
+        }
+    })
+
+    socket.on("listOnlineUsers", (onlineUsers) => {
+      console.log("TTTTTTTTTTTTTTTTthis sithe listonlineusers: ", onlineUsers)
+      if(onlineUsers[bookingData?.userId]){
+        setisUserOnline(true)
+      }
+  })
+
+  return () => {
+    socket.off("receiverIsOnline");
+    socket.off("receiverIsOffline");
+    socket.off("userOffline");
+    socket.off("listOnlineUsers")
+  };
+  
+   }
+},[socket])
   
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -104,6 +145,8 @@ function Chat() {
      socket?.off("receiveMessage");
    };
  },[socket]);
+
+
   
 
   const handleSendMessage = () => {
@@ -121,20 +164,65 @@ function Chat() {
         console.log("This is messgeDetails: ", messageDetails)
 
         socket?.emit("sendMessage", { messageDetails});
+        socket?.emit("typing", {
+          userId:bookingData.userId,
+          providerId:bookingData.providerId,
+          isTyping:false,
+          typer:"PROVIDER"
+        })
         setNewMessage("") 
   };
+
+  useEffect(() => {
+    if(socket){
+      socket.on("typing", ({isTyping, typer}) => {
+        console.log(` ${typer} is typing: ${isTyping}`);
+       
+        if(typer === 'USER'){
+          //toast.success("user is typing");
+          setIsUserTyping(isTyping)
+        }
+        
+      })
+      return () => {
+        socket.off("typing");
+      };
+
+    }
+},[socket])
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setNewMessage(e.target.value);
+
+    if(socket){
+      socket.emit("typing", {
+         userId:booking.userId,
+         providerId:booking.providerId,
+         isTyping:e.target.value.length > 0,
+         typer:"PROVIDER"
+
+      })
+    }
+};
 
   return (
     <div className="flex flex-col h-full bg-gray-100">
   {/* Header Section */}
-  <div className="flex items-center rounded-t-lg bg-blue-500 p-4 shadow-lg ">
+  <div className="flex flex-row rounded-xl bg-gray-300 p-2 items-center shadow-lg">
+  <div className="relative">
     <img
-      src={userData?.imageUrl}
-      alt="User"
-      className="rounded-full w-10 h-10"
+      className="h-10 w-10 rounded-full border-1 mr-2"
+      src={userData?.imageUrl || ''}
+      alt="pic"
     />
-    <h2 className="text-white text-lg font-semibold ml-3">{userData?.name}</h2>
+    {isUserOnline && (
+      <div className="absolute bottom-1 right-1 w-4 h-4 rounded-full bg-green-500 border-2 border-white"></div>
+    )}
   </div>
+  <h1 className="flex-grow text-center font-semibold font-atma text-xl">
+    {userData?.name}
+  </h1>
+</div>
 
   {/* Messages Section */}
   <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-white">
@@ -176,6 +264,12 @@ function Chat() {
     </div>
   ))}
 
+{
+    isUserTyping ? <div className='p-5'>
+      <TypingAnimation/>
+    </div>:""
+  }
+
   {/* Invisible div to track scrolling */}
   <div ref={messagesEndRef} />
 </div>
@@ -186,7 +280,8 @@ function Chat() {
     <textarea
       rows={1}
       value={newMessage}
-      onChange={(e) => setNewMessage(e.target.value)}
+      // onChange={(e) => setNewMessage(e.target.value)}
+      onChange={handleInputChange}
       placeholder="Type your message..."
       className="flex-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none overflow-y-auto"
       onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSendMessage()}

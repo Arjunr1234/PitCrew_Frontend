@@ -229,3 +229,17 @@ export const addRatingService  = async(reviewData:IReviewData) => {
       
     }
 }
+
+export const getNotification = async(receiverId:string) => {
+   try {
+       const response = await axiosInstance.get(URL + `/api/user/bookings/get-notification?receiverId=${receiverId}`);
+       console.log("This is the notification response : ", response.data)
+       return response.data
+    
+   } catch (error) {
+      console.log("Error in getNotification: ", error);
+      handleError(error);
+      throw error
+    
+   }
+}

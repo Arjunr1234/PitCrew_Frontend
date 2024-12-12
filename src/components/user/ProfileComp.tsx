@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getUserDetailsService, updateProfilePicService } from '../../services/user/user';
 import { AiOutlineLoading } from 'react-icons/ai';
+import { FaRegEdit } from "react-icons/fa";
 
 function ProfileComp() {
 
@@ -110,7 +111,7 @@ function ProfileComp() {
   return (
     <div className="grid h-[calc(100vh-100px)] w-full p-8 lg:grid-cols-[280px_1fr]">
       {/* Left Sidebar Section */}
-      <div className="hidden lg:flex flex-col bg-customBlue border-r rounded-lg border-gray-200 text-primary-foreground animate-fade">
+      <div className="hidden lg:flex flex-col bg-white border rounded-lg border-gray-300 text-primary-foreground animate-fade">
         <div className="flex flex-col items-center gap-6 py-6 px-4 border-b border-gray-300">
           {/* Profile Picture Section */}
           <div className="relative h-36 w-36">

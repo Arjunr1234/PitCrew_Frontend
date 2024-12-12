@@ -36,4 +36,47 @@
 
 /* scrolling chat outlet */
 
+/* Typing animation */
 
+
+.typing-animation {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 12px; /* Add padding for a bubble-like appearance */
+  background-color: #c5bfbfcc; /* Light gray bubble background */
+  border-radius: 20px; /* Rounded bubble */
+  width: fit-content;
+  margin-top: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for realism */
+}
+
+.typing-dot {
+  width: 10px;
+  height: 10px;
+  background-color: #888; /* Subtle gray color for the dots */
+  border-radius: 50%;
+  animation: typing 1.5s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typing {
+  0%, 80%, 100% {
+    transform: scale(0.6); /* Start small */
+    opacity: 0.4; /* Dim opacity */
+  }
+  40% {
+    transform: scale(1); /* Enlarge slightly */
+    opacity: 1; /* Brighten opacity */
+  }
+}
+
+
+/* Typing animation */

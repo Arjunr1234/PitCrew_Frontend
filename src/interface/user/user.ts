@@ -173,6 +173,7 @@ export interface ChatMessage {
   message: string;
   type: "text" ;
   delete: boolean;
+  seen:boolean,
   createdAt: string;
   updatedAt: string;
 }
@@ -186,6 +187,30 @@ export interface IReviewData{
     rating:number,
     feedback:string
 }
+
+// notification
+
+// Interface for a single notification item
+interface NotificationItem {
+  content: string;
+  type: string;
+  bookingId: string;
+  read: boolean;
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+
+export interface Notification {
+  _id: string;
+  receiverId: string;
+  __v: number;
+  createdAt: string;
+  updatedAt: string;
+  notifications: NotificationItem[];
+}
+
 
 
 

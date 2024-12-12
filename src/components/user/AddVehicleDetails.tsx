@@ -319,11 +319,11 @@ function AddVehicleDetailsComp() {
 
   return (
     <>
-      <h1 className="text-xl font-semibold my-4  text-center">Add Vehicle Details</h1>
+      <h1 className="text-xl font-semibold my-4  text-center">Vehicle Details</h1>
       <div className="p-5 space-y-4">
         <div className="flex flex-col md:flex-row mx-5 gap-4">
           {/* Left Section - Location Details */}
-          <div className="h-[30rem] w-auto rounded-xl bg-madBlack md:w-[50%] border-2 p-4">
+          <div className="h-[30rem] w-auto bg-madBlack rounded-xl  md:w-[50%]    p-4">
             <h1 className="text-xl font-semibold text-white my-2 text-center">Location Details</h1>
             <div className="p-5 bg-slate-300 h-96 rounded-lg relative">
               {/* Map Search Input */}

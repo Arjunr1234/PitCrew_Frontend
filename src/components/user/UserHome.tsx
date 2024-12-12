@@ -44,7 +44,7 @@ function UserHome() {
   return (
     <div>
       {/* First Section */}
-      <div className="bg-gradient-to-b from-customBlue mt-3 to-gray-100 py-10 rounded-t-3xl mx-3">
+      <div className="bg-gradient-to-b from-[#17C964] mt-3 to-gray-100 py-10 rounded-t-3xl mx-3">
         <div className="container mx-auto flex flex-col lg:flex-row justify-between items-center">
           {/* Left Section: Text and Button */}
           <div className="animate-fade-right w-full lg:w-1/2 px-6 flex flex-col gap-5 text-center lg:text-left">

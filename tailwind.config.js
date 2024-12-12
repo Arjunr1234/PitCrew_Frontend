@@ -19,7 +19,8 @@ export default {
         darkBlue:'#06278a',
         customYellow:"#ffb400",
         adminSecondary:"#9B7EBD",
-        customGrey:"#A59D84"
+        customGrey:"#A59D84",
+        newGreen:"#17C964"
       },
       fontFamily: {
         montserrat: ['Montserrat', 'sans-serif'],
