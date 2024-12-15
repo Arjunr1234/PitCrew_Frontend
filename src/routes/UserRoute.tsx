@@ -18,6 +18,7 @@ import PaymentFailed from '../components/user/paymentFailed'
 import ChatUser from '../components/user/ChatUser'
 import BookingView from '../components/user/BookingView'
 import ResetPassword from '../components/user/ResetPassword'
+import CallPage from '../pages/user/Call'
 
 
 
@@ -50,6 +51,7 @@ function UserRoute() {
            <Route path={'/user-profile/booking-details'} element={<BookingDetails/>}/>
            <Route path={'/user-profile/booking-view'} element={<BookingView/>}/>
          </Route>
+         <Route path={'/voice-call/:providerId'} element={<CallPage/>} />
       </Route>
    </Routes>
    

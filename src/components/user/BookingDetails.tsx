@@ -16,6 +16,7 @@ function BookingDetails() {
   const [selectedBooking, setSelectedBooking] = useState<IBookingDetails | null>(null);
   const navigate = useNavigate()
   const { id } = useSelector((state: any) => state.user?.userInfo);
+  const [currentPage, setCurrentPage] = useState(1);
 
   
 
@@ -129,6 +130,20 @@ function BookingDetails() {
       Swal.fire("Action canceled!", "", "error");
     }
   };
+
+  // pagination setup
+
+  const rowsPerPage = 5; 
+  const totalPages = Math.ceil(bookings.length / rowsPerPage);
+
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = bookings.slice(indexOfFirstRow, indexOfLastRow);
+
+  
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
   
   
   return (
@@ -145,7 +160,7 @@ function BookingDetails() {
           </tr>
         </thead>
         <tbody>
-          {bookings.map((booking: any) => (
+          {currentRows.map((booking: any) => (
             <tr
               key={booking._id}
               className="bg-white hover:bg-gray-100 transition duration-300 ease-in-out transform hover:scale-105"
@@ -337,7 +352,35 @@ function BookingDetails() {
           </div>
         )
       }
-
+       <div className="flex justify-center mt-4">
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="px-3 py-1 bg-gray-300 rounded mx-1 hover:bg-gray-400"
+        >
+          Previous
+        </button>
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index}
+            onClick={() => handlePageChange(index + 1)}
+            className={`px-3 py-1 mx-1 ${
+              currentPage === index + 1
+                ? "bg-blue-500 text-white"
+                : "bg-gray-300 hover:bg-gray-400"
+            } rounded`}
+          >
+            {index + 1}
+          </button>
+        ))}
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="px-3 py-1 bg-gray-300 rounded mx-1 hover:bg-gray-400"
+        >
+          Next
+        </button>
+      </div>
 
     </div>
 

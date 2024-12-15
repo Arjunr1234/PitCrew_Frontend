@@ -243,3 +243,15 @@ export const getNotification = async(receiverId:string) => {
     
    }
 }
+
+export const seenNotificationService =  async(notificationId:string) => {
+     try {
+          const response = await axiosInstance.patch(URL + `/api/user/bookings/notification-seen?notificationId=${notificationId}`);
+          return response.data
+     } catch (error) {
+         console.log("Error in seenNotification: ",error);
+         handleError(error);
+         throw error 
+     }
+}
+

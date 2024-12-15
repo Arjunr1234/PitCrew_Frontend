@@ -17,6 +17,9 @@ import { toast } from 'sonner';
 import Swal from 'sweetalert2';
 import { changeBookingStatus, fetchSingleBookingService } from '../../services/provider/providerService';
 import { addRatingService } from '../../services/user/user';
+import CallModal from './UserCall';
+import { useSocket } from '../../Context/SocketIO';
+
 
 
 
@@ -30,7 +33,10 @@ function BookingView() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rating, setRating] = useState(1);
   const [feedback, setFeedback] = useState("");
-  const [isReivewAdded, setIsReviewAdded] = useState<boolean>()
+  const [isReivewAdded, setIsReviewAdded] = useState<boolean>();
+  const [OutgoingCallModal, setOutgoingCallModal] = useState(false);
+  const [isCallActive, setIsCallActive] = useState(false);
+  const {socket} = useSocket();
 
   useEffect(() => {
     if (booking._id) {
@@ -151,6 +157,38 @@ function BookingView() {
     setRating(rating);
   };
 
+  const handleDismissModal = () => {
+    setOutgoingCallModal(false); 
+    setIsCallActive(false);
+    
+  };
+
+  const handleCallButtonClick = () => {
+    
+    socket?.emit("checkPersonIsOnline", {userId:booking?.userId, providerId:booking?.providerId, caller:'user'})
+ 
+};
+
+  useEffect(() => {
+       if(socket){
+        socket?.on("isPersonIsOnline",(response) => {
+        if(!response.success){
+          toast.warning("Provider is in Offline")
+        }else{
+           navigate(`/voice-call/${booking.providerId}`);
+        }
+     });
+       }
+       return()=> {
+          socket?.off("isPersonIsOnline")
+       }
+  },[socket])
+  
+  
+
+
+ 
+
 
   return (
     <div>
@@ -172,9 +210,18 @@ function BookingView() {
               <button
                 className="p-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition duration-300"
                 title="Call"
+                onClick={handleCallButtonClick}
               >
                 <FaPhoneAlt size={20} />
               </button>
+
+              {/* Conditionally Render VoiceCall Component */}
+              {/* <CallModal
+                isOpen={OutgoingCallModal} 
+                onDismiss={handleDismissModal} 
+                workshopName={selectedBooking?.providerDetails.workshopName || "workshop Name"}
+              /> */}
+
               <button
                 className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition duration-300"
                 title="Chat"

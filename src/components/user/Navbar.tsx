@@ -8,17 +8,20 @@ import { toast } from 'sonner'; // Assuming you're using this for toast notifica
 import logo from '../../../public/images/logo.jpg';
 import { logoutThunk, resetSuccessAndMessage } from '../../redux/slice/userAuthSlice';
 import Swal from 'sweetalert2';
-import { getNotification } from '../../services/user/user';
-import { Notification } from '../../interface/user/user';
+import { getNotification, seenNotificationService } from '../../services/user/user';
+import { Notification, NotificationItem } from '../../interface/user/user';
+import { useSocket } from '../../Context/SocketIO';
 
 function Navbar() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [notificationCount, setNotificationCount] = useState<number>(3);
+  const [notificationCount, setNotificationCount] = useState<number >(0);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [notification, setNotification] = useState<Notification>()
+  const [notification, setNotification] = useState<Notification>();
+  const [notificationArray, setNotificationArray] = useState<NotificationItem[]>()
+  const {socket} = useSocket();
 
 
   const { userInfo } = useSelector((state: RootState) => state.user);
@@ -38,6 +41,7 @@ function Navbar() {
       const response = await getNotification(userInfo?.id as string);
       console.log("This is the fech response:::::::::::::::::::: ", response)
       setNotification(response.notification);
+      setNotificationArray(response.notification.notifications)
       const readCount = response.notification.notifications.filter((item:any) => !item.read).length;
       setNotificationCount(readCount)
 
@@ -47,6 +51,26 @@ function Navbar() {
 
     }
   }
+
+  useEffect(() => {
+    if(socket) {
+        const handleNotification = (newNotification: any) => {
+        console.log("This is the notify content:", newNotification);
+        setNotificationArray((prev) => [
+          newNotification,
+          ...(prev || [])
+        ])
+        setNotificationCount((prevCount) => prevCount+1)
+      };
+  
+      socket.on("receiveNotification", handleNotification);
+  
+      return () => {
+        socket.off("receiveNotification", handleNotification);
+      };
+    }
+  }, [socket]);
+  
 
 
 
@@ -78,9 +102,16 @@ function Navbar() {
     });
   };
 
-  const handleNotificationClick = () => {
+  const handleNotificationClick = async() => {
 
-    toast.info('You have unread notifications!');
+   // toast.info('You have unread notifications!');
+    try {
+       const response = await seenNotificationService(notification?._id as string)
+      
+    } catch (error) {
+      console.log("Error in handleNotificationClicK: ", error)
+      
+    }
     setNotificationCount(0);
     setIsSidebarOpen(true);
   }
@@ -91,10 +122,14 @@ function Navbar() {
   };
 
   useEffect(() => {
-    if (notification) {
-      console.log("///////////////////////////This is notification: ", notification)
+    if(notificationArray){
+      console.log("This is notifyArray: ", notificationArray);
     }
-  }, [])
+    
+    
+  },[notificationArray])
+
+  
 
   const isProviderServiceView = location.pathname.includes('/provider-service-view');
   const navBarClass = isProviderServiceView ? 'bg-darkBlue' : 'bg-white'
@@ -140,7 +175,7 @@ function Navbar() {
               <button className="text-xl text-gray-700 hover:text-black focus:outline-none" onClick={handleNotificationClick}>
                 <FaBell />
               </button>
-              {notificationCount > 0 && (
+              {notificationCount>0 && (
                 <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-semibold rounded-full h-6 w-6 flex items-center justify-center shadow">
                   {notificationCount}
                 </span>
@@ -214,9 +249,9 @@ function Navbar() {
             <FaTimes />
           </button>
         </div>
-        {notification?.notifications ? (
+        {notificationArray ? (
           <ul className="space-y-4 p-4">
-            {notification.notifications.slice().
+            {notificationArray.slice().
             sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).
             map((notificationItem) => (
               <li

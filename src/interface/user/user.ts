@@ -191,7 +191,7 @@ export interface IReviewData{
 // notification
 
 // Interface for a single notification item
-interface NotificationItem {
+export interface NotificationItem {
   content: string;
   type: string;
   bookingId: string;
