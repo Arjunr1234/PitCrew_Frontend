@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import {
   FaEnvelope,
   FaMapMarkerAlt,
@@ -38,7 +38,7 @@ function BookingView() {
   const [isCallActive, setIsCallActive] = useState(false);
   const {socket} = useSocket();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (booking._id) {
       console.log('This is booking: ', booking);
       const fetchBooking = async () => {
@@ -165,7 +165,7 @@ function BookingView() {
 
   const handleCallButtonClick = () => {
     
-    socket?.emit("checkPersonIsOnline", {userId:booking?.userId, providerId:booking?.providerId, caller:'user'})
+    socket?.emit("checkPersonIsOnline", {userId:selectedBooking?.userId, providerId:selectedBooking?.providerId, caller:'user'})
  
 };
 
@@ -175,14 +175,18 @@ function BookingView() {
         if(!response.success){
           toast.warning("Provider is in Offline")
         }else{
-           navigate(`/voice-call/${booking.providerId}`);
+          
+          if(selectedBooking){
+            navigate(`/voice-call/${selectedBooking?.providerId}`);
+          }       
+          
         }
      });
        }
        return()=> {
-          socket?.off("isPersonIsOnline")
+          socket?.off("isPersonIsOnline");
        }
-  },[socket])
+  },[socket, selectedBooking])
   
   
 
@@ -204,6 +208,7 @@ function BookingView() {
 
             <h1 className="text-3xl font-atma">
               {selectedBooking?.providerDetails?.workshopName || 'No Name'}
+              
             </h1>
 
             <div className="flex flex-row gap-4">

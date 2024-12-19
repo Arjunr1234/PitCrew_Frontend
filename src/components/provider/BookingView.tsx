@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { FaCar, FaChevronDown, FaChevronUp, FaCircle, FaCommentAlt, FaEnvelope, FaGasPump, FaIdCard, FaMotorcycle, FaPhoneAlt, FaRoad, FaUser } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom'
-import { changeBookingStatus } from '../../services/provider/providerService';
+import { changeBookingStatus, fetchSingleBookingService } from '../../services/provider/providerService';
 import { toast } from 'sonner';
+import { IBookingDetails } from '../../interface/user/user';
 
 function BookingView() {
 
@@ -10,6 +11,7 @@ function BookingView() {
   const navigate = useNavigate()
   const booking = location?.state?.bookingData;
   const [bookingDetails, setBookingDetails] = useState<any>();
+  const [selectedBooking, setSelectedBooking] = useState<IBookingDetails | null>(null)
   const [isUserDetailsVisble, setIsUserDetailsVisible] = useState(false);
   const [isVehicleDetailsVisible, setIsVehicleDetailsVisible] = useState(false)
   const [currentStatus, setCurrentStatus] = useState("");
@@ -19,11 +21,30 @@ function BookingView() {
 
   useEffect(() => {
     if (booking) {
-      setBookingDetails(booking);
-      setCurrentStatus(booking.status || "NA");
+     // setBookingDetails(booking);
+      fetchSingleBooking()
+    //  setCurrentStatus(booking.status || "NA");
       console.log("This is booking details: ", booking);
     }
   }, [booking]);
+
+  const fetchSingleBooking = async() => {
+     try {
+        const response = await fetchSingleBookingService(booking._id)
+        if(response.success){
+          
+          setSelectedBooking(response.bookingData)
+          setCurrentStatus(response.bookingData.status)
+        }else{
+          toast.error("falied to fetchdata")
+        }
+      
+     } catch (error) {
+        console.log("Error in fetchBooking: ", error);
+
+      
+     }
+  }
 
 
   const toggleUserDetails = () => {
@@ -64,7 +85,7 @@ function BookingView() {
           </button>
 
           <h1 className="text-3xl font-atma">
-            {bookingDetails?.userData?.name || 'No Name'}
+            {selectedBooking?.userData.name || 'No Name'}
           </h1>
 
           <div className="flex flex-row gap-4">
@@ -126,8 +147,8 @@ function BookingView() {
 
           {
             currentStatus === 'cancelled' ?  <div className="flex items-center">
-            <h1 className="mr-2 text-black font-semibold text-orange-400">Reason for Cancellation:</h1>
-              {bookingDetails.reason}
+            <h1 className="mr-2  font-semibold text-orange-400">Reason for Cancellation:</h1>
+              {selectedBooking?.reason}
           </div>:""
           }
         </div>
@@ -151,21 +172,21 @@ function BookingView() {
                   <FaUser className="text-gray-500 mr-2" />
                   <span className="font-semibold text-sm">Name:</span>
                   <span className="text-sm ml-2">
-                    {bookingDetails?.userData?.name || 'N/A'}
+                    {selectedBooking?.userData.name || 'N/A'}
                   </span>
                 </div>
                 <div className="flex items-center mb-2">
                   <FaPhoneAlt className="text-gray-500 mr-2" />
                   <span className="font-semibold text-sm">Phone:</span>
                   <span className="text-sm ml-2">
-                    {bookingDetails?.userData?.phone || 'N/A'}
+                    {selectedBooking?.userData.phone || 'N/A'}
                   </span>
                 </div>
                 <div className="flex items-center mb-2">
                   <FaEnvelope className="text-gray-500 mr-2" />
                   <span className="font-semibold text-sm">Email:</span>
                   <span className="text-sm ml-2">
-                    {bookingDetails?.userData?.email || 'N/A'}
+                    {selectedBooking?.userData.email || 'N/A'}
                   </span>
                 </div>
 
@@ -195,42 +216,42 @@ function BookingView() {
                   <FaIdCard className="text-gray-500 mr-2" />
                   <span className="font-semibold text-sm">Vehicle Number:</span>
                   <span className="text-sm ml-2">
-                    {bookingDetails?.vehicleDetails?.number || 'number'}
+                    {selectedBooking?.vehicleDetails.number || 'number'}
                   </span>
                 </div>
                 <div className="flex items-center mb-2">
                   <FaCircle className="text-gray-500 mr-2" />
                   <span className="font-semibold text-sm">Vehicle Model:</span>
                   <span className="text-sm ml-2">
-                    {bookingDetails?.vehicleDetails?.model || 'model'}
+                    {selectedBooking?.vehicleDetails?.model || 'model'}
                   </span>
                 </div>
                 <div className="flex items-center mb-2">
                   <FaCar className="text-gray-500 mr-2" />
                   <span className="font-semibold text-sm">Vehicle Brand:</span>
                   <span className="text-sm ml-2">
-                    {bookingDetails?.vehicleDetails?.brand || 'brand'}
+                    {selectedBooking?.vehicleDetails?.brand || 'brand'}
                   </span>
                 </div>
                 <div className="flex items-center mb-2">
                   <FaRoad className="text-gray-500 mr-2" />
                   <span className="font-semibold text-sm">Kilometer run:</span>
                   <span className="text-sm ml-2">
-                    {bookingDetails?.vehicleDetails?.kilometersRun || 'N/A'}
+                    {selectedBooking?.vehicleDetails?.kilometersRun || 'N/A'}
                   </span>
                 </div>
                 <div className="flex items-center mb-2">
                   <FaGasPump className="text-gray-500 mr-2" />
                   <span className="font-semibold text-sm">Fuel Type:</span>
                   <span className="text-sm ml-2">
-                    {bookingDetails?.vehicleDetails?.fuelType === "petrol" ? "Petrol" : "Diesel"}
+                    {selectedBooking?.vehicleDetails?.fuelType === "petrol" ? "Petrol" : "Diesel"}
                   </span>
                 </div>
                 <div className="flex items-center">
                   <FaMotorcycle className="text-gray-500 mr-2" />
                   <span className="font-semibold text-sm">Vehicle Type: </span>
                   <span className="text-sm ml-2">
-                    {bookingDetails?.vehicleDetails?.vehicleType === "twoWheeler" ? "Two Wheller" : "Four Wheller"}
+                    {selectedBooking?.vehicleDetails?.vehicleType === "twoWheeler" ? "Two Wheller" : "Four Wheller"}
                   </span>
                 </div>
 
@@ -254,7 +275,7 @@ function BookingView() {
               </tr>
             </thead>
             <tbody>
-              {bookingDetails?.selectedSubServices.map((service: any, index: number) => (
+              {selectedBooking?.selectedSubServices.map((service: any, index: number) => (
                 <tr
                   key={service._id}
                   className={`${index % 2 === 0 ? "bg-gray-100" : "bg-white"
@@ -274,7 +295,7 @@ function BookingView() {
                 <td className="border border-gray-200 px-6 py-3 text-right">Subtotal</td>
                 <td className="border border-gray-200 px-6 py-3 text-right">
                   ₹
-                  {bookingDetails?.selectedSubServices.reduce(
+                  {selectedBooking?.selectedSubServices.reduce(
                     (total: any, service: any) => total + parseFloat(service.startingPrice),
                     0
                   )}
@@ -286,7 +307,7 @@ function BookingView() {
                   Platform Fee
                 </td>
                 <td className="border border-gray-200 px-6 py-3 text-right">
-                  ₹{bookingDetails?.platformFee}
+                  ₹{selectedBooking?.platformFee}
                 </td>
               </tr>
               {/* Grand Total Row */}
@@ -295,7 +316,7 @@ function BookingView() {
                   Grand Total
                 </td>
                 <td className=" px-6 py-3 text-right">
-                  ₹{bookingDetails?.subTotal}
+                  ₹{selectedBooking?.subTotal}
                 </td>
               </tr>
             </tbody>

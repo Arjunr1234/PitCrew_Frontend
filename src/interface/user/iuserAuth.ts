@@ -13,7 +13,8 @@ export interface userInfo {
   name: string,
   email: string,
   mobile: string,
-  blocked: boolean
+  blocked: boolean,
+  image?:string
 }
 
 export interface SigninData{
@@ -29,7 +30,8 @@ export interface UserResponse {
     name:string,
     email:string,
     mobile:string,
-    blocked:boolean
+    blocked:boolean,
+    image?:string
   }
   
 }

@@ -144,6 +144,13 @@ export interface IBookingDetails {
     rating: number ;
     feedback: string ;
 };
+userData: {
+  _id: string;
+  name: string;
+  phone: string;
+  email: string;
+  imageUrl: string;
+};
   selectedSubServices: {
     type: string;
     startingPrice: string;
@@ -156,6 +163,7 @@ export interface IBookingDetails {
   serviceName: string;
   providerDetails:IProviderDetails
 }
+
 export interface IProviderDetails {
   _id: string;
   workshopName: string;

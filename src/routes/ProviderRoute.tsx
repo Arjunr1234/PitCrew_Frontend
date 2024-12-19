@@ -18,9 +18,47 @@ import AddSlot from '../components/provider/AddSlot';
 import BookingView from '../components/provider/BookingView';
 import Chat from '../components/provider/Chat';
 import ResetPassword from '../components/provider/ResetPassword';
+import { useEffect, useState } from 'react';
+import { useSocket } from '../Context/SocketIO';
+import ReceivingCallModal from '../components/provider/RecevingCallModal';
+import Call from '../pages/provider/Call';
+
 
 
 function ProviderRoute() {
+      interface IincommingResponse{success:boolean | null ,callerId: string | null, receiverId: string | null, callerData?:{name?:string, image?:string}}
+      const [isCallModal, setIsCallModal] = useState<boolean>(false);
+      const {socket} = useSocket();
+      const [incommingResponse, setIncommingResponse] = useState<IincommingResponse>({success:null,callerId:null, receiverId:null});
+
+      useEffect(() => {
+          socket?.on("incommingCall", ({success, callerId, receiverId, callerData}) => {
+          setIncommingResponse({success,callerId, receiverId, callerData});
+          setIsCallModal(true);
+          
+          return()=> {
+            socket.off('incommingCall')
+          }
+
+          })
+      });
+
+      const handleAccept = () => {
+         console.log("Call accepted!");
+       };
+
+      //  const handleReject = () => {
+      //    setIsCallModal(false)
+      //    toast.error("Call is rejected");
+      //    socket?.emit("rejectCall", {rejected:true, callerId:incommingResponse.callerId, receiverId:incommingResponse.receiverId})
+      //  };
+
+       const changeModalState = () => {
+           setIsCallModal(false)
+       }
+
+
+
   return (
      <div>
          <Routes>
@@ -48,8 +86,12 @@ function ProviderRoute() {
                 <Route path='add-service/four-wheeler-services' element={<FourWheelerAddService/>}/>
                 <Route path='add-service/add-brands' element={<AddBrands/>}/>
              </Route>
+             <Route path='/voice-call/:userId' element={<Call/>}/>
         </Route>  
          </Routes>
+
+         {isCallModal  && <ReceivingCallModal changeModal={changeModalState}   success={incommingResponse?.success}  callerId={incommingResponse?.callerId} receiverId={incommingResponse?.receiverId } callerData={incommingResponse.callerData}/>}
+
     </div>
   )
 }
