@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   LineChart,
@@ -14,27 +14,12 @@ import {
 } from "recharts";
 import { RootState } from "../../redux/store";
 import { fetchDashboardData } from "../../services/provider/providerService";
-import { toast } from "sonner";
 import { FaMoneyBillWave, FaUsers } from "react-icons/fa";
 
-// Data for LineChart
-const lineData = [
-  { name: "Jan", users: 400, revenue: 2400 },
-  { name: "Feb", users: 300, revenue: 1398 },
-  { name: "Mar", users: 200, revenue: 9800 },
-  { name: "Apr", users: 278, revenue: 3908 },
-  { name: "May", users: 189, revenue: 4800 },
-  { name: "Jun", users: 239, revenue: 3800 },
-  { name: "Jul", users: 349, revenue: 4300 },
-];
 
-// Data for PieChart
-const pieData = [
-  { name: "Pending", count: 10 },
-  { name: "In Progress", count: 15 },
-  { name: "Delivered", count: 25 },
-  { name: "Cancelled", count: 5 },
-];
+
+
+
 
 // Colors for PieChart
 const COLORS = [
@@ -133,7 +118,7 @@ function ProviderHome() {
               fill="#8884d8"
               label
             >
-              {pieData.map((entry, index) => (
+              {pieData.map((_, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>

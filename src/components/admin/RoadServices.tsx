@@ -47,10 +47,7 @@ function RoadServices() {
              setDropdownOpen(null)
           }
 
-          const openModal = (service:IService) => {
-              setIsModalOpen(true);
-              setSelectedService(service)
-         }
+        
 
          const closeModal = () => {
              setIsModalOpen(false);
@@ -272,7 +269,7 @@ function RoadServices() {
 
         {/* Scrollable Subtypes List */}
         <div className="mt-4 flex-1 overflow-y-auto space-y-2">
-          {selectedService.subTypes.map((subtype, index) => (
+          {selectedService.subTypes.map((subtype) => (
             <div
               key={subtype._id}
               className="flex justify-between items-center bg-gray-100 p-2 rounded-md border border-gray-300"

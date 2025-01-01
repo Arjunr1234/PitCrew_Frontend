@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import  { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { RootState } from '../../redux/store';
@@ -120,7 +120,7 @@ function ProviderCall() {
       navigate(-1)
    }
 
-    const handleCallAccept = async (response:any) => {
+    const handleCallAccept = async () => {
          try {
 
           const stream = await navigator.mediaDevices.getUserMedia({
@@ -253,6 +253,7 @@ function ProviderCall() {
         <div className="w-full h-[300px] flex flex-col justify-center items-center mt-4 space-y-4">
           {/* Video Stream */}
           <div className="w-[80%] md:w-[50%] h-[150px] bg-gray-700 rounded-lg overflow-hidden relative shadow-md">
+            <h1>{callingState}</h1>
             <video
               ref={providerSideVideoRef}
               autoPlay

@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { addGenralRoadServices, addSubService, getAllServices, removeService } from "../../services/provider/providerService";
 import { toast } from "sonner";
-import { IAddSubServiceData, IGeneralService, IRoadService, IServiceData, IServices } from "../../interface/provider/iProvider";
+import { IAddSubServiceData, IGeneralService, IRoadService, IServiceData } from "../../interface/provider/iProvider";
 import { useSelector } from "react-redux";
-import { FiEdit } from "react-icons/fi"
 import { FaTrashAlt } from 'react-icons/fa';
 import { IoMdAddCircleOutline } from 'react-icons/io';
 import { BsThreeDots } from "react-icons/bs";
@@ -139,32 +138,32 @@ function FourWheelerAddService() {
   }
   
 
-  const handleAddRoadService = async (serviceId: string) => {
-    try {
-      const serviceData: IServiceData = {
-        serviceId: serviceId,
-        category: "road",
-        providerId: providerId,
-        vehicleType: "fourWheeler",
-      };
-      const response = await addGenralRoadServices(serviceData);
-      if (response.success) {
-        const updatedRoadService = roadServices.map((service) => {
-          if (service.typeid === serviceId) {
-            return {
-              ...service,
-              isAdded: true,
-            };
-          }
-          return service;
-        });
-        setRoadServices(updatedRoadService);
-        toast.success("Successfully Added");
-      }
-    } catch (error) {
-      console.log("Error in handleAddRoadService: ", error);
-    }
-  };
+  // const handleAddRoadService = async (serviceId: string) => {
+  //   try {
+  //     const serviceData: IServiceData = {
+  //       serviceId: serviceId,
+  //       category: "road",
+  //       providerId: providerId,
+  //       vehicleType: "fourWheeler",
+  //     };
+  //     const response = await addGenralRoadServices(serviceData);
+  //     if (response.success) {
+  //       const updatedRoadService = roadServices.map((service) => {
+  //         if (service.typeid === serviceId) {
+  //           return {
+  //             ...service,
+  //             isAdded: true,
+  //           };
+  //         }
+  //         return service;
+  //       });
+  //       setRoadServices(updatedRoadService);
+  //       toast.success("Successfully Added");
+  //     }
+  //   } catch (error) {
+  //     console.log("Error in handleAddRoadService: ", error);
+  //   }
+  // };
 
   const handleViewService = (service: IGeneralService) => {
     

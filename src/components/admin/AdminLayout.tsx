@@ -1,5 +1,5 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import { FaTachometerAlt, FaUser, FaUsers, FaStore, FaSignOutAlt, } from 'react-icons/fa'; 
+import { FaTachometerAlt, FaUsers, FaStore, FaSignOutAlt, } from 'react-icons/fa'; 
 import { FiCalendar, FiSettings } from "react-icons/fi"
 import { useAppDispatch } from '../../interface/hooks';
 import { adminLogoutThunk } from '../../redux/thunk/admin';

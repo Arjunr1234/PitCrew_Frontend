@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'; 
 import { FaBars, FaBell, FaTimes } from 'react-icons/fa'; 
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom'; 
-import { FaTachometerAlt, FaPlus, FaUser, FaStore, FaSignOutAlt } from 'react-icons/fa';
+import { FaTachometerAlt, FaPlus, FaUser,  FaSignOutAlt } from 'react-icons/fa';
 import { FiCalendar } from 'react-icons/fi';
 import { useAppDispatch } from '../../interface/hooks';
 import { providerLogoutThunk } from '../../redux/thunk/provider';
@@ -23,7 +23,7 @@ function ProviderLayout() {
   const [notification, setNotification] = useState<Notification>();
   const [notificationArray, setNotificationArray] = useState<NotificationItem[]>()
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { providerInfo, message, success } = useSelector((state:RootState) => state.provider);
+  const { providerInfo, message } = useSelector((state:RootState) => state.provider);
   const {socket} = useSocket()
 
   useEffect(() => {

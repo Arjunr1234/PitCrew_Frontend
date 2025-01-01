@@ -5,9 +5,9 @@ import mapboxgl, { Map } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import axios from 'axios';
 import { toast } from 'sonner';
-import { validationInputData } from '../../utils/validation/user';
+
 import { useLocation, useNavigate } from 'react-router-dom';
-import { fetchBrandService, vehicleDetailsService } from '../../services/user/user';
+import { fetchBrandService } from '../../services/user/user';
 
 function AddVehicleDetailsComp() {
   const [vehicleNumber, setVehicleNumber] = useState('');
@@ -28,7 +28,7 @@ function AddVehicleDetailsComp() {
   const navigate = useNavigate()
   
 
-  const INITIAL_CENTER: [number, number] = [-74.0242, 40.6941];
+  const INITIAL_CENTER: [number, number] = [76.3257,9.9384 ];
   const INITIAL_ZOOM = 14.12;
 
   const mapRef = useRef<Map | null>(null);
@@ -38,7 +38,7 @@ function AddVehicleDetailsComp() {
 
   
 
-  const [center, setCenter] = useState<[number, number]>(INITIAL_CENTER);
+  //const [center, setCenter] = useState<[number, number]>(INITIAL_CENTER);
   const [zoom, setZoom] = useState<number>(INITIAL_ZOOM);
  // const accessToken = 'pk.eyJ1IjoiYmluaXNoMTkwNSIsImEiOiJjbTFpdzE1OHcwcGdqMnJxbDUxdDN5cnExIn0.TYM92lLjTLoETRIJEiJWPw';
  
@@ -53,7 +53,7 @@ function AddVehicleDetailsComp() {
     mapRef.current = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: 'mapbox://styles/mapbox/streets-v11',
-      center: location?.coordinates ,
+      center: location?.coordinates || INITIAL_CENTER,
       zoom: zoom,
     });
 
@@ -62,7 +62,7 @@ function AddVehicleDetailsComp() {
       const mapZoom = mapRef.current?.getZoom();
 
       if (mapCenter && mapZoom !== undefined) {
-        setCenter([mapCenter.lng, mapCenter.lat]);
+      //  setCenter([mapCenter.lng, mapCenter.lat]);
         setZoom(mapZoom);
       }
     });
@@ -264,39 +264,39 @@ function AddVehicleDetailsComp() {
     }
   };
 
-  const validationInputData = (vehicleNumber: string, vehicleModel: string, kilometers: number, vehicleType: string,
-    fuelType: string, vehicleBrand: { id: string, brandName: string } , location:{place_name:string,coordinates:[number, number]} ) => {
-    if (!vehicleNumber) {
-      toast.error("Please add vehicle number")
-      return
-    }
-    if (!vehicleModel) {
-      toast.error("Please Vehicle Model")
-      return
-    }
-    if (!vehicleType) {
-      toast.error('Please add vehicle type');
-      return
-    }
-    if (!kilometers) {
-      toast.error("Please add Kilometers travelled")
-      return
-    }
-    if (!vehicleBrand) {
-      toast.error("Please Select Vehicle Brand!!")
-      return
-    }
-    if(!fuelType){
-      toast.error("Please add Fuel Type!!")
-      return
-    }
+  // const validationInputData = (vehicleNumber: string, vehicleModel: string, kilometers: number, vehicleType: string,
+  //   fuelType: string, vehicleBrand: { id: string, brandName: string } , location:{place_name:string,coordinates:[number, number]} ) => {
+  //   if (!vehicleNumber) {
+  //     toast.error("Please add vehicle number")
+  //     return
+  //   }
+  //   if (!vehicleModel) {
+  //     toast.error("Please Vehicle Model")
+  //     return
+  //   }
+  //   if (!vehicleType) {
+  //     toast.error('Please add vehicle type');
+  //     return
+  //   }
+  //   if (!kilometers) {
+  //     toast.error("Please add Kilometers travelled")
+  //     return
+  //   }
+  //   if (!vehicleBrand) {
+  //     toast.error("Please Select Vehicle Brand!!")
+  //     return
+  //   }
+  //   if(!fuelType){
+  //     toast.error("Please add Fuel Type!!")
+  //     return
+  //   }
     
-    if(!location){
-      toast.error("Please add Location!!")
-      return
-    }
+  //   if(!location){
+  //     toast.error("Please add Location!!")
+  //     return
+  //   }
 
-  }
+  // }
 
 
   const handlePlaceClick = (place: { place_name: string, coordinates: [number, number] }) => {

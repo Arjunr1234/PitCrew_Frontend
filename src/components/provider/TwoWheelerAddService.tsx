@@ -1,9 +1,8 @@
-import { useEffect, useLayoutEffect, useState  } from "react"
+import { useEffect,  useState  } from "react"
 import { toast } from "sonner";
 import { addGenralRoadServices, addSubService, getAllServices, removeService, removeSubService } from "../../services/provider/providerService";
-import { IAddSubServiceData, IGeneralService, IRoadService, IServiceData, IServices } from "../../interface/provider/iProvider";
+import { IAddSubServiceData, IGeneralService, IRoadService, IServiceData } from "../../interface/provider/iProvider";
 import { useSelector } from "react-redux";
-import { FiEdit } from "react-icons/fi";
 import { FaTrashAlt } from "react-icons/fa";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import Swal from "sweetalert2";

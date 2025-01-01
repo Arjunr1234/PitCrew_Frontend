@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { MdBook, MdCancel, MdAddCircle } from "react-icons/md";
+import { MdBook,  MdAddCircle } from "react-icons/md";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 
 function BookingComp() {

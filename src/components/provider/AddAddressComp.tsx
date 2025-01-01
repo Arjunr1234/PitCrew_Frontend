@@ -9,7 +9,7 @@ import { useAppDispatch } from '../../interface/hooks';
 import { signupThunk } from '../../redux/thunk/provider';
 import { SignupData } from '../../interface/provider/iProviderAuth';
 import { useSelector } from 'react-redux';
-import { resetMessage, resetSuccess } from '../../redux/slice/providerAuthSlice';
+import {  resetSuccess } from '../../redux/slice/providerAuthSlice';
 
 
 interface Viewport {

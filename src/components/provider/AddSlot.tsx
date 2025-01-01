@@ -25,11 +25,7 @@ function AddSlot() {
   const [addedSlot, setAddedSlot] = useState<SlotData[]>([]);
   const [addedDates, setAddedDates] = useState<Date[]>([])
   const [currentPage, setCurrentPage] = useState(1);
-  const highlightedDates = [
-    new Date("2024-11-13"),
-    new Date("2024-11-15"),
-    new Date("2024-11-20"),
-  ];
+ 
 
 
 

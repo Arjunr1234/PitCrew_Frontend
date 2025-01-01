@@ -8,22 +8,7 @@ import providerImg from '../../images/providerDefaltImg.jpg'
 import { useNavigate } from "react-router-dom";
 
 function ProfileComp() {
-  const workshopData = {
-    _id: "6728907cbc9066cea481cb04",
-    workshopName: "ReadyToFix",
-    ownerName: "Ananthu Shaji",
-    email: "ananthu@gmail.com",
-    mobile: "9645201934",
-    workshopDetails: {
-      address: "Aluva, Kerala, India",
-      location: {
-        type: "Point",
-        coordinates: [76.356996, 10.100297],
-      },
-    },
-    logoUrl: "https://via.placeholder.com/150", // Placeholder for profile pic
-    about: "",
-  };
+ 
 
   const [workshopName, setWorkshopName] = useState<string>("");
   const [about, setAbout] = useState<string>("");
@@ -39,7 +24,7 @@ function ProfileComp() {
   const [modalAbout, setModalAbout] = useState<string>("")
   const fileInputRef = useRef<HTMLInputElement>(null);
   const {id} = useSelector((state:any) => state.provider?.providerInfo);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+ // const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -151,7 +136,7 @@ function ProfileComp() {
       formData.append('image', file);
       formData.append('providerId', id);
 
-      setIsLoading(true);
+    //  setIsLoading(true);
 
       try {
 

@@ -5,22 +5,21 @@ import { changeBookingStatus, fetchSingleBookingService } from '../../services/p
 import { toast } from 'sonner';
 import { IBookingDetails } from '../../interface/user/user';
 import { useSocket } from '../../Context/SocketIO';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
+
 
 function BookingView() {
 
   const location = useLocation();
   const navigate = useNavigate()
   const booking = location?.state?.bookingData;
-  const [bookingDetails, setBookingDetails] = useState<any>();
+  
   const [selectedBooking, setSelectedBooking] = useState<IBookingDetails | null>(null)
   const [isUserDetailsVisble, setIsUserDetailsVisible] = useState(false);
   const [isVehicleDetailsVisible, setIsVehicleDetailsVisible] = useState(false)
   const [currentStatus, setCurrentStatus] = useState("");
   const statusOptions = ["pending", "work progress", "ready for delivery", "delayed"];
   const {socket} = useSocket();
-  const {providerInfo} = useSelector((state:RootState) => state.provider)
+ // const {providerInfo} = useSelector((state:RootState) => state.provider)
 
 
 
