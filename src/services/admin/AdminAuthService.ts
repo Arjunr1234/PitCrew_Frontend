@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import { axiosInstance } from "../../api/common";
 import { ILoginData } from "../../interface/admin/iAdminAuth";
 import { URL } from "../../utils/api";

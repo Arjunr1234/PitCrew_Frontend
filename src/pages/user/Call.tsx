@@ -1,4 +1,4 @@
-import React from 'react'
+
 import UserCallComp from '../../components/user/UserCall'
 
 function CallPage() {

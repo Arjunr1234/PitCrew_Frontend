@@ -25,11 +25,11 @@ function ProviderServicesViewComp() {
   const [selectedSubService, setSelectedSubService] = useState<IServiceSubType[] | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [platformFee, setPlatformFee] = useState<number>(50);
+  //const [platformFee, setPlatformFee] = useState<number>(50);
   const [selectedSlotId, setSelectedSlotId] = useState<string | null>(null)
   const {id, mobile} = useSelector((state:any) => state.user?.userInfo);
   const stripeKey = import.meta.env.VITE_STRIPE_KEY
- 
+  const platformFee = 50;
 
 
 
@@ -140,7 +140,7 @@ const handlePayment = async() => {
         //    window.location.href = session.url
         // }
 
-        const result = stripe?.redirectToCheckout({
+         stripe?.redirectToCheckout({
           sessionId:session.id
         })
 
@@ -304,7 +304,7 @@ useEffect(() => {
                     </tr>
                   </thead>
                   <tbody>
-                    {selectedSubService?.map((service, index) => (
+                    {selectedSubService?.map((service) => (
                       < tr className="text-center" key={service._id} >
                         <td className="p-2 border-b">{service.type}</td>
                         <td className="p-2 border-b">₹ {service.startingPrice}</td>

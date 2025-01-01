@@ -106,7 +106,7 @@ function Navbar() {
 
    // toast.info('You have unread notifications!');
     try {
-       const response = await seenNotificationService(notification?._id as string)
+        await seenNotificationService(notification?._id as string)
       
     } catch (error) {
       console.log("Error in handleNotificationClicK: ", error)

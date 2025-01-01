@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import  { useEffect, useLayoutEffect, useState } from 'react';
 import {
   FaEnvelope,
   FaMapMarkerAlt,
@@ -17,7 +17,6 @@ import { toast } from 'sonner';
 import Swal from 'sweetalert2';
 import { changeBookingStatus, fetchSingleBookingService } from '../../services/provider/providerService';
 import { addRatingService } from '../../services/user/user';
-import CallModal from './UserCall';
 import { useSocket } from '../../Context/SocketIO';
 
 
@@ -34,8 +33,8 @@ function BookingView() {
   const [rating, setRating] = useState(1);
   const [feedback, setFeedback] = useState("");
   const [isReivewAdded, setIsReviewAdded] = useState<boolean>();
-  const [OutgoingCallModal, setOutgoingCallModal] = useState(false);
-  const [isCallActive, setIsCallActive] = useState(false);
+  //const [OutgoingCallModal, setOutgoingCallModal] = useState(false);
+  //const [isCallActive, setIsCallActive] = useState(false);
   const {socket} = useSocket();
 
   useLayoutEffect(() => {
@@ -117,9 +116,9 @@ function BookingView() {
   };
 
 
-  const handleFeedbackChange = (e: any) => {
-    setFeedback(e.target.value);
-  };
+  // const handleFeedbackChange = (e: any) => {
+  //   setFeedback(e.target.value);
+  // };
 
 
   const handleSubmitFeedback = async () => {
@@ -149,19 +148,19 @@ function BookingView() {
   const handleOpenRatingModal = () => {
     setIsModalOpen(true)
   }
-  const handleRatingChange = (value: number) => {
-    setRating(value);
-  };
+  // const handleRatingChange = (value: number) => {
+  //   setRating(value);
+  // };
 
   const handleStarClick = (rating: number) => {
     setRating(rating);
   };
 
-  const handleDismissModal = () => {
-    setOutgoingCallModal(false); 
-    setIsCallActive(false);
+  // const handleDismissModal = () => {
+  //   setOutgoingCallModal(false); 
+  //  // setIsCallActive(false);
     
-  };
+  // };
 
   const handleCallButtonClick = () => {
     

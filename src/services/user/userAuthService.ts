@@ -1,4 +1,3 @@
-import axios from "axios";
 import { URL } from "../../utils/api";
 import { IuserSignupData, MainResponse, SigninData, UserResponse, logoutResponse } from "../../interface/user/iuserAuth";
 import { axiosInstance } from "../../api/common";

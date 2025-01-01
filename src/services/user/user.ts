@@ -1,10 +1,9 @@
 import { axiosInstance } from "../../api/common"
-import axios from "axios";
 import { reset } from "../../redux/slice/userAuthSlice";
 import store from "../../redux/store";
 import { URL } from "../../utils/api"
 import { toast } from "sonner";
-import { BookingData, IProfileEditData, IReviewData } from "../../interface/user/user";
+import {  IProfileEditData, IReviewData } from "../../interface/user/user";
 
 
 interface IVehicleDetailsData{

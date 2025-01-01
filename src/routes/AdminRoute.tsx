@@ -1,4 +1,4 @@
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import AdminLogin from "../pages/admin/AdminLogin";
 import AdminLayout from "../components/admin/AdminLayout";  // Example layout for dashboard and other pages
 import AdminDashboard from "../pages/admin/AdminDashboard";  // Example dashboard page

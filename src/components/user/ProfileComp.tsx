@@ -4,11 +4,11 @@ import Swal from 'sweetalert2';
 import { toast } from 'sonner';
 import { logoutThunk, resetSuccessAndMessage } from '../../redux/slice/userAuthSlice';
 import { useAppDispatch } from '../../interface/hooks';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getUserDetailsService, updateProfilePicService } from '../../services/user/user';
 import { AiOutlineLoading } from 'react-icons/ai';
-import { FaRegEdit } from "react-icons/fa";
+
 
 function ProfileComp() {
 
@@ -17,7 +17,6 @@ function ProfileComp() {
   const navigate = useNavigate();
   const { name, id } = useSelector((state: any) => state.user.userInfo);
   const [profilePic, setProfilePic] = useState<string>(Image)
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   useEffect(() => {

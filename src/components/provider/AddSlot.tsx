@@ -136,7 +136,7 @@ function AddSlot() {
       if (response.success) {
         const updateSlot = addedSlot.map((slot) => {
           if (slot._id === slotId) {
-            const newCount = slot.count + 1
+           // const newCount = slot.count + 1
             return {
               ...slot,
               count: slot.count + 1

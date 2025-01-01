@@ -1,13 +1,13 @@
 
-import React from 'react';
+
 import { useNavigate } from 'react-router-dom';
 
 function paymentFailed() {
   const navigate = useNavigate();
 
-  const handleRetry = () => {
-    navigate('/provider-service-view'); // Replace with your payment route
-  };
+  // const handleRetry = () => {
+  //   navigate('/provider-service-view'); // Replace with your payment route
+  // };
 
   setTimeout(() => {
      navigate('/')

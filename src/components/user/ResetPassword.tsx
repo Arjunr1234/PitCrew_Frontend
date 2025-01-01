@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import { resetPasswordService } from "../../services/user/user";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { useNavigate } from "react-router-dom";
+
 
 function ResetPassword() {
   const [currentPassword, setCurrentPassword] = useState<string>("");
@@ -13,7 +13,7 @@ function ResetPassword() {
   const [showPasswordCurrent, setShowPasswordsCurrent] = useState<boolean>(false)
   const [showPasswordNew, setShowPasswordsNew] = useState<boolean>(false);
   const {userInfo} = useSelector((state:RootState) => state.user);
-  const navigate = useNavigate()
+  
 
   const toggleConfirmPasswordVisibility = () => {
     setShowPasswordsConfirm(!showPasswordsConfirm);

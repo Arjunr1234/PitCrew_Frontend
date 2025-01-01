@@ -46,9 +46,9 @@ function ProviderRoute() {
           }
       });
 
-      const handleAccept = () => {
-         console.log("Call accepted!");
-       };
+      // const handleAccept = () => {
+      //    console.log("Call accepted!");
+      //  };
 
 
        const changeModalState = () => {

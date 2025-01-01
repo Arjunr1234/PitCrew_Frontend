@@ -3,7 +3,6 @@ import { FaCamera } from "react-icons/fa";
 import { getProviderDetailsService, updatePoviderProfile, updateProfilePicture } from "../../services/provider/providerService";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
-import { updateProfilePicService } from "../../services/user/user";
 import providerImg from '../../images/providerDefaltImg.jpg'
 import { useNavigate } from "react-router-dom";
 

@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { UserResponse, SigninData, IuserInitialState, logoutResponse, IuserSignupData } from "../../interface/user/iuserAuth";
 import {  logoutApi, signInApi, verifyAndSignupApi } from "../../services/user/userAuthService"; 
-import { boolean } from "yup";
+
 
 
 const storedUser = localStorage.getItem('user');

@@ -1,6 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
-import { BsFillMicMuteFill, BsFillMicFill } from "react-icons/bs";
-import { AiFillAudio } from "react-icons/ai";
+import  { useState, useRef, useEffect } from "react";
 import { MdCallEnd } from "react-icons/md";
 import { useSocket } from "../../Context/SocketIO";
 import { useSelector } from "react-redux";
@@ -52,7 +50,7 @@ const VideoCallUI = () => {
 
 
   useEffect(() => {
-    socket?.on("callRejected", ({ callerId, receiverId }) => {
+    socket?.on("callRejected", ({  receiverId }) => {
       toast.info(`${receiverId} rejected the call`);
       handleCallStop();
     });
@@ -216,7 +214,7 @@ const VideoCallUI = () => {
 
   }
 
-  const handleCallAccept = async (response: any) => {
+  const handleCallAccept = async () => {
     try {
       
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -282,6 +280,7 @@ const VideoCallUI = () => {
         <div className="w-full h-[300px] flex flex-col justify-center items-center mt-4 space-y-4">
           {/* Video Stream */}
           <div className="w-[80%] md:w-[50%] h-[150px] bg-gray-700 rounded-lg overflow-hidden relative shadow-md">
+            <h1>{callingState}</h1>
             <video
               ref={videoRef}
               autoPlay

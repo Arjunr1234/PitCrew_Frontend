@@ -6,8 +6,6 @@ import { FaPaperPlane } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { useSocket } from '../../Context/SocketIO';
 import { fetchAllChatService } from '../../services/user/user';
-import { GoDotFill } from "react-icons/go";
-import { toast } from 'sonner';
 import TypingAnimation from './TypingAnimation';
 
 

@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { editUserProfileService, getUserDetailsService } from "../../services/user/user";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
-import { useAppDispatch } from "../../interface/hooks";
 import { updateUserProfile } from "../../redux/slice/userAuthSlice";
 
 function UserProfileForm() {
