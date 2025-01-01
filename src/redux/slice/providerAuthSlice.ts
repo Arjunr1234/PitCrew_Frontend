@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ProviderInitialState } from "../../interface/provider/iProviderAuth";
 import { loginThunk, providerLogoutThunk, signupThunk } from "../thunk/provider";
-import { logoutThunk } from "./userAuthSlice";
+
 
 const provide = localStorage.getItem('provider');
 const provider = provide ? JSON.parse(provide) : null;
