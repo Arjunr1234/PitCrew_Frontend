@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+import animatedPlugin from 'tailwindcss-animated';
 
 export default {
   content: [
@@ -11,7 +12,6 @@ export default {
         customBlue: '#5DF0F9', 
         madBlack: '#162B31',
         madBlackHover:"",
-      //  providerGreen:'#4dff4d',
         providerGreen:'#78C1F3',
         providerBluePrimary:"#78C1F3",
         providerBlueSecondary:"#9BE8D8",
@@ -36,7 +36,7 @@ export default {
     },
   },
   plugins: [
-    require('tailwindcss-animated'),
+    animatedPlugin,
     
   ],
 }
