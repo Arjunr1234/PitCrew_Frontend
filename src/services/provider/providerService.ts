@@ -324,6 +324,19 @@ export const fetchSingleBookingService = async(bookingId:string) => {
     }
 }
 
+export const fetchDashboardData = async(providerId:string) => {
+    try {
+         const response = await axiosInstance.get(URL + `/api/provider/bookings/dashboard-details?providerId=${providerId}`)
+         return response.data
+      
+    } catch (error) {
+       console.log('Error in fetchDashboardData: ', error);
+       handleError(error);
+       throw error
+      
+    }
+}
+
 
 
 

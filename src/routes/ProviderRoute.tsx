@@ -22,6 +22,7 @@ import { useEffect, useState } from 'react';
 import { useSocket } from '../Context/SocketIO';
 import ReceivingCallModal from '../components/provider/RecevingCallModal';
 import Call from '../pages/provider/Call';
+import NotFound from '../components/common/NotFound';
 
 
 
@@ -36,22 +37,19 @@ function ProviderRoute() {
           setIncommingResponse({success,callerId, receiverId, callerData});
           setIsCallModal(true);
           
-          return()=> {
-            socket.off('incommingCall')
-          }
+          
 
           })
+
+          return()=> {
+            socket?.off('incommingCall')
+          }
       });
 
       const handleAccept = () => {
          console.log("Call accepted!");
        };
 
-      //  const handleReject = () => {
-      //    setIsCallModal(false)
-      //    toast.error("Call is rejected");
-      //    socket?.emit("rejectCall", {rejected:true, callerId:incommingResponse.callerId, receiverId:incommingResponse.receiverId})
-      //  };
 
        const changeModalState = () => {
            setIsCallModal(false)
@@ -69,6 +67,7 @@ function ProviderRoute() {
              <Route path={'/addaddress'} element={<AddAddress/>}/>
           // protected routes
          <Route element={<ProtectedRoute/>}>  
+             <Route path={'*'} element={<NotFound role='provider'/>}/> 
              <Route  element={<ProviderLayout/>}>
                 <Route path='reset-password' element={<ResetPassword/>}/>
                 <Route path='dashboard' element={<ProviderHome/>}/>

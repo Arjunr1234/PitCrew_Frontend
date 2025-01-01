@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { RootState } from '../../redux/store';
 import { useSocket } from '../../Context/SocketIO';
 import { MdCallEnd } from 'react-icons/md';
 import { toast } from 'sonner';
+import { CallingState } from '../../interface/provider/iProvider';
 
 const servers: RTCConfiguration = {
   iceServers: [
@@ -35,14 +36,17 @@ function ProviderCall() {
     const providerSideVideoRef = useRef<HTMLVideoElement | null>(null)
     const peerConnection = useRef<RTCPeerConnection | null>(null);
     const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
-    const localStrem = useRef<MediaStream | undefined>();
-    const navigate = useNavigate()
+    const [callingState, setCallingState] = useState<CallingState>("trying To connect");
+    const localStrem = useRef<MediaStream | undefined | null>();
+    const navigate = useNavigate();
 
 
 
     useEffect(() => {
       if(!location.state){
-        socket?.emit("createRoomForCall", {providerId:providerInfo?.id, userId , caller:"provider"})
+       // toast.success("createRoom for call")
+        socket?.emit("createRoomForCall", {providerId:providerInfo?.id, userId , caller:"provider"});
+        
       }
     },[]);
 
@@ -50,13 +54,15 @@ function ProviderCall() {
       if(!peerConnection.current){
         peerConnection.current = new RTCPeerConnection(servers)
       }
-     
+      socket?.on("receiveAnswer", receiveAnswer);
+      socket?.on("receivingCallEnded", handleReceivingCallEnded)
 
+      socket?.on("callAccepted", handleCallAccept )
       socket?.on("sendOfferToReceiver", sendOfferToReceiver);
-      socket?.on("receiveCandidate", receiveCandidate )
+      socket?.on("receiveCandidate", receiveCandidate );
 
       peerConnection.current.ontrack = (event) => {
-        console.log("event vannu",event.streams[0]);
+        ///console.log("event vannu",event.streams[0]);
         
         const remoteStream = event.streams[0];
         if (remoteVideoRef.current) {
@@ -65,7 +71,6 @@ function ProviderCall() {
       };
       if (peerConnection.current) {
         peerConnection.current.oniceconnectionstatechange = () => {
-
           console.log(peerConnection.current?.iceConnectionState);
         };
       }
@@ -77,15 +82,79 @@ function ProviderCall() {
          }
 
          socket?.off("sendOfferToReceiver");
-         socket?.off("receiveCandidate")
+         socket?.off("receiveCandidate");
+         socket?.off("callAccepted");
+         socket?.off("receiveAnswer");
+         socket?.off("receivingCallEnded")
       }
     },[socket]);
 
     const receiveCandidate = async(response:any) => {
-       toast.success("Receivde candidate");
+      // toast.success("Receivde candidate");
        await peerConnection.current?.addIceCandidate(new RTCIceCandidate(response.event))
        console.log("Thsi si the received canddate: ", response.event);
-       toast.success("connected")
+       
+      // toast.success("connected");
+    }
+
+    const receiveAnswer = (response:any) => {
+       // toast.success("anser is received")
+        if(peerConnection.current){
+           peerConnection.current.setRemoteDescription(response.answer)
+        }
+        setCallingState("connected");
+        
+    }
+
+    const handleReceivingCallEnded = () => {
+      toast.info("the user is ended the call");
+      if(peerConnection.current){
+       peerConnection.current.close();
+       peerConnection.current = null
+      }
+      if(localStrem.current){
+       localStrem.current.getTracks().forEach((track) => track.stop());
+       localStrem.current = undefined;
+      }
+      setCallingState("callEnded");
+      navigate(-1)
+   }
+
+    const handleCallAccept = async (response:any) => {
+         try {
+
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video:true,
+            audio:true
+          });
+
+          localStrem.current = stream;
+
+          if(providerSideVideoRef.current){
+             providerSideVideoRef.current.srcObject = stream
+          }
+
+          stream.getTracks().forEach((track) => {
+            peerConnection.current?.addTrack(track, stream)
+          })
+
+          const offer = await peerConnection.current?.createOffer();
+
+          if(offer){
+              
+              socket?.emit("sendOffer", {
+                receiverId:userId,
+                offer,
+                callerId:providerInfo?.id
+              })
+
+              await peerConnection.current?.setLocalDescription(offer)
+          }
+          
+         } catch (error) {
+           console.log("Error in handleCallAccept: ", error);
+          
+         }
     }
 
 
@@ -96,11 +165,11 @@ function ProviderCall() {
         console.log("Remote description set successfully.");
     
         navigator.mediaDevices
-          .getUserMedia({ video: false, audio: true })
+          .getUserMedia({ video: true, audio: true })
           .then((stream) => {
             console.log("Callee: Local media stream obtained:", stream);
             localStrem.current = stream;
-    
+          
             if (providerSideVideoRef.current) {
               providerSideVideoRef.current.srcObject = stream;
             }
@@ -108,8 +177,7 @@ function ProviderCall() {
             stream.getTracks().forEach((track) => {
               peerConnection.current?.addTrack(track, stream);
             });
-    
-            // Create and send an SDP answer
+          
             peerConnection.current
               ?.createAnswer()
               .then(async (answer) => {
@@ -139,7 +207,7 @@ function ProviderCall() {
             }
           };
     
-          // Handle remote tracks
+         // Handle remote tracks
          // console.log("ivde vare vannu");
           
           // peerConnection.current.ontrack = (event) => {
@@ -161,6 +229,16 @@ function ProviderCall() {
         peerConnection.current = null;
      }
 
+     if (localStrem.current) {
+      localStrem.current.getTracks().forEach((track) => {
+        track.stop(); 
+      });
+      localStrem.current = undefined; 
+    }
+
+    socket?.emit("callEnded", {to:userId})
+
+     toast.info("call ended")
      setTimeout(() => {
       navigate(-1);
     }, 2000);
@@ -176,11 +254,27 @@ function ProviderCall() {
           {/* Video Stream */}
           <div className="w-[80%] md:w-[50%] h-[150px] bg-gray-700 rounded-lg overflow-hidden relative shadow-md">
             <video
+              ref={providerSideVideoRef}
+              autoPlay
+              playsInline
+              className="w-full h-full bg-blue-500"
+            />
+           
+            {/* Placeholder if video is not active */}
+            {/* {!providerSideVideoRef.current && (
+              <div className="absolute inset-0 flex justify-center items-center bg-gray-800 text-white text-sm">
+                No video available
+              </div>
+            )} */}
+          </div>
+          <div className="w-[80%] md:w-[50%] h-[150px] bg-gray-700 rounded-lg overflow-hidden relative shadow-md">
+            <video
               ref={remoteVideoRef}
               autoPlay
               playsInline
               className="w-full h-full bg-blue-500"
             />
+            
             {/* Placeholder if video is not active */}
             {/* {!providerSideVideoRef.current && (
               <div className="absolute inset-0 flex justify-center items-center bg-gray-800 text-white text-sm">

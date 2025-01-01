@@ -40,9 +40,9 @@ function AddVehicleDetailsComp() {
 
   const [center, setCenter] = useState<[number, number]>(INITIAL_CENTER);
   const [zoom, setZoom] = useState<number>(INITIAL_ZOOM);
-  const accessToken = 'pk.eyJ1IjoiYmluaXNoMTkwNSIsImEiOiJjbTFpdzE1OHcwcGdqMnJxbDUxdDN5cnExIn0.TYM92lLjTLoETRIJEiJWPw';
-
-
+ // const accessToken = 'pk.eyJ1IjoiYmluaXNoMTkwNSIsImEiOiJjbTFpdzE1OHcwcGdqMnJxbDUxdDN5cnExIn0.TYM92lLjTLoETRIJEiJWPw';
+ 
+ const accessToken = import.meta.env.VITE_MAP_TOKEN;
 
 
   useEffect(() => {
@@ -53,7 +53,7 @@ function AddVehicleDetailsComp() {
     mapRef.current = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: 'mapbox://styles/mapbox/streets-v11',
-      center: location?.coordinates,
+      center: location?.coordinates ,
       zoom: zoom,
     });
 

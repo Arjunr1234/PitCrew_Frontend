@@ -232,23 +232,8 @@ useEffect(() => {
       })}
     </p>
     {/* Add double tick icon */}
-    {msg.sender === "user" && (
-      <svg
-        className={`w-5 h-4 ml-2 ${
-          msg.seen ? "text-blue-500" : "text-gray-400"
-        }`}
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-      >
-        {/* First tick */}
-        <path d="M4 12l4 4L20 4" />
-        {/* Second tick (slightly shifted for alignment) */}
-        <path d="M2 14l4 4L18 6" />
-      </svg>
-    )}
+    
+    
   </div>
 </div>
 

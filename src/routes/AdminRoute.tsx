@@ -14,6 +14,7 @@ import RoadServices from "../components/admin/RoadServices";
 import AdminServices from "../pages/admin/AdminServices";
 import ProtectedRoute from "../utils/protecteRoutes/admin";
 import BookingView from "../components/admin/BookingView";
+import NotFound from "../components/common/NotFound";
 
   
 
@@ -29,6 +30,7 @@ function AdminRoute() {
 
         <Route path="login" element={<AdminLogin />} />
      <Route element={<ProtectedRoute/>}>
+        <Route path={'*'} element={<NotFound role="admin"/>}/> 
         <Route element={<AdminLayout />}>
    
             <Route path="dashboard" element={<AdminDashboard />} />

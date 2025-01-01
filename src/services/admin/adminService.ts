@@ -149,5 +149,17 @@ export const fetchAllBookingsService = async() => {
       }
 }
 
+export const fetchDashboardDetails = async() => {
+      try {
+         const response = await axiosInstance.get(URL + `/api/admin/bookings/dashboard-details`);
+         return response.data
+        
+      } catch (error) {
+         console.log("Error in fetchDashboad details: ", error);
+         throw error
+        
+      }
+}
+
 
 

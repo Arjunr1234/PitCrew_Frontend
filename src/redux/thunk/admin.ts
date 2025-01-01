@@ -35,7 +35,6 @@ export const adminLogoutThunk = createAsyncThunk<IAdminLogoutResponse>(
       return response
     } catch (error) {
         console.log(error)
-      
     }
   }
 );

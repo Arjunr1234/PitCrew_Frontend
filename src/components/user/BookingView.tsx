@@ -174,8 +174,7 @@ function BookingView() {
         socket?.on("isPersonIsOnline",(response) => {
         if(!response.success){
           toast.warning("Provider is in Offline")
-        }else{
-          
+        }else{ 
           if(selectedBooking){
             navigate(`/voice-call/${selectedBooking?.providerId}`);
           }       

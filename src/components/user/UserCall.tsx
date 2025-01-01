@@ -5,7 +5,7 @@ import { MdCallEnd } from "react-icons/md";
 import { useSocket } from "../../Context/SocketIO";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 const servers: RTCConfiguration = {
@@ -28,24 +28,28 @@ const servers: RTCConfiguration = {
 };
 
 const VideoCallUI = () => {
-  const [isMuted, setIsMuted] = useState(false);
+  
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const {socket} = useSocket();
   const {providerId} = useParams()
-  const toggleMute = () => setIsMuted((prev) => !prev);
   const {userInfo} = useSelector((state:RootState) => state.user);
   const navigate = useNavigate();
   const peerConnection = useRef<RTCPeerConnection | null>(null)
   const localStream = useRef<MediaStream | undefined>();
+  const location = useLocation()
   const [callingState, setCallingState] = useState<"calling" | "connected" | "callEnded">("calling");
 
 
 
   useEffect(() => {
       // console.log("This is providerID: userId: ", providerId, userInfo?.id)
-        socket?.emit("createRoomForCall", {providerId:providerId, userId:userInfo?.id + "", caller:"user", callerData:{image:userInfo?.image, name:userInfo?.name} })
+        if(!location.state){
+          socket?.emit("createRoomForCall", {providerId:providerId, userId:userInfo?.id + "", caller:"user", callerData:{image:userInfo?.image, name:userInfo?.name} })
+        }
+        
   },[])
+
 
   useEffect(() => {
     socket?.on("callRejected", ({ callerId, receiverId }) => {
@@ -66,6 +70,8 @@ const VideoCallUI = () => {
       peerConnection.current = new RTCPeerConnection(servers)
     }
 
+    socket?.on("sendOfferToReceiver", sendOfferToReceiver );
+    socket?.on("receivingCallEnded", handleReceivingCallEnded)
 
     socket?.on("callAccepted", handleCallAccept);
     socket?.on("receiveAnswer", receiveAnswer);
@@ -74,12 +80,12 @@ const VideoCallUI = () => {
 
     if (peerConnection.current && !peerConnection.current.ontrack) {
       peerConnection.current.ontrack = (event: any) => {
-        console.log("Remote stream received:", event.streams[0]);
+        
   
         if (remoteVideoRef.current) {
-          console.log(("Enteed in to the remote stream "));
           
-          remoteVideoRef.current.srcObject = event.streams[0];
+            remoteVideoRef.current.srcObject = event.streams[0];
+
         }
       };
     }
@@ -90,6 +96,9 @@ const VideoCallUI = () => {
         peerConnection.current.close();
         peerConnection.current = null;
     }
+       socket?.off("sendOfferToReceiver")
+       socket?.off("receivingCallEnded")
+
        socket?.off("callAccepted");
        socket?.off("receiveAnswer");
        socket?.off("receiveCandidate")
@@ -98,7 +107,38 @@ const VideoCallUI = () => {
   },[socket]);
 
   const handleCallStop = () => {
-    navigate(-1)
+    if(peerConnection.current){
+      peerConnection.current.close();
+      peerConnection.current = null;
+    }
+
+    if(localStream){
+      localStream.current?.getTracks().forEach((track) => {
+        track.stop();
+      });
+      localStream.current = undefined;
+    }
+
+    socket?.emit("callEnded", {to:providerId});
+
+    toast.info("call ended")
+     setTimeout(() => {
+      navigate(-1);
+    }, 2000);
+  }
+
+  const handleReceivingCallEnded = () => {
+     toast.info("the provider is ended the call");
+     if(peerConnection.current){
+      peerConnection.current.close();
+      peerConnection.current = null
+     }
+     if(localStream.current){
+      localStream.current.getTracks().forEach((track) => track.stop());
+      localStream.current = undefined;
+     }
+     setCallingState("callEnded");
+     navigate(-1)
   }
 
   const receiveCandidate = async(response:any) => {
@@ -111,22 +151,83 @@ const VideoCallUI = () => {
        peerConnection.current.setRemoteDescription(response.answer);
      }
      setCallingState("connected");
-     toast.success("connected");
+    
+
+  }
+
+  const sendOfferToReceiver = async(response:any) => {
+       
+      try {
+        const offer = new RTCSessionDescription(response.offer);
+        await peerConnection.current?.setRemoteDescription(offer);
+        
+        navigator.mediaDevices
+        .getUserMedia({video:true, audio:true})
+        .then((stream) => {
+          localStream.current = stream
+ 
+          if(videoRef.current){
+            videoRef.current.srcObject = stream
+          }
+ 
+          stream.getTracks().forEach((track) => {
+             peerConnection.current?.addTrack(track, stream)
+          })
+ 
+          peerConnection.current
+          ?.createAnswer()
+          .then(async(answer) => {
+            await peerConnection.current?.setLocalDescription(answer);
+           // toast.success("answer is emitted")
+            socket?.emit("answer", {to:providerId, answer})
+          })
+          .catch((error) => {
+           console.log("Error in creating SDP answer: ", error);
+          })
+ 
+        })
+        .catch((error) => {
+          console.log("Error in aquiring media stream: ", error);
+          
+        })
+ 
+        if(peerConnection.current){
+          peerConnection.current.onicecandidate = (event) => {
+             if(event.candidate){
+               console.log("This is the candidate: ", event.candidate);
+             //  toast.success("sended the candidate key");
+               socket?.emit("sendCandidate", {
+                 event:event.candidate, 
+                 id:providerId,
+                 sender:"user"
+               })
+               
+             }else {
+               console.log("Callee: All ICE candidates sent.");
+             }
+          }
+        }
+        
+      } catch (error) {
+        console.error("Error during offer handling:", error);
+        
+      }
+
 
   }
 
   const handleCallAccept = async (response: any) => {
     try {
-      // Access user media (audio and video)
+      
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true,
       });
   
-      // Set the local stream
+    
       localStream.current = stream;
   
-      // Attach the stream to the video element
+      
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
       }
@@ -136,22 +237,22 @@ const VideoCallUI = () => {
         peerConnection.current?.addTrack(track, stream);
       });
   
-      // Create an offer and set it as the local description
-      peerConnection.current?.addTransceiver('video', { direction: 'recvonly' });
-      const offer = await peerConnection.current?.createOffer();
+       const offer = await peerConnection.current?.createOffer();
       if (offer) {
-        // Emit the offer to the receiver
+        
         socket?.emit("sendOffer", {
           receiverId: providerId,
           offer,
           callerId: userInfo?.id,
         });
   
-        // Set the local description
+        
         await peerConnection.current?.setLocalDescription(offer);
+
+
       }
   
-      // Handle ICE candidates
+      
      if (peerConnection.current) {
         peerConnection.current.onicecandidate = (event) => {
         if (event.candidate) {
@@ -166,6 +267,7 @@ const VideoCallUI = () => {
         }
       };
      }
+
     } catch (error) {
       // Log errors with context
       console.error("Error during call setup:", error);
@@ -187,11 +289,26 @@ const VideoCallUI = () => {
               className="w-full h-full bg-blue-500"
             />
             {/* Placeholder if video is not active */}
-            {!videoRef.current && (
+            {/* {!videoRef.current && (
               <div className="absolute inset-0 flex justify-center items-center bg-gray-800 text-white text-sm">
                 No video available
               </div>
-            )}
+            )} */}
+          </div>
+          <div className="w-[80%] md:w-[50%] h-[150px] bg-gray-700 rounded-lg overflow-hidden relative shadow-md">
+            <video
+              ref={remoteVideoRef}
+              autoPlay
+              playsInline
+              className="w-full h-full bg-blue-500"
+            />
+            {/* Placeholder if video is not active */}
+            {/* {!videoRef.current && (
+              <div className="absolute inset-0 flex justify-center items-center bg-gray-800 text-white text-sm">
+                No video available
+              </div>
+            )} */}
+
           </div>
 
           {/* Caller Details */}

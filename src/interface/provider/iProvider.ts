@@ -80,3 +80,14 @@ export interface IUserDataChat {
   email: string;
   imageUrl: string;
 }
+
+// provider call
+
+export type CallingState = 
+| "calling" 
+| "connected" 
+| "callEnded" 
+| "disconnected" 
+| "failed To Connect" 
+| "Rejected" 
+| "trying To connect";

@@ -9,6 +9,8 @@ function BookingsComp() {
   const [bookingDetails, setBookingDetails] = useState([]);
   const providerId = useSelector((state:any) => state.provider?.providerInfo?.id);
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 5;
   
 
   useEffect(() => {
@@ -31,6 +33,16 @@ function BookingsComp() {
   const handleViewBooking = (booking:any) => {
          navigate('/provider/bookings/booking-view',{state:{bookingData:booking}})
   }
+
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentBooking = bookingDetails.slice(indexOfFirstUser, indexOfLastUser);
+  const totalPages = Math.ceil(bookingDetails.length / usersPerPage);
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
+
   return (
     <>
      <div className="p-4">
@@ -45,7 +57,7 @@ function BookingsComp() {
       </tr>
     </thead>
     <tbody className="bg-white divide-y divide-gray-200">
-      {bookingDetails.map((booking: any, index) => (
+      {currentBooking.map((booking: any, index) => (
         <tr
           key={index}
           className="hover:bg-gray-100 transition duration-200"
@@ -84,7 +96,36 @@ function BookingsComp() {
       ))}
     </tbody>
   </table>
+
+  <div className="flex justify-center mt-4">
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="px-4 py-2 mx-1 bg-gray-300 rounded hover:bg-gray-400 disabled:bg-gray-200"
+        >
+          Previous
+        </button>
+        {[...Array(totalPages)].map((_, index) => (
+          <button
+            key={index}
+            onClick={() => handlePageChange(index + 1)}
+            className={`px-4 py-2 mx-1 ${
+              currentPage === index + 1 ? "bg-blue-500 text-white" : "bg-gray-300"
+            } rounded hover:bg-gray-400`}
+          >
+            {index + 1}
+          </button>
+        ))}
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 mx-1 bg-gray-300 rounded hover:bg-gray-400 disabled:bg-gray-200"
+        >
+          Next
+        </button>
+      </div>
 </div>
+
 
 
     </>

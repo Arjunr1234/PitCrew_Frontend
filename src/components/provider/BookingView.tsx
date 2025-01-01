@@ -4,6 +4,9 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { changeBookingStatus, fetchSingleBookingService } from '../../services/provider/providerService';
 import { toast } from 'sonner';
 import { IBookingDetails } from '../../interface/user/user';
+import { useSocket } from '../../Context/SocketIO';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 
 function BookingView() {
 
@@ -16,6 +19,8 @@ function BookingView() {
   const [isVehicleDetailsVisible, setIsVehicleDetailsVisible] = useState(false)
   const [currentStatus, setCurrentStatus] = useState("");
   const statusOptions = ["pending", "work progress", "ready for delivery", "delayed"];
+  const {socket} = useSocket();
+  const {providerInfo} = useSelector((state:RootState) => state.provider)
 
 
 
@@ -73,6 +78,31 @@ function BookingView() {
     }
 
   };
+
+  const handleCallButtonClick = () => {
+       socket?.emit("checkPersonIsOnline", {providerId:selectedBooking?.providerId,userId:selectedBooking?.userId, caller:"provider" })
+  }
+
+  useEffect(() => {
+      if(socket){
+         socket.on("isPersonIsOnline", ((response) => {
+           if(!response.success){
+            toast.warning("User is in Offline")
+           }else{
+              if(selectedBooking){
+                toast.success("user is in online");
+                navigate(`/provider/voice-call/${selectedBooking?.userId}`);
+              }
+           }
+         }))
+      }
+      return()=> {
+        socket?.off("isPersonIsOnline");
+     }
+  },[socket, selectedBooking]);
+
+
+
   return (
     <div className='p-2 h-full'>
       <div className="bg-gray-200 rounded-lg w-full h-full flex gap-y-2 flex-col shadow-lg relative">
@@ -92,7 +122,8 @@ function BookingView() {
             <button
               className="p-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition duration-300"
               title="Call"
-            >
+              onClick={handleCallButtonClick}
+              >
               <FaPhoneAlt size={20} />
             </button>
             <button

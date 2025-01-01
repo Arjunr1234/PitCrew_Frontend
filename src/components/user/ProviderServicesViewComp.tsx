@@ -28,6 +28,7 @@ function ProviderServicesViewComp() {
   const [platformFee, setPlatformFee] = useState<number>(50);
   const [selectedSlotId, setSelectedSlotId] = useState<string | null>(null)
   const {id, mobile} = useSelector((state:any) => state.user?.userInfo);
+  const stripeKey = import.meta.env.VITE_STRIPE_KEY
  
 
 
@@ -119,7 +120,7 @@ const calculateTotalPrice = (subServices:any) => {
 };
 
 const handlePayment = async() => {
-  const stripe = await loadStripe("pk_test_51QKE0SD1bTTHz7SzeCjfvIjGNtWxFrZBIu4QGS8ulkdu5SHR6PXO8OiwsrVvxsI9XIsTo8CCdPHejQdobj76B8AD00u1gc5H98")
+  const stripe = await loadStripe(stripeKey)
     const data = {
        vehicleDetails,
        providerId,

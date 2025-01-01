@@ -177,7 +177,7 @@ function BookingDetails() {
                 {booking?.providerDetails.workshopName}
               </td>
               <td
-                className={` px-4 py-3 text-center font-semibold ${booking?.status === 'Completed'
+                className={` px-4 py-3 text-center font-semibold ${booking?.status === 'Delivered'
                     ? 'text-green-500'
                     : booking?.status === 'pending'
                       ? 'text-yellow-500'
@@ -193,7 +193,7 @@ function BookingDetails() {
                 </button>
               </td>
               <td className=" px-4 py-3 text-center">
-               {booking.status !== 'cancelled'?
+               {booking.status === 'pending'?
                ( <button className="px-4 py-2 bg-red-500 text-white rounded-md shadow hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105"
                 onClick={() => handleCancelTerms(booking._id)}>
                   Cancell

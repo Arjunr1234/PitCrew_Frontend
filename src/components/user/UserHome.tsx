@@ -51,8 +51,9 @@ function UserHome() {
             <h1 className="text-2xl font-bold text-gray-800 mb-2 lg:mb-4">24 x 7 on-spot</h1>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold animate-fade-right">Bike and Car Repair Services</h1>
             <p className="text-gray-600 mb-6">We offer reliable bike and car services anytime, anywhere.</p>
-            <button className="bg-gray-500 text-white px-6 py-2 self-center lg:self-start rounded-3xl hover:bg-blue-600"
-              onClick={() => { navigate('/services') }}>
+            <button className="bg-gray-800 text-white px-6 py-2 self-center lg:self-start rounded-3xl animate-pulse hover:bg-blue-600"
+              onClick={() => { navigate('/services/general-service') }}>
+               
               Book Now
             </button>
           </div>

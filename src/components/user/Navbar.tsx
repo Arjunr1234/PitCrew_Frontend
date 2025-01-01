@@ -24,7 +24,7 @@ function Navbar() {
   const {socket} = useSocket();
 
 
-  const { userInfo } = useSelector((state: RootState) => state.user);
+  const { userInfo } = useSelector((state: RootState) => state?.user);
 
 
   const handleMobileMenuToggle = () => {
@@ -140,7 +140,7 @@ function Navbar() {
       <div className="container mx-auto flex justify-between items-center ">
 
         {/* Left Section: Logo and Site Name */}
-        <div className=" animate-pulse flex items-center">
+        <div className="  flex items-center">
           <img src={logo} alt="Site Logo" className="h-8 w-8 mr-2" />
           <span className="text-black text-4xl font-bold">PitCrew</span>
         </div>
