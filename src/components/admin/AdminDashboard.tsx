@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+
 import {
 LineChart,
   Line,
@@ -11,9 +11,9 @@ LineChart,
   Pie,
   Cell,
 } from "recharts";
-import { RootState } from "../../redux/store";
+
 import { useEffect, useState } from "react";
-import { fetchAllBookingsService, fetchDashboardDetails } from "../../services/admin/adminService";
+import {  fetchDashboardDetails } from "../../services/admin/adminService";
 import { toast } from "sonner";
 import { FaMoneyBillWave, FaStore, FaUsers } from "react-icons/fa";
 
@@ -125,7 +125,7 @@ function AdminDashboard() {
               fill="#8884d8"
               label
             >
-              {pieData.map((entry, index) => (
+              {pieData.map((_, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
