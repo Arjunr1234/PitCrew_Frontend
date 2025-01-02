@@ -3,7 +3,7 @@ import { URL } from "../utils/api";
 
 
 export const axiosInstance = axios.create({
-  baseURL: URL,
+  baseURL: 'https://api.pitcrew.shop',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
