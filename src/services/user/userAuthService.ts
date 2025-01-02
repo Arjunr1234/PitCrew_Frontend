@@ -7,7 +7,7 @@ import axios from "axios";
 
 export  const signInApi = async (signInData: SigninData): Promise<UserResponse> => {
   try {
-    const response = await axiosInstance.post<UserResponse>(`https://api.pitcrew.shop/api/user/auth/login`, signInData, );
+    const response = await axiosInstance.post<UserResponse>(`https://api.pitcrew.shop/api/user/auth/login`, signInData);
 
     if (response.data.success) {
       localStorage.setItem("user", JSON.stringify(response.data.user));
