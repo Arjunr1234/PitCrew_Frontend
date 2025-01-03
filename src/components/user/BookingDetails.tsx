@@ -57,8 +57,7 @@ function BookingDetails() {
 
   const handleCancellBooking = async(bookingId:string, reason:string) => {
      try {
-        console.log('This is the bookingId: ', bookingId);
-        console.log("This is the reason: ", reason);
+       
         const response = await cancellBookingService(bookingId, reason);
         if(response.success){
            const changeStatusBooking = bookings.map((booking) => {

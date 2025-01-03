@@ -22,11 +22,7 @@ function ChatUser() {
   const [isProviderTyping, setIsProviderTyping] = useState<boolean>();
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    // console.log("This is providerDetails: ", providerDetails);
-     console.log("This is bookingDetails: ", bookingDetails);
-     
-  },[])
+  
  
 
   useEffect(() => {
@@ -65,28 +61,18 @@ function ChatUser() {
      socket?.on("receiveMessage", (messageDetails:any) => {       
         setMessages(messageDetails.messages)
        
-        console.log("This is the latest message: ",messageDetails.messages.at(-1))
+       
      });
      return () => {
       socket?.off("receiveMessage");
     };
   },[socket]);
 
-  // useEffect(() => {
-  //   if(socket){
-  //      socket.on("userOffline",({userId}) => {
-  //          if(userId === bookingDetails?.providerId){
-  //            setIsUserOnline(false)
-  //            console.log("Provider went offline");
-  //          }
-  //      })
-  //   }
-  // })
+  
 
   useEffect(() => {
     if (socket) {
       socket.on("receiverIsOnline", ({ user_id }) => {
-        // Handle online status (update UI, etc...)
         console.log(`${user_id} is online`);
         setIsUserOnline(true)
       });
@@ -98,7 +84,7 @@ function ChatUser() {
       });
 
       socket.on("listOnlineUsers", (onlineUsers) => {
-          console.log("TTTTTTTTTTTTTTTTthis sithe listonlineusers: ", onlineUsers)
+          
           if(onlineUsers[bookingDetails?.providerId]){
             setIsUserOnline(true)
           }
@@ -107,7 +93,7 @@ function ChatUser() {
       socket.on("userOffline",({userId}) => {
         if(userId === bookingDetails?.providerId){
           setIsUserOnline(false)
-          console.log("Provider went offline");
+          
         }
     })
   
@@ -133,7 +119,7 @@ function ChatUser() {
           message:newMessage,
           sender:"user"
         }
-        console.log("This is messgeDetails: ", messageDetails)
+        
 
         socket?.emit("sendMessage", { messageDetails});
         socket?.emit("typing", {
@@ -168,7 +154,7 @@ function ChatUser() {
 useEffect(() => {
   if(socket){
     socket.on("typing", ({isTyping, typer}) => {
-      console.log(` ${typer} is typing------: ${isTyping}`);
+     // console.log(` ${typer} is typing------: ${isTyping}`);
      
       if(typer === 'PROVIDER'){
         setIsProviderTyping(isTyping);     
