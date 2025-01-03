@@ -13,7 +13,7 @@ function ChatUser() {
 
 
   const location = useLocation();
-  const { providerDetails, bookingDetails } = location.state;
+  const {  bookingDetails } = location.state;
   const userName = useSelector((state:any) => state?.user?.userInfo?.name);
   const [messages, setMessages] = useState<ChatMessage[] >([]);
   const [newMessage, setNewMessage] = useState<string>('');
@@ -21,6 +21,12 @@ function ChatUser() {
   const [isUserOnline, setIsUserOnline] = useState<boolean>();
   const [isProviderTyping, setIsProviderTyping] = useState<boolean>();
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    // console.log("This is providerDetails: ", providerDetails);
+     console.log("This is bookingDetails: ", bookingDetails);
+     
+  },[])
  
 
   useEffect(() => {
@@ -185,7 +191,7 @@ useEffect(() => {
   <div className="relative">
     <img
       className="h-10 w-10 rounded-full border-1 mr-2"
-      src={providerDetails?.logoUrl || workshopImg}
+      src={bookingDetails.providerDetails.logoUrl || workshopImg}
       alt="pic"
     />
     {isUserOnline && (
@@ -193,7 +199,7 @@ useEffect(() => {
     )}
   </div>
   <h1 className="flex-grow text-center font-semibold font-atma text-xl">
-    {providerDetails.workshopName}
+    {bookingDetails.providerDetails?.workshopName}
   </h1>
 </div>
 
@@ -208,7 +214,7 @@ useEffect(() => {
     >
       {msg.sender === "provider" && (
         <img
-          src={providerDetails?.logoUrl || workshopImg} 
+          src={bookingDetails.providerDetails?.logoUrl || workshopImg} 
           alt="User"
           className="rounded-full w-8 h-8 mr-3"
         />
@@ -238,7 +244,7 @@ useEffect(() => {
 
       {msg.sender === "user" && (
         <img
-          src={bookingDetails?.userImage} 
+          src={bookingDetails?.userData.imageUrl} 
           alt="User"
           className="rounded-full w-8 h-8 ml-3"
         />

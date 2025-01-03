@@ -21,21 +21,16 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     useEffect(() => {
         if (loggedUser) {
-            
             const newSocket = io( URL , {
                 query: {
                     userId: loggedUser,
                 },
             }
         );
-
             newSocket.on("connect", () => {
                 console.log("Socket connected:", newSocket);
             });
-
-            setSocket(newSocket);
-
-            
+            setSocket(newSocket); 
             return () => {
                 console.log("Socket disconnected:", newSocket);
                 newSocket.disconnect();

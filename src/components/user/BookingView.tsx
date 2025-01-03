@@ -28,23 +28,45 @@ function BookingView() {
   const [isVehicleDetailsVisible, setIsVehicleDetailsVisible] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const booking: IBookingDetails = location?.state?.booking[0];
+  const booking: IBookingDetails = location?.state?.booking;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rating, setRating] = useState(1);
   const [feedback, setFeedback] = useState("");
   const [isReivewAdded, setIsReviewAdded] = useState<boolean>();
-  //const [OutgoingCallModal, setOutgoingCallModal] = useState(false);
-  //const [isCallActive, setIsCallActive] = useState(false);
+
   const {socket} = useSocket();
+  const details = {
+    _id:selectedBooking?._id,
+    userId:selectedBooking?.userId,
+    providerId:selectedBooking?.providerId, 
+    providerDetails:selectedBooking?.providerDetails, 
+    userData:selectedBooking?.userData
+ }
+
+
+  // useEffect(() => {
+  //    console.log("This is booking syndrome: ", booking);
+  //    console.log("This is selected booking syndrome: ", selectedBooking)
+  // },[selectedBooking]);
+
+
+  useEffect(() => {
+    if(location.state.navigateToChat && selectedBooking){
+
+      navigate('/user-profile/user-chat', { state: { bookingDetails:details } })
+
+    }
+   
+  },[selectedBooking])
 
   useLayoutEffect(() => {
     if (booking._id) {
-      console.log('This is booking: ', booking);
+      
       const fetchBooking = async () => {
         try {
           const response = await fetchSingleBookingService(booking._id)
           if (response.success) {
-            console.log('This is the bookingData fetched: ', response.bookingData)
+            
             setSelectedBooking(response.bookingData)
 
           }
@@ -148,19 +170,13 @@ function BookingView() {
   const handleOpenRatingModal = () => {
     setIsModalOpen(true)
   }
-  // const handleRatingChange = (value: number) => {
-  //   setRating(value);
-  // };
+  
 
   const handleStarClick = (rating: number) => {
     setRating(rating);
   };
 
-  // const handleDismissModal = () => {
-  //   setOutgoingCallModal(false); 
-  //  // setIsCallActive(false);
-    
-  // };
+  
 
   const handleCallButtonClick = () => {
     
@@ -218,17 +234,13 @@ function BookingView() {
                 <FaPhoneAlt size={20} />
               </button>
 
-              {/* Conditionally Render VoiceCall Component */}
-              {/* <CallModal
-                isOpen={OutgoingCallModal} 
-                onDismiss={handleDismissModal} 
-                workshopName={selectedBooking?.providerDetails.workshopName || "workshop Name"}
-              /> */}
+              
 
               <button
                 className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition duration-300"
                 title="Chat"
-                onClick={() => navigate('/user-profile/user-chat', { state: { providerDetails: booking.providerDetails, bookingDetails: booking || null } })}
+                //onClick={() => navigate('/user-profile/user-chat', { state: { providerDetails: booking.providerDetails, bookingDetails: booking || null } })}
+                onClick={() => navigate('/user-profile/user-chat', { state: { providerDetails: booking.providerDetails, bookingDetails: details  } })}
               >
                 <FaCommentDots size={20} />
               </button>

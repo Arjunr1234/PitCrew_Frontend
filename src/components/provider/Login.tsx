@@ -13,27 +13,27 @@ function Login() {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const dispatch = useAppDispatch();
-  const {error, errorMessage, success, message} = useSelector((state:any) => state.provider);
+  const { error, errorMessage, success, message } = useSelector((state: any) => state.provider);
   const navigate = useNavigate()
-  
 
-  useEffect(()=> {
-    if(error){
+
+  useEffect(() => {
+    if (error) {
       toast.error(errorMessage);
       dispatch(resetError())
     }
-    if(success){
+    if (success) {
       toast.success(message);
       navigate('/provider/dashboard');
       dispatch(resetSuccess())
     }
-   
-  },[error, errorMessage, success, message])
+
+  }, [error, errorMessage, success, message])
 
   const handleLogin = () => {
     let valid = true;
 
-    
+
     setEmailError('');
     setPasswordError('');
 
@@ -45,7 +45,7 @@ function Login() {
       valid = false;
     }
 
-    
+
     if (!password) {
       setPasswordError('Password cannot be empty');
       valid = false;
@@ -59,14 +59,14 @@ function Login() {
         email,
         password,
       };
-      
+
       dispatch(loginThunk(logData))
-      
+
 
       console.log("Login successful:", logData);
     }
 
-    
+
     setTimeout(() => {
       setEmailError('');
       setPasswordError('');
@@ -77,7 +77,7 @@ function Login() {
     <div className="bg-black min-h-screen w-full ">
       <div className="h-[10%] w-[100%] flex flex-row justify-between">
         <div className="h-[50%] w-[15%] space-x-2 flex mt-6 ml-6">
-          <img   alt="" />
+          <img alt="" />
           <h1 className="font-dm p-2 font-bold text-white text-2xl">PitCrew</h1>
         </div>
       </div>
@@ -124,6 +124,13 @@ function Login() {
                 >
                   Login
                 </button>
+                <p
+                  className="text-white text-center hover:text-blue-400 cursor-pointer"
+                  onClick={() => navigate("/provider/register")}
+                >
+                  Don't have an account? Sign Up
+                </p>
+
               </div>
             </form>
           </div>

@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import { resetSuccess } from '../../redux/slice/providerAuthSlice';
 import { toast } from 'sonner';
 import { Notification, NotificationItem } from '../../interface/user/user';
-import { getNotification, seenNotificationService } from '../../services/user/user';
+import { clearNotificationServices, getNotification, seenNotificationService } from '../../services/user/user';
 import { RootState } from '../../redux/store';
 import { useSocket } from '../../Context/SocketIO';
 
@@ -97,6 +97,24 @@ function ProviderLayout() {
     setNotificationCount(0)
   }
 
+   const clearNotifications = async () => {
+      try {
+        const response = await clearNotificationServices(providerInfo?.id as string);
+        if (response.success) {
+          setNotificationArray([])
+          setTimeout(() => {
+            setIsSidebarOpen(false)
+          }, 1000)
+        } else {
+          toast.error("failed to clear notification")
+        }
+  
+      } catch (error) {
+        console.log("Error in clear notification: ", error)
+  
+      }
+    }
+
   useEffect(() => {
     if(socket) {
         const handleNotification = (newNotification: any) => {
@@ -125,18 +143,18 @@ function ProviderLayout() {
           className="p-2 focus:outline-none"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          {isMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />} {/* Hamburger/Close Icon */}
+          {isMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />} 
         </button>
       </div>
 
-      {/* Sidebar as dropdown from top on small screens */}
+     
       <div
         className={`lg:hidden bg-providerGreen text-white absolute top-0 left-0 w-full z-50 transform transition-transform duration-300 ease-in-out ${
           isMenuOpen ? 'translate-y-0' : '-translate-y-full'
         }`}
       >
         <div className="p-4">
-          {/* Close Button */}
+          
           <button
             className="mb-4 p-2 bg-red-500 text-white rounded focus:outline-none"
             onClick={() => setIsMenuOpen(false)}
@@ -296,29 +314,46 @@ function ProviderLayout() {
             <FaTimes />
           </button>
         </div>
-        {notificationArray ? (
-          <ul className="space-y-4 p-4">
-            {notificationArray.slice().
-            sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).
-            map((notificationItem) => (
-              <li
-                key={notificationItem?._id}
-                className={`p-3 rounded shadow transition-colors cursor-pointer ${notificationItem.read
-                    ? 'bg-gray-100 hover:bg-gray-200'
-                    : 'bg-blue-100 hover:bg-blue-200 font-semibold'
-                  }`}
-                onClick={() => handleNotificationClick()}
+        {notificationArray && notificationArray.length ? (
+          <div className="space-y-4 p-4">
+
+            <div className="flex justify-end mb-4">
+              <button
+                className="bg-yellow-500 text-xs text-white px-4 py-2 rounded hover:bg-yellow-600 transition-colors"
+                onClick={clearNotifications}
               >
-                {notificationItem?.content}
-              </li>
-            ))}
-          </ul>
+                Clear Notifications
+              </button>
+            </div>
+
+
+            <ul>
+              {notificationArray
+                .slice()
+                .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                .map((notificationItem) => (
+                  <li
+                    key={notificationItem?._id}
+                    className={`p-3 rounded shadow transition-colors cursor-pointer ${notificationItem.read
+                        ? 'bg-gray-100 hover:bg-gray-200'
+                        : 'bg-blue-100 hover:bg-blue-200 font-semibold'
+                      }`}
+                    onClick={() => handleNotificationClick()}
+                  >
+                    {notificationItem?.content}
+                    <div className="text-sm text-gray-500 text-right mt-2">
+                      {new Date(notificationItem?.createdAt).toLocaleString()}
+                    </div>
+                  </li>
+                ))}
+            </ul>
+          </div>
         ) : (
           <div className="p-4 text-center text-gray-500">No notifications</div>
         )}
       </div>
 
-      {/* Overlay */}
+      
       {isSidebarOpen && (
         <div
           className="fixed inset-0 bg-black opacity-50"
@@ -327,9 +362,9 @@ function ProviderLayout() {
       )}
 
 
-      {/* Main Content */}
-      <div className="flex-1  bg-gray-100 overflow-auto h-screen"> {/* Ensure the outlet section is scrollable */}
-        <Outlet /> {/* This is where the page content will render */}
+      
+      <div className="flex-1  bg-gray-100 overflow-auto h-screen"> 
+        <Outlet /> 
       </div>
     </div>
   );

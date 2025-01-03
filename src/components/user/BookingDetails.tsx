@@ -42,10 +42,9 @@ function BookingDetails() {
 
   const handleViewBookings = (bookingId: string) => {
     const selectBooking = bookings.filter((booking: IBookingDetails) => booking._id === bookingId);
-    // setSelectedBooking(selectBooking[0]);
-    // setIsModalOpen(true)
+    
     if (selectBooking) {
-      navigate('/user-profile/booking-view', { state: { booking: selectBooking } })
+      navigate('/user-profile/booking-view', { state: { booking: selectBooking[0] } })
     } else {
       toast.error('No selectd')
     }

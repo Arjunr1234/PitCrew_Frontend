@@ -1,5 +1,4 @@
 import { useState, } from 'react';
-import { FcGoogle } from 'react-icons/fc';
 import { RiLoginCircleFill } from 'react-icons/ri';
 import { useNavigate,  } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -138,10 +137,10 @@ function Signup() {
         </div>
         <div className="h-[100%] bg-black w-[100%] md:h-[100%] md:w-[50%] place-content-center flex flex-row justify-center md:flex-col">
           <div className="bg-signcardblue bg-madBlack ml-10 w-[60%] h-[90%] rounded-md flex flex-col space-y-6 items-center">
-            <div className="w-[100%] h-[5%] mb-3 hover:cursor-pointer">
-              <h1 className="text-center mt-5 text-black font-dm font-bold text-2xl tracking-wider">SIGN UP</h1>
+            <div className="w-[100%] h-[5%] mb-3 py-4 hover:cursor-pointer">
+              <h1 className="text-center mt-5 text-white font-dm font-bold text-2xl tracking-wider">SIGN UP</h1>
             </div>
-            <div className="w-[80%] h-[40%]  space-y-6  flex-col place-content-evenly">
+            <div className="w-[80%] h-[40%]   space-y-6  flex-col place-content-evenly">
               <div>
                 <input
                   className="w-[100%] py-2 bg-gray-300 rounded-md text-center"
@@ -193,14 +192,7 @@ function Signup() {
               >
                 SIGN UP
               </button>
-              <div className="bg-black w-[100%] py-2 flex flex-row items-center rounded-md">
-                <div className="w-[30%] ">
-                  <FcGoogle className="mt-2 w-[100%]" />
-                </div>
-                <div className="w-[70%] ">
-                  <p className="mt-1 text-white text-md tracking-widest">SIGNUP WITH GOOGLE</p>
-                </div>
-              </div>
+              
               <p className="text-white text-center hover:text-blue-400 cursor-pointer" onClick={() => navigate("/provider/login")}>
                 If you already have an account? Sign In
               </p>

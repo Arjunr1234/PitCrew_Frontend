@@ -254,3 +254,14 @@ export const seenNotificationService =  async(notificationId:string) => {
      }
 }
 
+export const clearNotificationServices = async(receiverId:string) => {
+     try {
+          console.log("This is receiverId: ", receiverId)
+          const response = await axiosInstance.patch(URL + `/api/user/bookings/clear-notification?receiverId=${receiverId}`);
+          return response.data
+     } catch (error) {
+         console.log("Error in clearNotificationService: ", error)
+      
+     }
+}
+

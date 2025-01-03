@@ -161,57 +161,58 @@ useEffect(() => {
 
   return (
     <div className="h-screen ">
-      <div className="flex flex-col  md:flex-row bg-darkBlue h-full md:h-4/5 p-4 md:p-2 gap-4 md:gap-2">
-        {/* Left section */}
-        <div className="flex flex-col w-full md:w-1/2 h-64 md:h-full animate-flip-up">
-          <div className="flex flex-col font-montserrat m-6 py-5 ml-10 mt-16 text-white space-y-4">
-            <h1 className="text-5xl font-bold">{vehicleDetails.serviceName}</h1>
-            <h1 className="text-5xl my-10">Services</h1>
-    
-            <div className="flex items-center gap-2">
-              <FaUser className="text-xl text-customYellow" />
-              <h1 className="text-lg">{providerDetails?.providerDetails.ownerName || "Owner Name"}</h1>
-            </div>
+      <div className="flex flex-col md:flex-row bg-darkBlue h-full md:h-4/5 p-4 md:p-6 gap-6 md:gap-8">
+  {/* Right section (on top in mobile view) */}
+  <div className="order-1 md:order-2 flex flex-col text-white justify-center items-center gap-6 md:gap-10 w-full md:w-1/2 h-full animate-flip-up">
+    <h1 className="text-2xl md:text-4xl font-semibold font-atma text-center">
+      {providerDetails?.providerDetails.workshopName || "Workshop Name"}
+    </h1>
+    <img
+      src={providerDetails?.providerDetails.logoUrl || DefaultImg}
+      alt="Profile Picture"
+      className="w-24 h-24 md:w-40 md:h-40 lg:w-80 lg:h-80 rounded-full border-4 border-white shadow-lg object-cover"
+    />
+  </div>
 
-            <div className="flex items-center gap-2">
-              <FaEnvelope className="text-xl text-customYellow" />
-              <h1 className="text-lg">{providerDetails?.providerDetails.email || "email@example.com"}</h1>
-            </div>
+  {/* Left section (below in mobile view) */}
+  <div className="order-2 md:order-1 flex flex-col w-full md:w-1/2 h-64 md:h-full animate-flip-up items-center justify-center">
+    <div className="flex flex-col font-montserrat py-5 text-white space-y-4 relative items-center">
+      <h1 className="text-3xl md:text-5xl font-bold text-center">{vehicleDetails.serviceName}</h1>
+      <h1 className="text-3xl md:text-5xl my-6 md:my-10 text-center">Services</h1>
 
-            <div className="flex items-center gap-2">
-              <FaPhone className="text-xl text-customYellow" />
-              <h2 className="text-lg">{providerDetails?.providerDetails.mobile || "9393939353"}</h2>
-            </div>
+      <div className="flex items-center gap-2">
+        <FaUser className="text-lg md:text-xl text-customYellow" />
+        <h1 className="text-base md:text-lg text-center">{providerDetails?.providerDetails.ownerName || "Owner Name"}</h1>
+      </div>
 
-            <div className="flex items-center gap-2">
-              <FaMapMarkerAlt className="text-xl text-customYellow" />
-              <h1 className="text-lg">{providerDetails?.providerDetails.workshopDetails.address || "Location"}</h1>
-            </div>
+      <div className="flex items-center gap-2">
+        <FaEnvelope className="text-lg md:text-xl text-customYellow" />
+        <h1 className="text-base md:text-lg text-center">{providerDetails?.providerDetails.email || "email@example.com"}</h1>
+      </div>
 
-            {/* Button aligned to the left */}
-            <div className="py-5 animate-pulse" >
-              <button className="p-3 px-5 font-semibold mt-4 bg-customYellow text-darkBlue rounded self-start shadow-dark-yellow hover:shadow-dark-yellow-lg transition-shadow duration-200"
-              onClick={handleBookService} >
-                Book Service
-              </button>
-            </div>
+      <div className="flex items-center gap-2">
+        <FaPhone className="text-lg md:text-xl text-customYellow" />
+        <h2 className="text-base md:text-lg text-center">{providerDetails?.providerDetails.mobile || "9393939353"}</h2>
+      </div>
 
-          </div>
-        </div>
+      <div className="flex items-center gap-2">
+        <FaMapMarkerAlt className="text-lg md:text-xl text-customYellow" />
+        <h1 className="text-base md:text-lg text-center">{providerDetails?.providerDetails.workshopDetails.address || "Location"}</h1>
+      </div>
 
-        {/* Right section */}
-        <div className="flex text-white flex-col justify-center items-center gap-10 w-full md:w-1/2 h-full animate-flip-up">
-  <h1 className="text-4xl md:text-6xl font-semibold font-atma text-center">
-    {providerDetails?.providerDetails.workshopName || "Workshop Name"}
-  </h1>
-  <img 
-    src={providerDetails?.providerDetails.logoUrl || DefaultImg} 
-    alt="Profile Picture" 
-    className="w-32 h-32 md:w-80 md:h-80 rounded-full border-4 border-white shadow-lg object-cover" 
-  />
+      {/* Button aligned to the center */}
+      <div className="py-4 md:py-5 animate-pulse">
+        <button
+          className="p-2 md:p-3 px-4 md:px-5 font-semibold mt-4 bg-customYellow text-darkBlue rounded shadow-dark-yellow hover:shadow-dark-yellow-lg transition-shadow duration-200"
+          onClick={handleBookService}
+        >
+          Book Service
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
-      </div>
 
       {/* Service section */}
       <div className="p-10 flex flex-col ">

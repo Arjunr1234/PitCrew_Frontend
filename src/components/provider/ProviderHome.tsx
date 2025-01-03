@@ -29,7 +29,7 @@ const COLORS = [
 
 function ProviderHome() {
 
-  const {providerInfo}  = useSelector((state:RootState) => state.provider)
+  const {providerInfo}  = useSelector((state:RootState) => state?.provider)
   const [users, setUsers] = useState<number | null>(null);
   const [totalRevenue, setTotalRevenue] = useState<number | null>(null);
   const [pieData, setPieData] = useState([]);

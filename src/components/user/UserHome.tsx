@@ -20,7 +20,7 @@ function UserHome() {
               entry.target.classList.add('animate-fadeInRight');
             }
           } else {
-            // Optionally, reset the animation classes
+            
             if (entry.target === leftSectionRef.current) {
               entry.target.classList.remove('animate-fadeInLeft');
             } else if (entry.target === rightSectionRef.current) {
@@ -29,7 +29,7 @@ function UserHome() {
           }
         });
       },
-      { threshold: 0.1 } // Trigger when 10% of the section is visible
+      { threshold: 0.1 } 
     );
 
     if (leftSectionRef.current) observer.observe(leftSectionRef.current);
@@ -58,14 +58,14 @@ function UserHome() {
             </button>
           </div>
 
-          {/* Right Section: Image */}
+          
           <div className="animate-fade-left animate-ease-out w-full lg:w-1/2 px-6 mt-8 lg:mt-0">
             <img src={showImage} alt="Bike and Car Service" className="w-full h-auto rounded" />
           </div>
         </div>
       </div>
 
-      {/* Second Section with Custom Animation */}
+      
       <div className="bg-gray-100 py-10 mx-3">
         <div className="container mx-auto flex flex-col lg:flex-row justify-between items-center">
          
@@ -73,9 +73,9 @@ function UserHome() {
             <h1 className="text-2xl font-bold text-gray-800 mb-2 lg:mb-4">Reliable Repair Services</h1>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold">24 x 7 Assistance</h1>
             <p className="text-gray-600 mb-6">We offer reliable repair services with 24/7 assistance. Whether you're at home, on the road, or at work, our platform connects you with professional vehicle workshops for quick and efficient maintenance. Book with confidence, knowing our expert technicians are ready to provide top-notch service whenever you need it. Your convenience is our priority.</p>
-            <button className="bg-gray-500 text-white px-6 py-2 self-center lg:self-start rounded-3xl hover:bg-blue-600">
+            {/* <button className="bg-gray-500 text-white px-6 py-2 self-center lg:self-start rounded-3xl hover:bg-blue-600">
               Contact Us
-            </button>
+            </button> */}
           </div>
 
          

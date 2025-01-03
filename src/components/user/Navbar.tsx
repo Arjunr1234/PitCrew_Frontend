@@ -4,11 +4,11 @@ import { FaBars, FaBell, FaTimes } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { useAppDispatch } from '../../interface/hooks';
-import { toast } from 'sonner'; // Assuming you're using this for toast notifications
+import { toast } from 'sonner';
 import logo from '../../../public/images/logo.jpg';
 import { logoutThunk, resetSuccessAndMessage } from '../../redux/slice/userAuthSlice';
 import Swal from 'sweetalert2';
-import { getNotification, seenNotificationService } from '../../services/user/user';
+import { clearNotificationServices, getNotification, seenNotificationService } from '../../services/user/user';
 import { Notification, NotificationItem } from '../../interface/user/user';
 import { useSocket } from '../../Context/SocketIO';
 
@@ -17,11 +17,11 @@ function Navbar() {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [notificationCount, setNotificationCount] = useState<number >(0);
+  const [notificationCount, setNotificationCount] = useState<number>(0);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [notification, setNotification] = useState<Notification>();
   const [notificationArray, setNotificationArray] = useState<NotificationItem[]>()
-  const {socket} = useSocket();
+  const { socket } = useSocket();
 
 
   const { userInfo } = useSelector((state: RootState) => state?.user);
@@ -39,10 +39,10 @@ function Navbar() {
     try {
 
       const response = await getNotification(userInfo?.id as string);
-      console.log("This is the fech response:::::::::::::::::::: ", response)
+
       setNotification(response.notification);
       setNotificationArray(response.notification.notifications)
-      const readCount = response.notification.notifications.filter((item:any) => !item.read).length;
+      const readCount = response.notification.notifications.filter((item: any) => !item.read).length;
       setNotificationCount(readCount)
 
 
@@ -53,24 +53,29 @@ function Navbar() {
   }
 
   useEffect(() => {
-    if(socket) {
-        const handleNotification = (newNotification: any) => {
-        console.log("This is the notify content:", newNotification);
+    if (socket) {
+      const handleNotification = (newNotification: any) => {
+
         setNotificationArray((prev) => [
           newNotification,
           ...(prev || [])
         ])
-        setNotificationCount((prevCount) => prevCount+1)
+        setNotificationCount((prevCount) => prevCount + 1)
       };
-  
+
       socket.on("receiveNotification", handleNotification);
-  
+
       return () => {
         socket.off("receiveNotification", handleNotification);
       };
     }
   }, [socket]);
-  
+
+
+
+
+
+
 
 
 
@@ -102,15 +107,15 @@ function Navbar() {
     });
   };
 
-  const handleNotificationClick = async() => {
+  const handleNotificationClick = async () => {
 
-   // toast.info('You have unread notifications!');
+    // toast.info('You have unread notifications!');
     try {
-        await seenNotificationService(notification?._id as string)
-      
+      await seenNotificationService(notification?._id as string)
+
     } catch (error) {
       console.log("Error in handleNotificationClicK: ", error)
-      
+
     }
     setNotificationCount(0);
     setIsSidebarOpen(true);
@@ -121,15 +126,35 @@ function Navbar() {
     setIsSidebarOpen(false);
   };
 
-  useEffect(() => {
-    if(notificationArray){
-      console.log("This is notifyArray: ", notificationArray);
-    }
-    
-    
-  },[notificationArray])
 
-  
+  const clearNotifications = async () => {
+    try {
+      const response = await clearNotificationServices(userInfo?.id as string);
+      if (response.success) {
+        setNotificationArray([])
+        setTimeout(() => {
+          setIsSidebarOpen(false)
+        }, 1000)
+      } else {
+        toast.error("failed to clear notification")
+      }
+
+    } catch (error) {
+      console.log("Error in clear notification: ", error)
+
+    }
+  }
+
+  const handleNotificationNavigate = (notification:any) => {
+     console.log("This is notification: ", notification);
+     if(notification.type==='booking'){
+      navigate('/user-profile/booking-view', {state:{booking:{_id:notification.bookingId}}})
+     }
+     else if(notification.type === 'message'){
+      navigate('/user-profile/booking-view', {state:{booking:{_id:notification.bookingId}, navigateToChat:true}})
+     }
+  }
+
 
   const isProviderServiceView = location.pathname.includes('/provider-service-view');
   const navBarClass = isProviderServiceView ? 'bg-darkBlue' : 'bg-white'
@@ -139,28 +164,25 @@ function Navbar() {
     <nav className={` p-4 rounded ${navBarClass} `}>
       <div className="container mx-auto flex justify-between items-center ">
 
-        {/* Left Section: Logo and Site Name */}
+
         <div className="  flex items-center">
           <img src={logo} alt="Site Logo" className="h-8 w-8 mr-2" />
           <span className="text-black text-4xl font-bold">PitCrew</span>
         </div>
 
-        {/* Right Section: Buttons (hidden on mobile) */}
+
         <div className={`hidden md:flex text-xl space-x-5 ${navBartextColor}`}>
           <button className=" font-medium  px-3 py-2 rounded hover:font-bold"
             onClick={() => navigate('/')}>
             Home
           </button>
           <button className=" font-medium  px-3 py-2 rounded hover:font-bold"
-            // onClick={() => navigate('/services')}
+
             onClick={() => navigate('/services/general-service')}
           >
             Service
           </button>
-          {/* <button className=" font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white"
-          >
-            About
-          </button> */}
+
           <button className=" font-medium  px-3 py-2 rounded hover:font-bold"
             onClick={() => navigate('/user-profile')}>
             Profile
@@ -175,7 +197,7 @@ function Navbar() {
               <button className="text-xl text-gray-700 hover:text-black focus:outline-none" onClick={handleNotificationClick}>
                 <FaBell />
               </button>
-              {notificationCount>0 && (
+              {notificationCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-semibold rounded-full h-6 w-6 flex items-center justify-center shadow">
                   {notificationCount}
                 </span>
@@ -207,28 +229,27 @@ function Navbar() {
       {/* Mobile Menu (visible when toggled) */}
       {isMobileMenuOpen && (
         <div className="md:hidden mt-4 flex flex-col space-y-3">
-          <button className="text-black font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white">
+          <button className="text-black font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white"
+            onClick={() => navigate('/')}>
             Home
           </button>
-          <button className="text-black font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white">
+          <button className="text-black font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white"
+            onClick={() => navigate('/services/general-service')}>
             Service
           </button>
-          <button className="text-black font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white">
-            About
+          <button className="text-black font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white"
+            onClick={() => navigate('/user-profile')}>
+            Profile
           </button>
-          <button className="text-black font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white">
-            Contact
-          </button>
-          <button className="text-black font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white" onClick={() => navigate('/provider/register')}>
+          <button className="text-black font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white"
+            onClick={() => navigate('/provider/register')}>
             Add Workshop
           </button>
-          <button className="text-black font-bold hover:bg-gray-700 px-3 py-2 rounded hover:text-white">
-            Notification
-          </button>
+
 
           {/* Conditionally render Sign In or Logout in mobile menu */}
           {userInfo ? (
-            <button className="text-white bg-gray-700 px-3 py-2 rounded-full" onClick={handleLogout}>
+            <button className="text-white bg-gray-700 px-3 py-2 rounded-full" onClick={confirmLogout}>
               Logout
             </button>
           ) : (
@@ -249,26 +270,46 @@ function Navbar() {
             <FaTimes />
           </button>
         </div>
-        {notificationArray ? (
-          <ul className="space-y-4 p-4">
-            {notificationArray.slice().
-            sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).
-            map((notificationItem) => (
-              <li
-                key={notificationItem?._id}
-                className={`p-3 rounded shadow transition-colors cursor-pointer ${notificationItem.read
-                    ? 'bg-gray-100 hover:bg-gray-200'
-                    : 'bg-blue-100 hover:bg-blue-200 font-semibold'
-                  }`}
-                onClick={() => handleNotificationClick()}
+        {notificationArray && notificationArray.length ? (
+          <div className="space-y-4 p-4">
+
+            <div className="flex justify-end mb-4">
+              <button
+                className="bg-yellow-500 text-xs text-white px-4 py-2 rounded hover:bg-yellow-600 transition-colors"
+                onClick={clearNotifications}
               >
-                {notificationItem?.content}
-              </li>
-            ))}
-          </ul>
+                Clear Notifications
+              </button>
+            </div>
+
+
+            <ul>
+              {notificationArray
+                .slice()
+                .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                .map((notificationItem) => (
+                  <li
+                    
+                    key={notificationItem?._id}
+                    className={`p-3 rounded shadow transition-colors cursor-pointer ${notificationItem.read
+                        ? 'bg-gray-100 hover:bg-gray-200'
+                        : 'bg-blue-100 hover:bg-blue-200 font-semibold'
+                      }`}
+                    onClick={() => handleNotificationNavigate(notificationItem)}
+                     // onClick={() => navigate('/user-profile/booking-view', {state:{booking:{_id:notificationItem.bookingId}}})}
+                  >
+                    {notificationItem?.content}
+                    <div className="text-sm text-gray-500 text-right mt-2">
+                      {new Date(notificationItem?.createdAt).toLocaleString()}
+                    </div>
+                  </li>
+                ))}
+            </ul>
+          </div>
         ) : (
           <div className="p-4 text-center text-gray-500">No notifications</div>
         )}
+
       </div>
 
       {/* Overlay */}
