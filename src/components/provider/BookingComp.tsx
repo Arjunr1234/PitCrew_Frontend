@@ -5,7 +5,7 @@ import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 function BookingComp() {
 
         const location = useLocation();
-        const navigate = useNavigate()
+        const navigate = useNavigate();
         const [activeLink, setActiveLink] = useState('');
 
 

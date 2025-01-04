@@ -33,7 +33,7 @@ export const addBrand = async (brand:string) => {
 export const deleteBrand = async (id: string) => {
     try {
         console.log("This is Id: ", id);
-        const response = await axiosInstance.delete(`${URL}/api/admin/services/delete-brands?id=${id}`); // Using route parameter
+        const response = await axiosInstance.delete(`${URL}/api/admin/services/delete-brands/${id}`); // Using route parameter
         console.log("This is the response from the deleteBrand: ", response.data);
         return response.data;
     } catch (error:any) {
@@ -103,7 +103,7 @@ export const getAllRoadService = async () => {
 
 export const deleteService = async(id:string) => {
       try {
-           const response = await axiosInstance.delete(`${URL}/api/admin/services/remove-service?id=${id}`)
+           const response = await axiosInstance.delete(`${URL}/api/admin/services/remove-service/${id}`)
            return response.data
            
       } catch (error) {
@@ -129,7 +129,7 @@ export const addSubService = async(id:string, subService:string) => {
 export const removeSubService = async(serviceId:string, subServiceId:string) => {
      try {
 
-          const response = await axiosInstance.delete(URL + `/api/admin/services/remove-sub-service?serviceId=${serviceId}&subServiceId=${subServiceId}`);
+          const response = await axiosInstance.delete(URL + `/api/admin/services/remove-sub-service/${serviceId}/${subServiceId}`);
           return response.data
         
      } catch (error) {

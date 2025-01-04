@@ -190,7 +190,8 @@ export const fetchAllChatService = async (userId: string, providerId: string) =>
 
 export const resetPasswordService = async(userId:string, currentPassword:string, newPassword:string) => {
   try {
-       const response = await axiosInstance.put(URL + '/api/user/profile/reset-password',{userId, currentPassword, newPassword});
+      // const response = await axiosInstance.put(URL + '/api/user/profile/reset-password',{userId, currentPassword, newPassword});
+      const response = await axiosInstance.put(URL + `/api/user/profile/reset-password/${userId}/${currentPassword}/${newPassword}`);
        return response.data
     
   } catch (error) {
@@ -203,7 +204,8 @@ export const resetPasswordService = async(userId:string, currentPassword:string,
 
 export const cancellBookingService = async (bookingId:string, reason:string) => {
     try {
-         const response = await axiosInstance.put(URL + '/api/user/bookings/cancell-booking', {bookingId, reason});
+        // const response = await axiosInstance.put(URL + '/api/user/bookings/cancell-booking', {bookingId, reason});
+         const response = await axiosInstance.put(URL + `/api/user/bookings/cancell-booking/${bookingId}/${encodeURIComponent(reason)}`);
          return response.data
       
     } catch (error) {

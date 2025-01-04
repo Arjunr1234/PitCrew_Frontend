@@ -131,8 +131,11 @@ export const removeSubService = async(data: IRemoveSubServiceData) => {
     const { providerId, serviceId, subServiceId, vehicleType } = data;
 
     
+    // const response = await axiosInstance.delete(
+    //   `${URL}/api/provider/add-service/remove-subtype?providerId=${providerId}&serviceId=${serviceId}&type=${subServiceId}&vehicleType=${vehicleType}`
+    // );
     const response = await axiosInstance.delete(
-      `${URL}/api/provider/add-service/remove-subtype?providerId=${providerId}&serviceId=${serviceId}&type=${subServiceId}&vehicleType=${vehicleType}`
+      `${URL}/api/provider/add-service/remove-subtype/${providerId}/${serviceId}/${subServiceId}/${vehicleType}`
     );
 
     return response.data;
@@ -146,7 +149,9 @@ export const removeSubService = async(data: IRemoveSubServiceData) => {
 export const removeService = async (providerId:string, serviceId:string, vehicleType:string) => {
              try {
 
-              const response = await axiosInstance.delete(URL + `/api/provider/add-service/remove-service?providerId=${providerId}&serviceId=${serviceId}&vehicleType=${vehicleType}`);
+              // const response = await axiosInstance.delete(URL + `/api/provider/add-service/remove-service?providerId=${providerId}&serviceId=${serviceId}&vehicleType=${vehicleType}`);
+              const response = await axiosInstance.delete(URL + `/api/provider/add-service/remove-service/${providerId}/${serviceId}/${vehicleType}`);
+
               return response.data
               
              } catch (error) {
@@ -205,7 +210,7 @@ export const updateSlotCountService = async(slotId:string, state:number) => {
 export const removeSlotService = async (slotId: string) => {
   try {
 
-    const response = await axiosInstance.delete(URL + `/api/provider/bookings/remove-slot?slotId=${slotId}`);
+    const response = await axiosInstance.delete(URL + `/api/provider/bookings/remove-slot/${slotId}`);
     return response.data
 
   } catch (error) {
@@ -235,7 +240,7 @@ export const getProviderDetailsService = async (providerId: string) => {
 
 export const updatePoviderProfile = async (data: IProviderProfileData) => {
   try {
-    const response = await axiosInstance.put(URL + '/api/provider/profile/edit-profile', data)
+    const response = await axiosInstance.post(URL + '/api/provider/profile/edit-profile', data)
     return response.data
   } catch (error) {
     console.log("Error in updateProviderProfile: ", error);
@@ -301,7 +306,9 @@ export const changeBookingStatus = async (bookingId: string, status: string) => 
 
 export const resetPasswordService = async(providerId:string, currentPassword:string, newPassword:string) => {
   try {
-       const response = await axiosInstance.put(URL + '/api/provider/profile/reset-password',{providerId, currentPassword, newPassword});
+      //  const response = await axiosInstance.put(URL + '/api/provider/profile/reset-password',{providerId, currentPassword, newPassword});
+      const response = await axiosInstance.put(URL + `/api/provider/profile/reset-password/${providerId}/${currentPassword}/${newPassword}`);
+
        return response.data
     
   } catch (error) {
