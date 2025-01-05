@@ -7,6 +7,7 @@ function Bookings() {
   const [filteredBookings, setFilteredBookings] = useState<any[]>([]); 
   const [filterStatus, setFilterStatus] = useState(""); 
   const [currentPage, setCurrentPage] = useState(1);
+  const [date, setDate] = useState("")
   const navigate = useNavigate();
   const itemsPerPage = 5; 
 
@@ -29,18 +30,54 @@ function Bookings() {
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFilterStatus(e.target.value); 
   };
+  const handleDateChange = (e:React.ChangeEvent<HTMLSelectElement>) => {
+      setDate(e.target.value)
+  }
 
   const applyFilter = () => {
+    let filtered = bookings;
+  
+    
     if (filterStatus) {
-      const filtered = bookings.filter(
+      filtered = filtered.filter(
         (booking) => booking.status.toLowerCase() === filterStatus.toLowerCase()
       );
-      setFilteredBookings(filtered);
-    } else {
-      setFilteredBookings(bookings); 
     }
+  
+    
+    if (date) {
+      const today = new Date();
+      filtered = filtered.filter((booking) => {
+        const bookingDate = new Date(booking.bookingDate);
+  
+        if (date === "today") {
+          
+          return (
+            bookingDate.toDateString() === today.toDateString()
+          );
+        } else if (date === "week") {
+          
+          const weekStart = new Date(today);
+          weekStart.setDate(today.getDate() - today.getDay());
+          const weekEnd = new Date(weekStart);
+          weekEnd.setDate(weekStart.getDate() + 6);
+          return bookingDate >= weekStart && bookingDate <= weekEnd;
+        } else if (date === "month") {
+          
+          return (
+            bookingDate.getFullYear() === today.getFullYear() &&
+            bookingDate.getMonth() === today.getMonth()
+          );
+        }
+  
+        return true; 
+      });
+    }
+  
+    setFilteredBookings(filtered);
     setCurrentPage(1); 
   };
+  
 
   
   const totalPages = Math.ceil(filteredBookings.length / itemsPerPage);
@@ -65,6 +102,18 @@ function Bookings() {
       </div> */}
      
       <div className="flex flex-row justify-center items-center mb-4 space-x-4">
+        <h1>Date: </h1>
+        <select
+          className="border border-gray-300 rounded px-4 py-2"
+          value={date}
+          onChange={handleDateChange}
+        > 
+          <option value="">All</option>
+          <option value="today">Today</option>
+          <option value="week">This Week</option>
+          <option value="month">This Month</option>
+          
+        </select>
         <h1>Status:</h1>
         <select
           className="border border-gray-300 rounded px-4 py-2"

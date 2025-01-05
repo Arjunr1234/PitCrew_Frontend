@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 function BookingsComp() {
   const [bookingDetails, setBookingDetails] = useState([]);
   const [filteredBookingDetails, setFilteredBookingDetails] = useState([]);
+  const [date, setDate] = useState("")
   const providerId = useSelector((state: any) => state.provider?.providerInfo?.id);
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
@@ -34,16 +35,47 @@ function BookingsComp() {
     setFilterStatus(e.target.value);
   };
 
+  const handleDateChange = (e:React.ChangeEvent<HTMLSelectElement>) => {
+     setDate(e.target.value)
+  }
+
   const applyFilter = () => {
+    let filtered = bookingDetails;
+
+    // Filter by Status
     if (filterStatus) {
-      const filtered = bookingDetails.filter(
+      filtered = filtered.filter(
         (booking: any) => booking?.status?.toLowerCase() === filterStatus.toLowerCase()
       );
-      setFilteredBookingDetails(filtered);
-      setCurrentPage(1); 
-    } else {
-      setFilteredBookingDetails(bookingDetails); 
     }
+
+    
+    if (date) {
+      const currentDate = new Date();
+      filtered = filtered.filter((booking: any) => {
+        const bookingDate = new Date(booking?.bookingDate);
+
+        if (date === "today") {
+          return (
+            bookingDate.toDateString() === currentDate.toDateString()
+          );
+        } else if (date === "week") {
+          const weekStart = new Date(currentDate.setDate(currentDate.getDate() - currentDate.getDay()));
+          const weekEnd = new Date(weekStart);
+          weekEnd.setDate(weekEnd.getDate() + 6);
+          return bookingDate >= weekStart && bookingDate <= weekEnd;
+        } else if (date === "month") {
+          return (
+            bookingDate.getFullYear() === currentDate.getFullYear() &&
+            bookingDate.getMonth() === currentDate.getMonth()
+          );
+        }
+        return true;
+      });
+    }
+
+    setFilteredBookingDetails(filtered);
+    setCurrentPage(1); 
   };
 
   const indexOfLastUser = currentPage * usersPerPage;
@@ -59,7 +91,19 @@ function BookingsComp() {
     <>
       <div className="p-4">
         <div className="flex flex-row justify-center items-center mb-4 space-x-4">
+        <h1>Date: </h1>
+        <select
+          className="border border-gray-300 rounded px-4 py-2"
+          value={date}
+          onChange={handleDateChange}
+        > 
+          <option value="">All</option>
+          <option value="today">Today</option>
+          <option value="week">This Week</option>
+          <option value="month">This Month</option>
           
+        </select>
+        <h1>Status: </h1>
           <select
             className="border border-gray-300 rounded px-4 py-2"
             value={filterStatus}
