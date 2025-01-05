@@ -11,7 +11,9 @@ function Users() {
   const [active, setActive] = useState<number>(0);
   const [blocked, setBlocked] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 5; // Number of users per page
+  const [filteredUsers, setFilteredUsers] = useState<Array<any>>([]);
+  const usersPerPage = 5;
+  const [searchKey, setSearchKey] = useState("");
   const navigate = useNavigate();
 
   useLayoutEffect(() => {
@@ -19,8 +21,8 @@ function Users() {
       .get(URL + "/api/admin/user/get-user")
       .then((response) => {
         if (response.data) {
-          console.log("yes there is response.data.users: ", response.data.users);
           setUsers(response.data.users);
+          setFilteredUsers(response.data.users);
           setActive(response.data.active);
           setBlocked(response.data.blocked);
         }
@@ -33,65 +35,94 @@ function Users() {
             navigate("/admin/login", { replace: true });
           }
         } else {
-          console.log("An error occurred");
+          console.error("An error occurred");
         }
       });
   }, []);
 
   const handleBlockUnblock = (id: string, status: boolean) => {
-    axiosInstance.patch(URL + '/api/admin/user/user-block-unblock', {id, state:status}).then((response) => {
-      if(response.data.success){
-        if(status){
-          setBlocked(blocked + 1);
-          setActive(active - 1);
-        } else {
-          setBlocked(blocked - 1);
-          setActive(active + 1);
-        }
-        const updatedUsers = users.map((user) => {
-          if(user.id === id){
-            return { ...user, blocked: status };
+    axiosInstance
+      .patch(URL + "/api/admin/user/user-block-unblock", { id, state: status })
+      .then((response) => {
+        if (response.data.success) {
+          if (status) {
+            setBlocked(blocked + 1);
+            setActive(active - 1);
+          } else {
+            setBlocked(blocked - 1);
+            setActive(active + 1);
           }
-          return user;
-        });
-        setUsers(updatedUsers);
-      }
-    });
+          const updatedUsers = users.map((user) => {
+            if (user.id === id) {
+              return { ...user, blocked: status };
+            }
+            return user;
+          });
+          setUsers(updatedUsers);
+          setFilteredUsers(updatedUsers);
+        }
+      });
   };
 
-  const confirmBlockAndUnBlockUser = (id:string, status:boolean) => {
+  const confirmBlockAndUnBlockUser = (id: string, status: boolean) => {
     Swal.fire({
-      title: 'Are you sure?',
+      title: "Are you sure?",
       text: `Do you want to ${status ? "Block" : "Unblock"}?`,
-      icon: 'question',
+      icon: "question",
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Confirm',
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Confirm",
     }).then((result) => {
       if (result.isConfirmed) {
-        handleBlockUnblock(id, status); 
+        handleBlockUnblock(id, status);
       }
     });
   };
 
-  // Pagination calculation
+  
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
-  const totalPages = Math.ceil(users.length / usersPerPage);
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
   };
 
+  const handleSearch = () => {
+    const filtered = users.filter((user) =>
+      user.name.toLowerCase().includes(searchKey.toLowerCase())
+    );
+    setFilteredUsers(filtered);
+    setCurrentPage(1);
+  };
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4 text-center">Users Details</h1>
-      <div className="flex flex-row justify-between items-center gap-4 px-8">
+      <div className="flex flex-row justify-between items-center p-4 gap-4 px-8">
         <div className="p-6 bg-white shadow-md rounded-lg">
           Active Users: {active}
         </div>
+
+        <div className="flex flex-row items-center justify-center space-x-4 p-4 bg-gray-100 rounded-lg">
+          <h1 className="text-lg font-semibold text-gray-700">User:</h1>
+          <input
+            type="text"
+            placeholder="Enter user name"
+            value={searchKey}
+            onChange={(e) => setSearchKey(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button
+            className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition duration-200"
+            onClick={handleSearch}
+          >
+            Search
+          </button>
+        </div>
+
         <div className="p-6 bg-white shadow-md rounded-lg">
           Blocked Users: {blocked}
         </div>

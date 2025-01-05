@@ -11,11 +11,12 @@ function Providers() {
   return (
     <div className="flex flex-col h-screen">
       {/* First section with 20% height */}
-      <div className="flex flex-col md:flex-row h-1/5 bg-gray-100 p-4 justify-center">
+      
+      <div className="flex flex-col md:flex-row h-1/7 bg-gray-100  justify-center">
         {/* Get All Providers */}
         <Link to={'/admin/providers/get-providers'}>
            <div className="flex-1 p-4 bg-white shadow-md rounded-lg m-2 hover:ring-4 hover:ring-violet-400 transition-shadow duration-300">
-            <h2 className="text-xl text-center font-bold">Get All Providers</h2>
+            <h2 className="text-xl text-center font-bold"> Providers</h2>
             <p className="text-gray-600 text-center">View the list of all available providers.</p>
            </div>
         </Link>
