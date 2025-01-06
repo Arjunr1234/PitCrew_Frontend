@@ -94,7 +94,7 @@ function Bookings() {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-
+  
   return (
     <div className="p-2 flex flex-col justify-center gap-y-5">
       {/* <div className="p-5 ">

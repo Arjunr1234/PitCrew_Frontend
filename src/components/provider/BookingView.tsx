@@ -119,8 +119,8 @@ function BookingView() {
           {/* phone */}
           <div className="flex flex-row gap-4">
             <button
-              //  className="p-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition duration-300"
-              className="p-2 bg-gray-200 text-gray-200 rounded-full  transition duration-300"
+                className="p-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition duration-300"
+              //className="p-2 bg-gray-200 text-gray-200 rounded-full  transition duration-300"
               title="Call"
               onClick={handleCallButtonClick}
               >
