@@ -1,11 +1,11 @@
-import  { useEffect, useRef, useState } from 'react'
+import  { useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { RootState } from '../../redux/store';
 import { useSocket } from '../../Context/SocketIO';
 import { MdCallEnd } from 'react-icons/md';
 import { toast } from 'sonner';
-import { CallingState } from '../../interface/provider/iProvider';
+//import { CallingState } from '../../interface/provider/iProvider';
 
 const servers: RTCConfiguration = {
   iceServers: [
@@ -36,7 +36,7 @@ function ProviderCall() {
     const providerSideVideoRef = useRef<HTMLVideoElement | null>(null)
     const peerConnection = useRef<RTCPeerConnection | null>(null);
     const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
-    const [callingState, setCallingState] = useState<CallingState>("trying To connect");
+   // const [callingState, setCallingState] = useState<CallingState>("trying To connect");
     const localStrem = useRef<MediaStream | undefined | null>();
     const navigate = useNavigate();
 
@@ -102,7 +102,7 @@ function ProviderCall() {
         if(peerConnection.current){
            peerConnection.current.setRemoteDescription(response.answer)
         }
-        setCallingState("connected");
+     //   setCallingState("connected");
         
     }
 
@@ -116,7 +116,7 @@ function ProviderCall() {
        localStrem.current.getTracks().forEach((track) => track.stop());
        localStrem.current = undefined;
       }
-      setCallingState("callEnded");
+    //  setCallingState("callEnded");
       navigate(-1)
    }
 

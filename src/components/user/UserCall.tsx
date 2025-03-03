@@ -1,4 +1,4 @@
-import  { useState, useRef, useEffect } from "react";
+import  {  useRef, useEffect } from "react";
 import { MdCallEnd } from "react-icons/md";
 import { useSocket } from "../../Context/SocketIO";
 import { useSelector } from "react-redux";
@@ -36,7 +36,7 @@ const VideoCallUI = () => {
   const peerConnection = useRef<RTCPeerConnection | null>(null)
   const localStream = useRef<MediaStream | undefined>();
   const location = useLocation()
-  const [callingState, setCallingState] = useState<"calling" | "connected" | "callEnded">("calling");
+  //const [callingState, setCallingState] = useState<"calling" | "connected" | "callEnded">("calling");
 
 
 
@@ -135,7 +135,7 @@ const VideoCallUI = () => {
       localStream.current.getTracks().forEach((track) => track.stop());
       localStream.current = undefined;
      }
-     setCallingState("callEnded");
+     //setCallingState("callEnded");
      navigate(-1)
   }
 
@@ -148,7 +148,7 @@ const VideoCallUI = () => {
      if(peerConnection.current){
        peerConnection.current.setRemoteDescription(response.answer);
      }
-     setCallingState("connected");
+     //setCallingState("connected");
     
 
   }
