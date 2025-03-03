@@ -274,83 +274,49 @@ const VideoCallUI = () => {
   
 
   return (
-    <div className="w-full h-screen bg-black flex justify-center items-center ">
-      <div className="w-full md:w-[60%] h-full md:h-[520px] bg-gray-900 flex flex-col justify-between rounded-md shadow-lg p-4 animate-jump-in">
-        {/* Video and User Info Section */}
-        <div className="w-full h-[300px] flex flex-col justify-center items-center mt-4 space-y-4">
-          {/* Video Stream */}
-          <div className="w-[80%] md:w-[50%] h-[150px] bg-gray-700 rounded-lg overflow-hidden relative shadow-md">
-            <h1>{callingState}</h1>
-            <video
-              ref={videoRef}
-              autoPlay
-              playsInline
-              className="w-full h-full bg-blue-500"
-            />
-            {/* Placeholder if video is not active */}
-            {/* {!videoRef.current && (
-              <div className="absolute inset-0 flex justify-center items-center bg-gray-800 text-white text-sm">
-                No video available
-              </div>
-            )} */}
-          </div>
-          <div className="w-[80%] md:w-[50%] h-[150px] bg-gray-700 rounded-lg overflow-hidden relative shadow-md">
-            <video
-              ref={remoteVideoRef}
-              autoPlay
-              playsInline
-              className="w-full h-full bg-blue-500"
-            />
-            {/* Placeholder if video is not active */}
-            {/* {!videoRef.current && (
-              <div className="absolute inset-0 flex justify-center items-center bg-gray-800 text-white text-sm">
-                No video available
-              </div>
-            )} */}
-
-          </div>
-
-          {/* Caller Details */}
-          <div className="w-[80%] md:w-[30%] text-center space-y-2">
-            <h5 className="text-white font-semibold text-lg">
-              Ajr Workshop-
-            </h5>
-            <h5 className="text-gray-400 animate-pulse flex justify-center gap-2 font-semibold">
-              Calling...
-            </h5>
-          </div>
+    <div className="w-full h-screen bg-black relative flex justify-center items-center">
+    {/* Provider's Video (80% Viewport Centered) */}
+    <div className="w-[80%] h-[80%] bg-gray-900 rounded-lg overflow-hidden shadow-lg">
+      <video
+        ref={remoteVideoRef}
+        autoPlay
+        playsInline
+        className="w-full h-full object-cover bg-gray-800"
+      />
+      {!remoteVideoRef.current && (
+        <div className="absolute inset-0 flex justify-center items-center bg-gray-900 text-white text-lg">
+          Waiting for provider’s video...
         </div>
-
-        {/* Action Buttons Section */}
-        <div className="w-full h-[100px] flex justify-center items-center">
-          <div className="w-[80%] md:w-[50%] h-[100px] flex justify-center items-center">
-            {/* Mute Button */}
-            {/* <button
-              onClick={toggleMute}
-              aria-label={isMuted ? "Unmute Audio" : "Mute Audio"}
-              className="w-[60px] h-[60px] bg-gray-600 rounded-full flex justify-center items-center hover:bg-gray-500 transition duration-300"
-            >
-              {isMuted ? (
-                <BsFillMicMuteFill className="text-xl text-white" />
-              ) : (
-                <BsFillMicFill className="text-xl text-white" />
-              )}
-            </button> */}
-
-            {/* End Call Button */}
-            <button
-              aria-label="End Call"
-              className="w-[60px] h-[60px] shadow-lg bg-red-500 rounded-full flex justify-center items-center hover:shadow-[0_10px_20px_rgba(255,0,0,0.7)] transition-transform duration-300 transform hover:scale-110"
-              onClick={handleCallStop}>
-              <MdCallEnd className="text-2xl text-white" />
-            </button>
-
-            {/* Speaker Button */}
-           
-          </div>
-        </div>
-      </div>
+      )}
     </div>
+  
+    {/* User's Video (Bottom-Right Corner) */}
+    <div className="absolute bottom-6 right-6 w-[120px] h-[120px] md:w-[150px] md:h-[150px] bg-gray-700 rounded-lg overflow-hidden shadow-lg border-2 border-gray-500">
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        className="w-full h-full bg-gray-800"
+      />
+      {!videoRef.current && (
+        <div className="absolute inset-0 flex justify-center items-center bg-gray-800 text-white text-sm">
+          Your video is off
+        </div>
+      )}
+    </div>
+  
+    {/* End Call Button */}
+    <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2">
+      <button
+        aria-label="End Call"
+        className="w-[70px] h-[70px] bg-red-500 rounded-full flex justify-center items-center hover:bg-red-600 transition duration-300 transform hover:scale-110 shadow-md hover:shadow-lg"
+        onClick={handleCallStop}
+      >
+        <MdCallEnd className="text-3xl text-white" />
+      </button>
+    </div>
+  </div>
+  
   );
 };
 
