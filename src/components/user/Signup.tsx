@@ -189,14 +189,14 @@ function Signup() {
               > 
                 SIGN UP
               </button>
-              <div className="bg-black w-[100%] py-2 flex flex-row items-center rounded-md">
+              {/* <div className="bg-black w-[100%] py-2 flex flex-row items-center rounded-md">
                 <div className="w-[30%] ">
                   <FcGoogle className="mt-2 w-[100%]" />
                 </div>
                 <div className="w-[70%] ">
                   <p className="mt-1 text-white text-md tracking-widest">SIGNUP WITH GOOGLE</p>
                 </div>
-              </div>
+              </div> */}
               <p className="text-white text-center hover:text-blue-400 cursor-pointer" onClick={() => navigate("/login")}>
                 If you already have an account? Sign In
               </p>
