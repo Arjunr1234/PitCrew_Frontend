@@ -186,7 +186,7 @@ function Signup() {
               <button
                 className="bg-customBlue w-[100%] py-1 justify-center rounded-md text-2xl text-white"
                 onClick={handleSubmit}
-              >
+              > 
                 SIGN UP
               </button>
               <div className="bg-black w-[100%] py-2 flex flex-row items-center rounded-md">
